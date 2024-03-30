@@ -4107,26 +4107,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pedro\\.nuget\\packages\\": {}
+    "/Users/laralima/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
+      "projectUniqueName": "/Users/laralima/Documents/TIS/pmg-es-2024-1-ti3-9577100-toque-de-chef/Codigo/TOQUE.DE.CHEF/TOQUE.DE.CHEF/TOQUE.DE.CHEF.csproj",
       "projectName": "TOQUE.DE.CHEF",
-      "projectPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
-      "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\obj\\",
+      "projectPath": "/Users/laralima/Documents/TIS/pmg-es-2024-1-ti3-9577100-toque-de-chef/Codigo/TOQUE.DE.CHEF/TOQUE.DE.CHEF/TOQUE.DE.CHEF.csproj",
+      "packagesPath": "/Users/laralima/.nuget/packages/",
+      "outputPath": "/Users/laralima/Documents/TIS/pmg-es-2024-1-ti3-9577100-toque-de-chef/Codigo/TOQUE.DE.CHEF/TOQUE.DE.CHEF/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/laralima/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4139,6 +4137,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4185,16 +4188,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }
