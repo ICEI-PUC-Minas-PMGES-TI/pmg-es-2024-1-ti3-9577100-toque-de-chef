@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\TOQUE.DE.CHEF.props" />
-</Project>
