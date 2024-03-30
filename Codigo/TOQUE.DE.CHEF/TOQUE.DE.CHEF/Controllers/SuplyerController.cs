@@ -9,7 +9,8 @@ namespace TOQUE.DE.CHEF.Controllers
 
         private readonly Context _context;
 
-        public SuplyerController(Context context) {
+        public SuplyerController(Context context)
+        {
             _context = context;
         }
         public IActionResult Index()
@@ -18,7 +19,8 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
-        public JsonResult getSuplyers(string search = null, int page = 1, int take = 15) {
+        public JsonResult getSuplyers(string search = null, int page = 1, int take = 15)
+        {
             listSuplyers = _context.suppliers.ToList();
             int totalRegistros = 0;
             int skip = (page - 1) * take;
@@ -41,7 +43,8 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
-        public string createSupyer(string name, string email, string phone, string description) {
+        public string createSupyer(string name, string email, string phone, string description)
+        {
             try
             {
                 Suplyer newSuplyer = new Suplyer();
@@ -55,15 +58,53 @@ namespace TOQUE.DE.CHEF.Controllers
 
                 return "OK";
             }
-            catch {
+            catch
+            {
                 return "ERROR";
-            }            
+            }
         }
 
-        [HttpPut]
-        public string editSuplyer(string name,string email, string phone, string description)
+        [HttpDelete]
+        public string deleteSuplyer(int id)
         {
-            return "OK";
+            try
+            {
+                _context.Remove(_context.suppliers.Single(x => x.Id == id));
+                _context.SaveChanges();
+                return "OK";
+            }
+            catch
+            {
+                return "ERRO";
+            }
+        }
+
+        [HttpGet]
+        public JsonResult getSuplyerById(int id)
+        {
+            Suplyer suplyer = _context.suppliers.FirstOrDefault(x => x.Id == id);
+            return Json(suplyer);
+        }
+
+
+        [HttpPut]
+        public string editSuplyer(int id, string newName, string newEmail, string newPhone, string newDescription)
+        {
+            try
+            {
+                Suplyer SuplyerToEdit = _context.suppliers.FirstOrDefault(x => x.Id == id);
+                SuplyerToEdit.Name = newName;
+                SuplyerToEdit.Email = newEmail;
+                SuplyerToEdit.Phone = newPhone;
+                SuplyerToEdit.Description = newDescription;
+                _context.suppliers.Update(SuplyerToEdit);
+                _context.SaveChanges();
+                return "OK";
+            }
+            catch
+            {
+                return "ERRO";
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TOQUE.DE.CHEF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b37a8d1aa3c6e4f06caf6bf86c756959fcc773b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50c448ed28ba1d7171ef205c93cbd3e6a3d395b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("TOQUE.DE.CHEF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TOQUE.DE.CHEF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
