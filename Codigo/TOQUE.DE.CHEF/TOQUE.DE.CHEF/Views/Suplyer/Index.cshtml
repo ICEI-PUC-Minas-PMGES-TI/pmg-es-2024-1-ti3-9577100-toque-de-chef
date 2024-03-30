@@ -24,7 +24,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnFechar">Fechar</button>
-                <button type="button" class="btn btn-primary" onclick="" style="background-color: #fc8a04">Cadastrar</button>
+                <button type="button" class="btn btn-primary" onclick="createSuplyer()" style="background-color: #fc8a04">Cadastrar</button>
             </div>
         </div>
     </div>
@@ -41,13 +41,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input class="form-control me-1 mb-4" type="search" placeholder="id" aria-label="Search" id="txtIdCategoria" style="display: none">
-                <input class="form-control me-1 mb-4" type="search" placeholder="Nome" aria-label="Search" id="txtNomeFornecedorEdit">
-                <input class="form-control me-1" type="search" placeholder="Descrição" aria-label="Search" id="txtDescricaoFornecedorEdit">
+                <input class="form-control me-1 mb-4" type="search" placeholder="id" aria-label="Search" id="txtIdFornecedorEdit" style="display: none">
+                <input class="form-control me-1 mb-4" type="text" placeholder="Nome" aria-label="Search" id="txtNomeFornecedorEdit">
+                <input class="form-control me-1 mb-4" type="email" placeholder="Email" aria-label="Search" id="txtEmailFornecedorEdit">
+                <input class="form-control me-1 mb-4" type="tel" placeholder="Contato" aria-label="Search" id="txtTelefoneFornecedorEdit">
+                <input class="form-control me-1" type="text" placeholder="Descrição" aria-label="Search" id="txtDescricaoFornecedorEdit">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnFecharEdit">Fechar</button>
-                <button type="button" class="btn btn-primary" onclick="" style="background-color: #fc8a04">Salvar mudanças</button>
+                <button type="button" class="btn btn-primary" onclick="editSuplyer()" style="background-color: #fc8a04">Salvar mudanças</button>
             </div>
         </div>
     </div>

@@ -57,8 +57,13 @@ namespace TOQUE.DE.CHEF.Controllers
             }
             catch {
                 return "ERROR";
-            }
-            
+            }            
+        }
+
+        [HttpPut]
+        public string editSuplyer(string name,string email, string phone, string description)
+        {
+            return "OK";
         }
     }
 }
