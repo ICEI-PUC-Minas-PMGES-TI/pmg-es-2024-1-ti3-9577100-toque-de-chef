@@ -19,7 +19,15 @@ export const registerUser = async (user: Partial<User>) => {
 };
 
 export const useRegisterUser = (
-  props?: UseMutationOptions<unknown, Error, Partial<User>, unknown>
+  props?: UseMutationOptions<
+    {
+      token: string;
+      user: User;
+    },
+    Error,
+    Partial<User>,
+    unknown
+  >
 ) => {
   return useMutation({
     ...props,

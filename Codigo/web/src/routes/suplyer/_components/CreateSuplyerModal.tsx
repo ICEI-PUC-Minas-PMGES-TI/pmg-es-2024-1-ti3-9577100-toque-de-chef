@@ -67,7 +67,7 @@ export const CreateSuplyerModal = () => {
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Password">
+          <FloatingLabel controlId="floatingPassword" label="Nome">
             <Form.Control
               type="text"
               placeholder="Nome"
@@ -77,7 +77,7 @@ export const CreateSuplyerModal = () => {
           <FloatingLabel controlId="floatingContato" label="Contato">
             <Form.Control
               type="number"
-              placeholder="Password"
+              placeholder="Contato"
               {...register("phone")}
             />
           </FloatingLabel>

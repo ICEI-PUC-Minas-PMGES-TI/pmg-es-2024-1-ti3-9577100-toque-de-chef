@@ -93,10 +93,10 @@ function Index() {
                   })
                 }
               >
-                Registrar-se
+                <strong>Registrar-se</strong>
               </Button>
               <Button type="submit" className="text-white">
-                Entrar
+                <strong>Entrar</strong>
               </Button>
             </div>
           </Form>

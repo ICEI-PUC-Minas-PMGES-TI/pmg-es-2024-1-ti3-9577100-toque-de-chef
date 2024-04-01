@@ -1,5 +1,5 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
-// import { api } from "../api";
+import { api } from "../api";
 import { Category } from "../../types/category";
 
 // export const createCategory = async (category: Partial<Category>) => {
@@ -27,12 +27,9 @@ export const createCategory = async (category: Partial<Category>) => {
       description: category.description || "",
     });
 
-    const res = await fetch(
-      `https://localhost:7039/Category/addCategory?${queryParams}`,
-      {
-        method: "GET",
-      }
-    );
+    const res = await api(`Category/addCategory?${queryParams}`, {
+      method: "GET",
+    });
 
     // const data = await res.json();
     // console.log("res", data);
