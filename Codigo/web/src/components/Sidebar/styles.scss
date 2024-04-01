@@ -1,0 +1,33 @@
+.sidebar-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  margin-top: 32px;
+  min-width: 180px;
+
+  a {
+    border-radius: 4px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: unset;
+
+    &.active,
+    &:hover {
+      cursor: pointer;
+      background-color: #fc8a04;
+      color: white;
+      font-weight: bold;
+    }
+  }
+}
+
+.container-sidebar {
+  background: #f4f5fc;
+  border: 1px solid #dddddd;
+  max-width: 292px;
+}
