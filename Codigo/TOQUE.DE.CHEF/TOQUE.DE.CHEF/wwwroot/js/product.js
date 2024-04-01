@@ -32,26 +32,26 @@ function getProducts() {
     })
 }
 
-//function createProduct() {
-//    $.ajax({
-//        url: '/Product/addProduct',
-//        data: {
-//            name: document.getElementById('txtNomeProduto').value,
-//            description: document.getElementById('txtDescricaoProduto').value
-//        },
-//        type: "GET",
-//        success: function (data) {
-//            if (data == "OK") {
-//                alert('CADASTRADO')
-//                document.getElementById('txtNomeProduto').value = ""
-//                document.getElementById('txtDescricaoProduto').value = ""
-//                getProducts()
-//            } else {
-//                alert('ERRO')
-//            }
-//        }
-//    })
-//}
+function createProduct() {
+    $.ajax({
+        url: '/Product/addProduct',
+        data: {
+            name: document.getElementById('txtNomeProduto').value,
+            description: document.getElementById('txtDescricaoProduto').value
+        },
+        type: "GET",
+        success: function (data) {
+            if (data == "OK") {
+                alert('CADASTRADO')
+                document.getElementById('txtNomeProduto').value = ""
+                document.getElementById('txtDescricaoProduto').value = ""
+                getProducts()
+            } else {
+                alert('ERRO')
+            }
+        }
+    })
+}
 
 function deleteProduct(id) {
     $.ajax({
