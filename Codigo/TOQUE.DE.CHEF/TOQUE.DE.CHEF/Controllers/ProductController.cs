@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Models;
+using ClosedXML.Excel;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
@@ -101,6 +102,70 @@ namespace TOQUE.DE.CHEF.Controllers
         {
             Product product = _context.products.FirstOrDefault(x => x.Id == id);
             return Json(product);
+        }
+
+        [HttpPost]
+        public IActionResult importExcelProducts(IFormFile file) {
+            try
+            {
+                if (file == null || file.Length <= 0)
+                {
+                    return BadRequest("Arquivo não selecionado ou vazio.");
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    file.CopyTo(stream);
+                    stream.Position = 0;
+
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheet(1); // Assumindo que os dados estão na primeira planilha
+
+                        var rows = worksheet.RowsUsed().Skip(1); // Ignorar o cabeçalho
+
+                        foreach (var row in rows)
+                        {
+                            // Ler os dados da linha
+                            string nome = row.Cell(1).Value.ToString();
+                            string categoria = row.Cell(2).Value.ToString();
+                            double preco = Convert.ToDouble(row.Cell(3).Value.ToString());
+                            string descricao = row.Cell(4).Value.ToString();
+
+                            // Verificar se a categoria existe
+                            var category = _context.categories.FirstOrDefault(x => x.Name == categoria);
+                            if (category == null)
+                            {
+                                // Se a categoria não existir, você pode criar aqui
+                                // Ou lidar com isso de acordo com sua lógica de negócios
+                                // Por enquanto, vamos supor que a categoria já existe
+                                return BadRequest($"Categoria '{categoria}' não encontrada.");
+                            }
+
+                            // Criar um novo produto
+                            var product = new Product
+                            {
+                                Name = nome,
+                                Description = descricao,
+                                Unit_Price = preco,
+                                Category_id = category.Id
+                            };
+
+                            // Adicionar produto ao contexto
+                            _context.products.Add(product);
+                        }
+
+                        // Salvar mudanças no banco de dados
+                        _context.SaveChanges();
+                    }
+                }
+
+                return Ok("Produtos importados com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao importar produtos: {ex.Message}");
+            }
         }
     }
 }

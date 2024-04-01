@@ -5,7 +5,7 @@ using TOQUE.DE.CHEF.Models;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CategoryController : Controller
     {
         public List<Category> listCategories { get; set; }
