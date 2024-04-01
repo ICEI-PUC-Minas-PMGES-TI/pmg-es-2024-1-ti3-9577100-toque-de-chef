@@ -33,10 +33,10 @@ export const DeleteCategoryModal = () => {
   return (
     <Modal show={Boolean(deleteCategoryModal)} onHide={handleCloseDelete}>
       <Modal.Header closeButton>
-        <Modal.Title>Excluir Fornecedor</Modal.Title>
+        <Modal.Title>Excluir Categoria</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Você tem certeza que deseja excluir o fornecedor{" "}
+        Você tem certeza que deseja excluir a categoria{" "}
         <strong>{selectedCategoryToDelete?.name}</strong>?
       </Modal.Body>
       <Modal.Footer>

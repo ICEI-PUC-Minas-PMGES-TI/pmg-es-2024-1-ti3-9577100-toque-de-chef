@@ -45,11 +45,15 @@ export const CreateCategoryModal = () => {
       onHide={() => setCreateCategoryModal(undefined)}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Criar Fornecedor</Modal.Title>
+        <Modal.Title>Criar Categoria</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <FloatingLabel controlId="floatingPassword" label="Password">
+          <FloatingLabel
+            controlId="floatingPassword"
+            label="Nome"
+            className="mb-3"
+          >
             <Form.Control
               type="text"
               placeholder="Nome"
@@ -57,10 +61,14 @@ export const CreateCategoryModal = () => {
             />
           </FloatingLabel>
 
-          <FloatingLabel controlId="floatingDescription" label="Descrição">
+          <FloatingLabel
+            controlId="floatingDescription"
+            label="Descrição"
+            className="mb-3"
+          >
             <Form.Control
               type="text"
-              placeholder="Password"
+              placeholder="Descrição"
               {...register("description")}
               isInvalid={Boolean(formState.errors.description)}
             />

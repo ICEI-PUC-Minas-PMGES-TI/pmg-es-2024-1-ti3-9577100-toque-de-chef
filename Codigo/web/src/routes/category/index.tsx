@@ -22,10 +22,10 @@ function Index() {
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
-        <div className="p-2">Fornecedor</div>
+        <div className="p-2">Categoria</div>
         <InputGroup className="p-2 me-auto w-8">
           <Form.Control
-            placeholder="Pesquisar Fornecedor"
+            placeholder="Pesquisar Categoria"
             aria-label="Recipient's username"
             aria-describedby="basic-addon2"
           />
@@ -37,7 +37,7 @@ function Index() {
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           onClick={() => setCreateCategoryModal("true")}
         >
-          <PlusCircle /> <strong>Adicionar novo fornecedor</strong>
+          <PlusCircle /> <strong>Adicionar novo categoria</strong>
         </Button>
       </Stack>
       <div className="p-1">
@@ -45,8 +45,8 @@ function Index() {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Descrição</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">

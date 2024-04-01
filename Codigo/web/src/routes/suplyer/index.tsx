@@ -45,10 +45,10 @@ function Index() {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Name</th>
+              <th scope="col">Nome</th>
               <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Description</th>
+              <th scope="col">Contato</th>
+              <th scope="col">Descrição</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">

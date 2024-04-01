@@ -65,7 +65,7 @@ export const UpdateCategoryModal = () => {
       onHide={() => setUpdateCategoryModal(undefined)}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Editar Fornecedor</Modal.Title>
+        <Modal.Title>Editar Categoria</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmitUpdate(onSubmitUpdate)}>

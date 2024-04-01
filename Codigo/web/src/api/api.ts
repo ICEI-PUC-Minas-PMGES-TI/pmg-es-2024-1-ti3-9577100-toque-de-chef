@@ -13,8 +13,7 @@ export const api = async (endpoint: string, init?: RequestInit | undefined) => {
     },
   });
 
-  if (response.status === 401) {
-    console.log("response 300401", response);
+  if (response.status === 401 && cookies.get("user")) {
     toast.error("Não autorizado");
     setTimeout(() => {
       window.location.href = "/";
