@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Models;
 
 namespace TOQUE.DE.CHEF.Controllers
@@ -19,6 +20,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public JsonResult getSuplyers(string search = null, int page = 1, int take = 15)
         {
             listSuplyers = _context.suppliers.ToList();

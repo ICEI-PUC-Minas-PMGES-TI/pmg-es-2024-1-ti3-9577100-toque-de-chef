@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Models;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         public List<Category> listCategories { get; set; }
@@ -22,6 +25,8 @@ namespace TOQUE.DE.CHEF.Controllers
         [HttpGet]
         public JsonResult getAllCategories(string search = null, int page = 1, int take = 15)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine(userId);
             listCategories = _context.categories.ToList();
             int totalRegistros = 0;
             int skip = (page - 1) * take;
