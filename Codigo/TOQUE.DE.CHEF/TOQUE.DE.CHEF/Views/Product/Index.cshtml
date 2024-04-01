@@ -1,0 +1,107 @@
+﻿@{
+
+}
+@*TELA CATEGORIAS*@
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+<link rel="stylesheet" href="~/css/category.css" asp-append-version="true" />
+
+@* modal cadastro *@
+<div class="modal fade" id="modalAdicionaCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adicionar Produto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar" id="closeModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control me-1 mb-4" type="search" placeholder="Nome" aria-label="Search" id="txtNomeCategoria">
+                <input class="form-control me-1" type="search" placeholder="Descrição" aria-label="Search" id="txtDescricaoCategoria">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnFechar">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="createCategory()" style="background-color: #fc8a04">Cadastrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* modal edição *@
+<div class="modal fade" id="modalEditaCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Produto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar" id="closeModalEdit">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control me-1 mb-4" type="search" placeholder="id" aria-label="Search" id="txtIdCategoria" style="display: none">
+                <input class="form-control me-1 mb-4" type="search" placeholder="Nome" aria-label="Search" id="txtNomeCategoriaEdit">
+                <input class="form-control me-1" type="search" placeholder="Descrição" aria-label="Search" id="txtDescricaoCategoriaEdit">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnFecharEdit">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="editCategory()" style="background-color: #fc8a04">Salvar mudanças</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="background-color: white">
+    <div>
+        <nav class="row align-content-center mt-5 mb-5">
+
+            <strong class="col-lg-1">Produtos</strong>
+            <div class="d-flex col-lg-8">
+                <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" id="txtSearch">
+                <button class="btn" style="background-color: #fc8a04" onclick="getCategories()">
+                    <i class="fa fa-search fa-sm" style="color: white"></i>
+                </button>
+            </div>
+            <button type="button" class="btn col-lg-3" style="background-color: #fc8a04; color:white" id="btnAdicionarCategoria">
+                <i class="fa fa-plus nav-icon" style="color: white"></i>
+                Adicionar Novo Produto
+            </button>
+
+        </nav>
+    </div>
+    <div class="mt-5">
+        <strong>Listagem de Produtos</strong>
+        <table class="mt-5" style="width: 100%; background-color:white">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CATEGORIA</th>
+                    <th>prod</th>
+                    <th>DESCRIPTION</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="dataSource">
+                <tr><td colspan="4"><center><b>Nenhuma Categoria Encontrada</b></center></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    document.getElementById('btnAdicionarCategoria').addEventListener('click', function () {
+        $('#modalAdicionaCategoria').modal('show');
+    });
+    document.getElementById('btnFechar').addEventListener('click', function () {
+        $('#modalAdicionaCategoria').modal('hide');
+    });
+    document.getElementById('closeModal').addEventListener('click', function () {
+        $('#modalAdicionaCategoria').modal('hide');
+    });
+    document.getElementById('btnFecharEdit').addEventListener('click', function () {
+        $('#modalEditaCategoria').modal('hide');
+    });
+    document.getElementById('closeModalEdit').addEventListener('click', function () {
+        $('#modalEditaCategoria').modal('hide');
+    });
+</script>
+
+<script src="~/js/category.js" asp-append-version="true"></script>
