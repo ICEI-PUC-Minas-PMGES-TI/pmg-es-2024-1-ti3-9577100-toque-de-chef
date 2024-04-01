@@ -6,6 +6,7 @@ import "./styles.scss";
 import {
   BorderAll,
   Box,
+  Diamond,
   GearWide,
   GraphUpArrow,
   InfoCircle,
@@ -31,7 +32,7 @@ const routesGeneral = [
   {
     name: "Categoria",
     path: "/category",
-    icon: <Truck />,
+    icon: <Diamond />,
   },
   {
     name: "Relatórios",

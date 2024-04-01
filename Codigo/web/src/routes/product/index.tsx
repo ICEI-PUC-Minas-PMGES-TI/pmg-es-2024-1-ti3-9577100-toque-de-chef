@@ -20,7 +20,7 @@ function Index() {
   const { data: suplyerData } = useReadSuplyers();
 
   return (
-    <>
+    <div className="m-4">
       <Stack direction="horizontal" gap={3}>
         <div className="p-2">Produto</div>
         <InputGroup className="p-2 me-auto w-8">
@@ -82,6 +82,6 @@ function Index() {
       <CreateProductModal />
       <UpdateProductModal />
       <DeleteProductModal />
-    </>
+    </div>
   );
 }

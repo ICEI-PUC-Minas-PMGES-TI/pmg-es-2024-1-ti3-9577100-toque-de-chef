@@ -1,10 +1,12 @@
 import { Container, Image, Dropdown } from "react-bootstrap";
 import Cookies from "universal-cookie";
 import { useNavigate } from "@tanstack/react-router";
+import { useCurrentUser } from "../../api/User/useCurrentUser";
 const cookies = new Cookies();
 
 export const RigthSidebar = () => {
   const navigate = useNavigate();
+  const { data } = useCurrentUser();
   const logout = () => {
     navigate({
       to: "/",
@@ -22,7 +24,7 @@ export const RigthSidebar = () => {
           roundedCircle
           style={{ width: "42px", height: "42px", marginTop: "4px" }}
         />
-        <div>Usuário</div>
+        <div>Usuário: {data?.name}</div>
         <Dropdown>
           <Dropdown.Toggle></Dropdown.Toggle>
 
