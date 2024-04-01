@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
@@ -108,6 +109,14 @@ namespace TOQUE.DE.CHEF.Controllers
             {
                 return "ERRO";
             }
+        }
+
+        [HttpGet]
+        public User getCurrentUser()
+        {
+
+            var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            return _context.users.Single(x => x.Id == userId);
         }
     }
 }
