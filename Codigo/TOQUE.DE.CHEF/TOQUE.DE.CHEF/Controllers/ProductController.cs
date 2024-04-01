@@ -43,14 +43,16 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
-        public string addProduct(string name, string description)
+        public string addProduct(string name, string description, double preco, string categoria)
         {
             try
             {
+                Category category = _context.categories.FirstOrDefault(x => x.Name.Equals(categoria));
                 Product product = new Product();
                 product.Name = name;
                 product.Description = description;
-
+                product.Unit_Price = preco;
+                product.Category_id = category.Id;
                 _context.products.Add(product);
                 _context.SaveChanges();
                 return "OK";
