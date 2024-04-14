@@ -25,6 +25,5 @@ namespace TOQUE.DE.CHEF.Models
 
         public User User { get; set; }
 
-        // Outras propriedades relevantes à operação de estoque podem ser adicionadas conforme necessário
     }
 }

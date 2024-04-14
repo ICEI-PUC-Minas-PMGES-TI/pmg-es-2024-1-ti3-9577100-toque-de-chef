@@ -1,16 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
-using TOQUE.DE.CHEF.Models;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TOQUE.DE.CHEF.Dto;
+using TOQUE.DE.CHEF.Models;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
     public class ProductController : Controller
     {
-        public List<Product> listProducts { get; set; }
+        private readonly Models.Context _context;
 
-        private readonly Context _context;
-
-        public ProductController(Context context)
+        public ProductController(Models.Context context)
         {
             _context = context;
         }
@@ -21,96 +22,139 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
-        public JsonResult getAllProducts(string search = null, int page = 1, int take = 15)
+    public IActionResult GetAllProducts(string search = null, int page = 1, int take = 15)
+    {
+        try
         {
-            listProducts = _context.products.ToList();
-            int totalRegistros = 0;
-            int skip = (page - 1) * take;
+            var query = _context.products.Include(p => p.Category).AsQueryable();
 
-            totalRegistros = listProducts.Count;
-
-            if (string.IsNullOrEmpty(search).Equals(false))
+            if (!string.IsNullOrEmpty(search))
             {
-                listProducts = listProducts.Where(x => x.Name.Contains(search) || x.Description.Contains(search)).ToList();
+                query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
             }
 
-            return Json(
-                    new
-                    {
-                        obj = listProducts.Skip(skip).Take(take),
-                        count = totalRegistros
-                    }
-                );
-        }
+            var products = query.Skip((page - 1) * take).Take(take).ToList();
+            var totalRecords = query.Count();
 
-        [HttpGet]
-        public string addProduct(string name, string description, double preco, string categoria)
+            
+
+            return Json(new { obj = products, count = totalRecords });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao recuperar produtos: {ex.Message}");
+        }
+    }
+
+
+    [HttpPost]
+        public IActionResult createProduct([FromBody] ProductDto dto)
         {
             try
             {
-                Category category = _context.categories.FirstOrDefault(x => x.Name.Equals(categoria));
-                Product product = new Product();
-                product.Name = name;
-                product.Description = description;
-                product.Unit_Price = preco;
-                product.Category_id = category.Id;
+                var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
+                if (category == null)
+                {
+                    return BadRequest($"Categoria com ID '{dto.CategoryId}' nÃ£o encontrada.");
+                }
+
+                var product = new Product
+                {
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    Unit_Price = dto.UnitPrice,
+                    Category = category
+                };
+
                 _context.products.Add(product);
                 _context.SaveChanges();
-                return "OK";
+                return Ok("Produto adicionado com sucesso.");
             }
-            catch
+            catch (Exception ex)
             {
-                return "ERROR";
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao adicionar produto: {ex.Message}");
             }
         }
 
         [HttpDelete]
-        public string deleteProduct(int id)
+        public IActionResult DeleteProduct(int id)
         {
             try
             {
-                _context.Remove(_context.products.Single(x => x.Id == id));
+                var product = _context.products.FirstOrDefault(x => x.Id == id);
+                if (product == null)
+                {
+                    return NotFound($"Produto com ID '{id}' nÃ£o encontrado.");
+                }
+
+                _context.products.Remove(product);
                 _context.SaveChanges();
-                return "OK";
+                return Ok("Produto excluÃ­do com sucesso.");
             }
-            catch
+            catch (Exception ex)
             {
-                return "ERRO";
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao excluir produto: {ex.Message}");
             }
         }
 
         [HttpPut]
-        public string editProduct(int id, string newName, string newDescription)
+        public IActionResult EditProduct(int id, [FromBody] ProductDto dto)
         {
             try
             {
-                Product productToEdit = _context.products.FirstOrDefault(x => x.Id == id);
-                productToEdit.Name = newName;
-                productToEdit.Description = newDescription;
-                _context.products.Update(productToEdit);
+                var product = _context.products.Include(x => x.Category).FirstOrDefault(x => x.Id == id);
+                if (product == null)
+                {
+                    return NotFound($"Produto com ID '{id}' nÃ£o encontrado.");
+                }
+
+                var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
+                if (category == null)
+                {
+                    return BadRequest($"Categoria com ID '{dto.CategoryId}' nÃ£o encontrada.");
+                }
+
+                product.Name = dto.Name;
+                product.Description = dto.Description;
+                product.Unit_Price = dto.UnitPrice;
+                product.Category = category;
+
                 _context.SaveChanges();
-                return "OK";
+                return Ok("Produto atualizado com sucesso.");
             }
-            catch
+            catch (Exception ex)
             {
-                return "ERRO";
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao atualizar produto: {ex.Message}");
             }
         }
 
         [HttpGet]
-        public JsonResult getProductById(int id)
+        public IActionResult GetProductById(int id)
         {
-            Product product = _context.products.FirstOrDefault(x => x.Id == id);
-            return Json(product);
+            try
+            {
+                var product = _context.products.FirstOrDefault(x => x.Id == id);
+                if (product == null)
+                {
+                    return NotFound($"Produto com ID '{id}' nÃ£o encontrado.");
+                }
+
+                return Json(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao recuperar produto: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public IActionResult importExcelProducts(IFormFile file) {
+        public IActionResult ImportExcelProducts(IFormFile file)
+        {
             try
             {
                 if (file == null || file.Length <= 0)
                 {
-                    return BadRequest("Arquivo não selecionado ou vazio.");
+                    return BadRequest("Arquivo nÃ£o selecionado ou vazio.");
                 }
 
                 using (var stream = new MemoryStream())
@@ -120,42 +164,34 @@ namespace TOQUE.DE.CHEF.Controllers
 
                     using (var workbook = new XLWorkbook(stream))
                     {
-                        var worksheet = workbook.Worksheet(1); // Assumindo que os dados estão na primeira planilha
+                        var worksheet = workbook.Worksheet(1);
 
-                        var rows = worksheet.RowsUsed().Skip(1); // Ignorar o cabeçalho
+                        var rows = worksheet.RowsUsed().Skip(1); 
 
                         foreach (var row in rows)
                         {
-                            // Ler os dados da linha
-                            string nome = row.Cell(1).Value.ToString();
-                            string categoria = row.Cell(2).Value.ToString();
-                            double preco = Convert.ToDouble(row.Cell(3).Value.ToString());
-                            string descricao = row.Cell(4).Value.ToString();
+                            string name = row.Cell(1).Value.ToString();
+                            string categoryName = row.Cell(2).Value.ToString();
+                            double price = Convert.ToDouble(row.Cell(3).Value.ToString());
+                            string description = row.Cell(4).Value.ToString();
 
-                            // Verificar se a categoria existe
-                            var category = _context.categories.FirstOrDefault(x => x.Name == categoria);
+                            var category = _context.categories.FirstOrDefault(x => x.Name == categoryName);
                             if (category == null)
                             {
-                                // Se a categoria não existir, você pode criar aqui
-                                // Ou lidar com isso de acordo com sua lógica de negócios
-                                // Por enquanto, vamos supor que a categoria já existe
-                                return BadRequest($"Categoria '{categoria}' não encontrada.");
+                                return BadRequest($"Categoria '{categoryName}' nÃ£o encontrada.");
                             }
 
-                            // Criar um novo produto
                             var product = new Product
                             {
-                                Name = nome,
-                                Description = descricao,
-                                Unit_Price = preco,
-                                Category_id = category.Id
+                                Name = name,
+                                Description = description,
+                                Unit_Price = price,
+                                Category = category
                             };
 
-                            // Adicionar produto ao contexto
                             _context.products.Add(product);
                         }
 
-                        // Salvar mudanças no banco de dados
                         _context.SaveChanges();
                     }
                 }
