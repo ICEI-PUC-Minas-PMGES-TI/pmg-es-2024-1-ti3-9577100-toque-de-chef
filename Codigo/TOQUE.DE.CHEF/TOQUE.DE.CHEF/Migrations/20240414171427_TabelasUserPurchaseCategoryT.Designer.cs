@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TOQUE.DE.CHEF.Models;
 
@@ -11,9 +12,11 @@ using TOQUE.DE.CHEF.Models;
 namespace TOQUE.DE.CHEF.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240414171427_TabelasUserPurchaseCategoryT")]
+    partial class TabelasUserPurchaseCategoryT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,7 +172,7 @@ namespace TOQUE.DE.CHEF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TRANSACTION_PURCHASE_OPERATIONS");
+                    b.ToTable("TransactionPurchaseOperations");
                 });
 
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.TransactionStockOperation", b =>
@@ -197,7 +200,7 @@ namespace TOQUE.DE.CHEF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TRANSACTION_STOCK_OPERATIONS");
+                    b.ToTable("TransactionStockOperations");
                 });
 
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.User", b =>
@@ -239,7 +242,7 @@ namespace TOQUE.DE.CHEF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("USERS");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.Product", b =>

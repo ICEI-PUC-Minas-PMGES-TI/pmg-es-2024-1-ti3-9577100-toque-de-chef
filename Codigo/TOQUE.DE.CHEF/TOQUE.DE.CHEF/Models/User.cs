@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using TOQUE.DE.CHEF.Dto;
+
 
 namespace TOQUE.DE.CHEF.Models
 {
-    [Table("Users")]
+    [Table("USERS")]
     public class User
     {
         [Key]
@@ -33,6 +32,11 @@ namespace TOQUE.DE.CHEF.Models
         [Required(ErrorMessage = "Type is required.")]
         [StringLength(50, ErrorMessage = "Type must not exceed 50 characters.")]
         [Column("TYPE")]
+
         public string Type { get; set; }
+
+        public ICollection<TransactionStockOperation> TransactionStockOperations { get; set; }
+
+        public ICollection<TransactionPurchaseOperation> TransactionalPurchaseOperations { get; set; }
     }
 }

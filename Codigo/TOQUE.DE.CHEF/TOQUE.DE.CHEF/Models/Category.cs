@@ -10,8 +10,11 @@ namespace TOQUE.DE.CHEF.Models
         public int Id { get; set; }
         [Column("NAME")]
         public string Name { get; set; }
+
         [Column("DESCRIPTION")]
         public string Description { get; set; }
 
+
+        public ICollection<Product> Products { get; set; }
     }
 }
