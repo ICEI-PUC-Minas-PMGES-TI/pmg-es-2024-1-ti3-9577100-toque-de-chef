@@ -3,20 +3,23 @@ import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpdateSuplyer } from "../../../api/Suplyer/useUpdateSuplyer";
+import { useUpdateProduct } from "../../../api/Product/useUpdateProduct";
 import { useQueryClient } from "@tanstack/react-query";
-import { useReadSuplyers } from "../../../api/Suplyer/useReadSuplyers";
+import { useReadProducts } from "../../../api/Product/useReadProducts";
 import { useEffect } from "react";
 
 const schemaEdit = z.object({
   name: z.string({ required_error: "Obrigatório" }),
-  email: z.string({ required_error: "Obrigatório" }).email(),
-  description: z.string({ required_error: "Obrigatório" }).min(1),
-  phone: z.string({ required_error: "Obrigatório" }),
+  description: z.string({ required_error: "Obrigatório" }),
+  unit_Price: z.number({ required_error: "Obrigatório" }).min(1),
+  category: z.object({
+    id: z.number({ required_error: "Obrigatório" }).min(1),
+  }),
 });
 
 export const UpdateProductModal = () => {
   const queryClient = useQueryClient();
+
   const [updateProductModal, setUpdateProductModal] =
     useSearchParam("updateProductModal");
   const {
@@ -28,19 +31,19 @@ export const UpdateProductModal = () => {
     resolver: zodResolver(schemaEdit),
   });
 
-  const { data: suplyerData, isLoading } = useReadSuplyers();
-  const selectedSuplyerToUpdate = suplyerData?.find(
-    (suplyer) => suplyer.id === Number(updateProductModal)
+  const { data: productData, isLoading } = useReadProducts(null);
+  const selectedProductToUpdate = productData?.obj?.find(
+    (product) => product.id === Number(updateProductModal)
   );
-  const { mutateAsync: mutateAsyncUpdate } = useUpdateSuplyer({
+  const { mutateAsync: mutateAsyncUpdate } = useUpdateProduct({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readSuplyers"],
+        queryKey: ["readProducts"],
       });
     },
     onError: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readSuplyers"],
+        queryKey: ["readProducts"],
       });
     },
   });
@@ -50,15 +53,23 @@ export const UpdateProductModal = () => {
   ) => {
     setUpdateProductModal(undefined);
     await mutateAsyncUpdate({
-      suplyer: { ...data, id: selectedSuplyerToUpdate?.id },
+      product: {
+        id: selectedProductToUpdate?.id,
+        categoryId: data.category.id,
+        unitPrice: data.unit_Price,
+        description: data.description,
+        name: data.name,
+      },
     });
   };
 
   useEffect(() => {
-    if (suplyerData) {
-      reset(selectedSuplyerToUpdate);
+    if (productData) {
+      reset(selectedProductToUpdate);
     }
-  }, [isLoading, reset, selectedSuplyerToUpdate, suplyerData]);
+  }, [isLoading, reset, selectedProductToUpdate, productData]);
+
+  console.log("selectedProductToUpdate", selectedProductToUpdate);
 
   return (
     <Modal
@@ -70,37 +81,59 @@ export const UpdateProductModal = () => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmitUpdate(onSubmitUpdate)}>
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Email address"
-            className="mb-3"
-          >
+          <FloatingLabel controlId="name" label="Nome" className="mb-3">
             <Form.Control
-              type="email"
-              placeholder="name@example.com"
-              {...update("email")}
-              isInvalid={Boolean(formStateUpdate.errors.email)}
+              type="text"
+              placeholder="Nome"
+              {...update("name")}
+              isInvalid={Boolean(formStateUpdate.errors.name)}
             />
-            {formStateUpdate.errors.email && (
+            {formStateUpdate.errors.name && (
               <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.email.message}
+                {formStateUpdate.errors.name.message}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Password">
-            <Form.Control type="text" placeholder="Nome" {...update("name")} />
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingContato" label="Contato">
+
+          <FloatingLabel
+            controlId="unitPrice"
+            label="Preço Unitário"
+            className="mb-3"
+          >
             <Form.Control
               type="number"
-              placeholder="Password"
-              {...update("phone")}
+              placeholder="Preço Unitário"
+              {...update("unit_Price", { valueAsNumber: true })}
+              isInvalid={Boolean(formStateUpdate.errors.unit_Price)}
             />
+            {formStateUpdate.errors.unit_Price && (
+              <Form.Control.Feedback type="invalid">
+                {formStateUpdate.errors.unit_Price.message}
+              </Form.Control.Feedback>
+            )}
           </FloatingLabel>
+          <FloatingLabel
+            controlId="categoryId"
+            label="Categoria"
+            className="mb-3"
+          >
+            <Form.Control
+              type="number"
+              placeholder="Categoria"
+              {...update("category.id", { valueAsNumber: true })}
+              isInvalid={Boolean(formStateUpdate.errors.category?.id)}
+            />
+            {formStateUpdate.errors.category?.id && (
+              <Form.Control.Feedback type="invalid">
+                {formStateUpdate.errors.category?.id?.message}
+              </Form.Control.Feedback>
+            )}
+          </FloatingLabel>
+
           <FloatingLabel controlId="floatingDescription" label="Descrição">
             <Form.Control
               type="text"
-              placeholder="Password"
+              placeholder="Descrição"
               {...update("description")}
               isInvalid={Boolean(formStateUpdate.errors.description)}
             />

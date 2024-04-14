@@ -3,15 +3,16 @@ import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateSuplyer } from "../../../api/Suplyer/useCreateSuplyer";
+import { useCreateProduct } from "../../../api/Product/useCreateProduct";
 import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
-  email: z.string({ required_error: "Obrigatório" }).email(),
-  description: z.string({ required_error: "Obrigatório" }).min(1),
-  phone: z.string({ required_error: "Obrigatório" }),
+  description: z.string({ required_error: "Obrigatório" }),
+  unitPrice: z.number({ required_error: "Obrigatório" }).min(1),
+  categoryId: z.number({ required_error: "Obrigatório" }).min(1),
 });
+
 export const CreateProductModal = () => {
   const queryClient = useQueryClient();
   const [createProductModal, setCreateProductModal] =
@@ -22,15 +23,15 @@ export const CreateProductModal = () => {
     }
   );
 
-  const { mutateAsync } = useCreateSuplyer({
+  const { mutateAsync } = useCreateProduct({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readSuplyers"],
+        queryKey: ["readProducts"],
       });
     },
     onError: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readSuplyers"],
+        queryKey: ["readProducts"],
       });
     },
   });
@@ -50,47 +51,70 @@ export const CreateProductModal = () => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Email address"
-            className="mb-3"
-          >
-            <Form.Control
-              type="email"
-              placeholder="name@example.com"
-              {...register("email")}
-              isInvalid={Boolean(formState.errors.email)}
-            />
-            {formState.errors.email && (
-              <Form.Control.Feedback type="invalid">
-                {formState.errors.email.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Password">
+          <FloatingLabel controlId="name" label="Nome" className="mb-3">
             <Form.Control
               type="text"
               placeholder="Nome"
               {...register("name")}
+              isInvalid={Boolean(formState.errors.name)}
             />
+            {formState.errors.name && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.name.message}
+              </Form.Control.Feedback>
+            )}
           </FloatingLabel>
-          <FloatingLabel controlId="floatingContato" label="Contato">
-            <Form.Control
-              type="number"
-              placeholder="Password"
-              {...register("phone")}
-            />
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingDescription" label="Descrição">
+
+          <FloatingLabel
+            controlId="description"
+            label="Descrição"
+            className="mb-3"
+          >
             <Form.Control
               type="text"
-              placeholder="Password"
+              placeholder="Descrição"
               {...register("description")}
               isInvalid={Boolean(formState.errors.description)}
             />
             {formState.errors.description && (
               <Form.Control.Feedback type="invalid">
                 {formState.errors.description.message}
+              </Form.Control.Feedback>
+            )}
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="unitPrice"
+            label="Preço Unitário"
+            className="mb-3"
+          >
+            <Form.Control
+              type="number"
+              placeholder="Preço Unitário"
+              {...register("unitPrice", { valueAsNumber: true })}
+              isInvalid={Boolean(formState.errors.unitPrice)}
+            />
+            {formState.errors.unitPrice && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.unitPrice.message}
+              </Form.Control.Feedback>
+            )}
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="categoryId"
+            label="Categoria"
+            className="mb-3"
+          >
+            <Form.Control
+              type="number"
+              placeholder="Categoria"
+              {...register("categoryId", { valueAsNumber: true })}
+              isInvalid={Boolean(formState.errors.categoryId)}
+            />
+            {formState.errors.categoryId && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.categoryId.message}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>

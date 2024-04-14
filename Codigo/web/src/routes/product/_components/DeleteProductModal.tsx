@@ -1,28 +1,30 @@
 import { useSearchParam } from "../../../hooks/useSearchParams";
 import { Button, Modal } from "react-bootstrap";
 import { useQueryClient } from "@tanstack/react-query";
-import { useReadSuplyers } from "../../../api/Suplyer/useReadSuplyers";
-import { useDeleteSuplyer } from "../../../api/Suplyer/useDeleteSuplyer";
+import { useReadProducts } from "../../../api/Product/useReadProducts";
+import { useDeleteProduct } from "../../../api/Product/useDeleteProduct";
 
 export const DeleteProductModal = () => {
   const queryClient = useQueryClient();
   const [deleteProductModal, setDeleteProductModal] =
     useSearchParam("deleteProductModal");
 
-  const { data: suplyerData } = useReadSuplyers();
-  const selectedSuplyerToDelete = suplyerData?.find(
-    (suplyer) => suplyer.id === Number(deleteProductModal)
+  const { data: productData } = useReadProducts(null);
+  const selectedProductToDelete = productData?.obj?.find(
+    (product) => product.id === Number(deleteProductModal)
   );
-  const { mutateAsync: mutateAsyncDelete } = useDeleteSuplyer({
+
+  const { mutateAsync: mutateAsyncDelete } = useDeleteProduct({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readSuplyers"],
+        queryKey: ["readProducts"],
       });
     },
   });
+
   const handleDeleteProduct = async () => {
     setDeleteProductModal(undefined);
-    await mutateAsyncDelete(selectedSuplyerToDelete!.id);
+    await mutateAsyncDelete(selectedProductToDelete!.id);
   };
 
   const handleCloseDelete = () => {
@@ -36,7 +38,7 @@ export const DeleteProductModal = () => {
       </Modal.Header>
       <Modal.Body>
         Você tem certeza que deseja excluir o produto{" "}
-        <strong>{selectedSuplyerToDelete?.name}</strong>?
+        <strong>{selectedProductToDelete?.name}</strong>?
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseDelete}>

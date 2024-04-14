@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TOQUE.DE.CHEF.Dto;
@@ -26,7 +25,7 @@ namespace TOQUE.DE.CHEF.Controllers
     {
         try
         {
-            var query = _context.products.Include(p => p.Category).AsQueryable();
+            var query = _context.products.Include(p => p.Category).Where(p => p.DeletedAt == null).AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -68,7 +67,7 @@ namespace TOQUE.DE.CHEF.Controllers
 
                 _context.products.Add(product);
                 _context.SaveChanges();
-                return Ok("Produto adicionado com sucesso.");
+                return Ok(product);
             }
             catch (Exception ex)
             {
@@ -76,7 +75,7 @@ namespace TOQUE.DE.CHEF.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("Product/deleteProduct/{id}")]
         public IActionResult DeleteProduct(int id)
         {
             try
@@ -87,9 +86,11 @@ namespace TOQUE.DE.CHEF.Controllers
                     return NotFound($"Produto com ID '{id}' não encontrado.");
                 }
 
-                _context.products.Remove(product);
+                product.DeletedAt = DateTime.UtcNow;
+
                 _context.SaveChanges();
-                return Ok("Produto excluído com sucesso.");
+
+                return Ok(product);
             }
             catch (Exception ex)
             {
@@ -97,7 +98,8 @@ namespace TOQUE.DE.CHEF.Controllers
             }
         }
 
-        [HttpPut]
+
+        [HttpPut("Product/editProduct/{id}")]
         public IActionResult EditProduct(int id, [FromBody] ProductDto dto)
         {
             try
@@ -127,6 +129,7 @@ namespace TOQUE.DE.CHEF.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao atualizar produto: {ex.Message}");
             }
         }
+
 
         [HttpGet]
         public IActionResult GetProductById(int id)

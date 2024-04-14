@@ -17,9 +17,9 @@ namespace TOQUE.DE.CHEF.Models
         [Column("UNIT_PRICE")]
         public double Unit_Price { get; set; }
 
-
-        [Column("CATEGORY_ID")]
-        public int Category_id { get; set; }
         public Category Category { get; set; }
+
+        [Column("DELETED_AT")]
+        public DateTime? DeletedAt { get; set; }
     }
 }
