@@ -7,6 +7,9 @@ import { UpdateProductModal } from "./_components/UpdateProductModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
+import { useEffect } from "react";
+import { isKeyPressed } from "../Utils/Util";
+import { useCreateProduct } from "../../api/Product/useCreateProduct";
 
 export const Route = createFileRoute("/product/")({
   component: Index,
@@ -84,4 +87,17 @@ function Index() {
       <DeleteProductModal />
     </div>
   );
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isKeyPressed(event, [{ key: 'p', modifier: 'Ctrl' }])) {
+        setCreateProductModal("true");
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [useCreateProduct]);
 }

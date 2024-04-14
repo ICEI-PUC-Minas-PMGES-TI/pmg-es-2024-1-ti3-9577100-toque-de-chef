@@ -16,6 +16,7 @@ import { Route as SuplyerIndexImport } from './routes/suplyer/index'
 import { Route as RegistrationIndexImport } from './routes/registration/index'
 import { Route as ProductIndexImport } from './routes/product/index'
 import { Route as CategoryIndexImport } from './routes/category/index'
+import { Route as UtilsUtilImport } from './routes/Utils/Util'
 
 // Create/Update Routes
 
@@ -44,12 +45,21 @@ const CategoryIndexRoute = CategoryIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const UtilsUtilRoute = UtilsUtilImport.update({
+  path: '/Utils/Util',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/Utils/Util': {
+      preLoaderRoute: typeof UtilsUtilImport
       parentRoute: typeof rootRoute
     }
     '/category/': {
@@ -75,6 +85,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  UtilsUtilRoute,
   CategoryIndexRoute,
   ProductIndexRoute,
   RegistrationIndexRoute,
