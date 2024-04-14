@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TOQUE.DE.CHEF.Models
 {
     [Table("PURCHASES")]
     public class Purchase
     {
+        public Purchase()
+        {
+            PurchaseDate = DateTime.UtcNow;
+        }
+
         [Column("ID")]
         public int Id { get; set; }
 
         [Column("PURCHASE_DATE")]
         public DateTime PurchaseDate { get; set; }
 
-        // Relacionamento com o fornecedor
-        [Column("SUPPLIER_ID")]
-        public int SupplierId { get; set; }
         public Suplyer Suplyer { get; set; }
 
-        // Lista de itens da compra
-
-
+        public ICollection<PurchaseItem> PurchaseItens { get; set; }
     }
 }

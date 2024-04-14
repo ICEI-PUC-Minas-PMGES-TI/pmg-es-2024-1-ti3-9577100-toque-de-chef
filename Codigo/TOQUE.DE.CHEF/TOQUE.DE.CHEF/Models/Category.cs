@@ -14,7 +14,6 @@ namespace TOQUE.DE.CHEF.Models
         [Column("DESCRIPTION")]
         public string Description { get; set; }
 
-
         public ICollection<Product> Products { get; set; }
     }
 }

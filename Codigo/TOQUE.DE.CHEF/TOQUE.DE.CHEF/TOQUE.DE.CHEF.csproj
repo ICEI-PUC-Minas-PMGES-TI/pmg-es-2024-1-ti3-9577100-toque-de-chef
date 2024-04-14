@@ -11,6 +11,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
     <Folder Include="Dto\" />
+    <Folder Include="Service\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,5 +38,6 @@
 
   <ItemGroup>
     <None Remove="Dto\" />
+    <None Remove="Service\" />
   </ItemGroup>
 </Project>

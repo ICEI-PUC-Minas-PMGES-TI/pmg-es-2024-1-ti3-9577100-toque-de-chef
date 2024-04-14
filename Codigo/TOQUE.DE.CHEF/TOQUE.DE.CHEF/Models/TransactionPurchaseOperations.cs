@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TOQUE.DE.CHEF.Models
@@ -13,18 +12,16 @@ namespace TOQUE.DE.CHEF.Models
 
         [Required]
         [Column("OperationType")]
-        public string OperationType { get; set; } 
+        public OperationType OperationType { get; set; } 
 
         [Required]
         [Column("OperationDate")]
-        public DateTime OperationDate { get; set; } 
+        public DateTime OperationDate { get; set; }
 
-  
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
+        [Column("StockItemIds")]
+        public int[] StockItemIds { get; set; }
 
-        public User User { get; set; }
+        public Purchase Purchase { get; set; }
 
-        // Outras propriedades relevantes à operação de compra podem ser adicionadas conforme necessário
     }
 }

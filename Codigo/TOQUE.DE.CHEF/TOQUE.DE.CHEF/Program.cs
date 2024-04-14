@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using TOQUE.DE.CHEF.Models;
+using TOQUE.DE.CHEF.Services; // Certifique-se de importar o namespace correto para o ProductService
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
         };
     });
+
+// Adicionando a configuração para registrar ProductService
+builder.Services.AddTransient<ProductService>();
 
 var app = builder.Build();
 
