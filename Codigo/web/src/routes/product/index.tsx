@@ -7,6 +7,9 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
+import { useEffect } from "react";
+import { isKeyPressed } from "../Utils/Util";
+import { useCreateProduct } from "../../api/Product/useCreateProduct";
 
 export const Route = createFileRoute("/product/")({
   component: Index,
