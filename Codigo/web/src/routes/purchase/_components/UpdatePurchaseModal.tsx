@@ -18,10 +18,10 @@ const schemaEdit = z.object({
   }),
 });
 
-export const UpdateProductModal = () => {
+export const UpdatePurchaseModal = () => {
   const queryClient = useQueryClient();
 
-  const [updateProductModal, setUpdateProductModal] =
+  const [updateProductModal, setUpdatePurchaseModal] =
     useSearchParam("updateProductModal");
   const {
     handleSubmit: handleSubmitUpdate,
@@ -52,7 +52,7 @@ export const UpdateProductModal = () => {
   const onSubmitUpdate: SubmitHandler<z.infer<typeof schemaEdit>> = async (
     data
   ) => {
-    setUpdateProductModal(undefined);
+    setUpdatePurchaseModal(undefined);
     await mutateAsyncUpdate({
       product: {
         id: selectedProductToUpdate?.id,
@@ -75,7 +75,7 @@ export const UpdateProductModal = () => {
   return (
     <Modal
       show={Boolean(updateProductModal)}
-      onHide={() => setUpdateProductModal(undefined)}
+      onHide={() => setUpdatePurchaseModal(undefined)}
     >
       <Modal.Header closeButton>
         <Modal.Title>Editar Produto</Modal.Title>
@@ -144,7 +144,7 @@ export const UpdateProductModal = () => {
           <div className="d-flex gap-2 mt-2">
             <Button
               variant="secondary"
-              onClick={() => setUpdateProductModal(undefined)}
+              onClick={() => setUpdatePurchaseModal(undefined)}
             >
               Fechar
             </Button>

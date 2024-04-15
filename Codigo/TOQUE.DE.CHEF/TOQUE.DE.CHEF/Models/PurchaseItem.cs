@@ -12,7 +12,7 @@ namespace TOQUE.DE.CHEF.Models
         [Column("QUANTITY")]
         public int Quantity { get; set; }
 
-        [Column("UNIT_PRICE")]
+        [Column("UNIT_PRICE", TypeName = "decimal(18, 2)")]
         public decimal UnitPrice { get; set; }
 
         [NotMapped] 

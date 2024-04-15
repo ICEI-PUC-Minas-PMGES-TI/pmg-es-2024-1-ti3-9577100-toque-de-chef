@@ -7,20 +7,16 @@ type UpdateSuplyerProps = {
 };
 
 export const updateSuplyer = async ({ suplyer }: UpdateSuplyerProps) => {
-  const formData = new FormData();
-  formData.append("newName", suplyer.name || "");
-  formData.append("newDescription", suplyer.description || "");
-  formData.append("newPhone", suplyer.phone || "");
-  formData.append("id", suplyer.id?.toString() || "");
-  formData.append("newEmail", suplyer.email || "");
-
-  const res = await api(`Suplyer/editSuplyer`, {
+  const res = await api(`Suplyer/EditSuplyer/${suplyer.id}`, {
     method: "PUT",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(suplyer),
   });
 
   if (!res.ok) {
-    throw new Error("Erro ao atualizar o usuário!");
+    throw new Error("Erro ao atualizar o fornecedor!");
   }
 
   return (await res.json()) as Suplyer;

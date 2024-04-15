@@ -29,10 +29,7 @@ function Index() {
       });
     },
   });
-  const { register, handleSubmit, formState } =
-    useForm<z.infer<typeof schema>>();
-
-  console.log("formState", formState);
+  const { register, handleSubmit } = useForm<z.infer<typeof schema>>();
 
   const handleLogin: SubmitHandler<z.infer<typeof schema>> = (data) => {
     mutateAsync({

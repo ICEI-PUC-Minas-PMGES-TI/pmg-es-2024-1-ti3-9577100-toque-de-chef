@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TOQUE.DE.CHEF.Models;
+using TOQUE.DE.CHEF.Dto;
+using TOQUE.DE.CHEF.Services;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
-    public class SuplyerController : Controller
+    public class suplyerController : Controller
     {
-        public List<Suplyer> listSuplyers { get; set; }
+        private readonly SuplyerService _suplyerService;
 
-        private readonly Context _context;
-
-        public SuplyerController(Context context)
+        public suplyerController(SuplyerService SuplyerService)
         {
-            _context = context;
+            _suplyerService = SuplyerService;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -21,91 +21,92 @@ namespace TOQUE.DE.CHEF.Controllers
 
         [HttpGet]
         [Authorize]
-        public JsonResult getSuplyers(string search = null, int page = 1, int take = 15)
+        public IActionResult GetAllSuplyers(string search = null, int page = 1, int take = 15)
         {
-            listSuplyers = _context.suppliers.ToList();
-            int totalRegistros = 0;
-            int skip = (page - 1) * take;
-
-
-            totalRegistros = listSuplyers.Count;
-
-            if (string.IsNullOrEmpty(search).Equals(false))
+            try
             {
-                listSuplyers = listSuplyers.Where(x => x.Name.Contains(search) || x.Description.Contains(search)).ToList();
+                var suplyers = _suplyerService.GetAllSuplyers(search, page, take);
+                return Ok(suplyers);
             }
-
-            return Json(
-                    new
-                    {
-                        obj = listSuplyers.Skip(skip).Take(take),
-                        count = totalRegistros
-                    }
-                );
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
-        public string createSupyer(string name, string email, string phone, string description)
+        public IActionResult CreateSuplyer([FromBody] SuplyerDto dto)
         {
             try
             {
-                Suplyer newSuplyer = new Suplyer();
-                newSuplyer.Name = name;
-                newSuplyer.Email = email;
-                newSuplyer.Phone = phone;
-                newSuplyer.Description = description;
-
-                _context.suppliers.Add(newSuplyer);
-                _context.SaveChanges();
-
-                return "OK";
+                var suplyer = _suplyerService.CreateSuplyer(dto);
+                return Ok(suplyer);
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return "ERROR";
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpDelete]
-        public string deleteSuplyer(int id)
+        [HttpDelete("suplyer/deleteSuplyer/{id}")]
+        public IActionResult DeleteSuplyer(int id)
         {
             try
             {
-                _context.Remove(_context.suppliers.Single(x => x.Id == id));
-                _context.SaveChanges();
-                return "OK";
+                _suplyerService.DeleteSuplyer(id);
+                return NoContent();
             }
-            catch
+            catch (InvalidOperationException ex)
             {
-                return "ERRO";
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("suplyer/editSuplyer/{id}")]
+        public IActionResult EditSuplyer(int id, [FromBody] SuplyerDto dto)
+        {
+            try
+            {
+                var suplyer = _suplyerService.EditSuplyer(id, dto);
+                return Ok(suplyer);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
         [HttpGet]
-        public JsonResult getSuplyerById(int id)
-        {
-            Suplyer suplyer = _context.suppliers.FirstOrDefault(x => x.Id == id);
-            return Json(suplyer);
-        }
-
-
-        [HttpPut]
-        public string editSuplyer(int id, string newName, string newEmail, string newPhone, string newDescription)
+        public IActionResult GetSuplyerById(int id)
         {
             try
             {
-                Suplyer SuplyerToEdit = _context.suppliers.FirstOrDefault(x => x.Id == id);
-                SuplyerToEdit.Name = newName;
-                SuplyerToEdit.Email = newEmail;
-                SuplyerToEdit.Phone = newPhone;
-                SuplyerToEdit.Description = newDescription;
-                _context.suppliers.Update(SuplyerToEdit);
-                _context.SaveChanges();
-                return "OK";
+                var suplyer = _suplyerService.GetSuplyerById(id);
+                return Ok(suplyer);
             }
-            catch
+            catch (InvalidOperationException ex)
             {
-                return "ERRO";
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
     }

@@ -16,8 +16,10 @@ const schema = z.object({
 
 export const CreateProductModal = () => {
   const queryClient = useQueryClient();
+
   const [createProductModal, setCreateProductModal] =
     useSearchParam("createProductModal");
+
   const { handleSubmit, register, formState } = useForm<z.infer<typeof schema>>(
     {
       resolver: zodResolver(schema),

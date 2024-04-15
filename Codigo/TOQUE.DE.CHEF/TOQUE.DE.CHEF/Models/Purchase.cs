@@ -5,11 +5,7 @@ namespace TOQUE.DE.CHEF.Models
     [Table("PURCHASES")]
     public class Purchase
     {
-        public Purchase()
-        {
-            PurchaseDate = DateTime.UtcNow;
-        }
-
+      
         [Column("ID")]
         public int Id { get; set; }
 
@@ -18,6 +14,6 @@ namespace TOQUE.DE.CHEF.Models
 
         public Suplyer Suplyer { get; set; }
 
-        public ICollection<PurchaseItem> PurchaseItens { get; set; }
+        public ICollection<PurchaseItem> PurchaseItems { get; set; }
     }
 }

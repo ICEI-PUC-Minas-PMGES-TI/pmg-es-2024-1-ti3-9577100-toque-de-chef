@@ -32,6 +32,7 @@ namespace TOQUE.DE.CHEF.Controllers
             }
         }
 
+
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductDto dto)
         {

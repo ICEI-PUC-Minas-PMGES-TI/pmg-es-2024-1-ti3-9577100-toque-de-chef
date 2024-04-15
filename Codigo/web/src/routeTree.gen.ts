@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as SuplyerIndexImport } from './routes/suplyer/index'
 import { Route as RegistrationIndexImport } from './routes/registration/index'
+import { Route as PurchaseIndexImport } from './routes/purchase/index'
 import { Route as ProductIndexImport } from './routes/product/index'
 import { Route as CategoryIndexImport } from './routes/category/index'
 
@@ -31,6 +32,11 @@ const SuplyerIndexRoute = SuplyerIndexImport.update({
 
 const RegistrationIndexRoute = RegistrationIndexImport.update({
   path: '/registration/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PurchaseIndexRoute = PurchaseIndexImport.update({
+  path: '/purchase/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +66,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIndexImport
       parentRoute: typeof rootRoute
     }
+    '/purchase/': {
+      preLoaderRoute: typeof PurchaseIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/registration/': {
       preLoaderRoute: typeof RegistrationIndexImport
       parentRoute: typeof rootRoute
@@ -77,6 +87,7 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   CategoryIndexRoute,
   ProductIndexRoute,
+  PurchaseIndexRoute,
   RegistrationIndexRoute,
   SuplyerIndexRoute,
 ])

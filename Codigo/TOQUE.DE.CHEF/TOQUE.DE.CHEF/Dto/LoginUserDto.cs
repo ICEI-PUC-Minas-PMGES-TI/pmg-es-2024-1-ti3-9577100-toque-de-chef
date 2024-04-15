@@ -1,5 +1,4 @@
-﻿using System;
-namespace TOQUE.DE.CHEF.Dto
+﻿namespace TOQUE.DE.CHEF.Dto
 {
 	public class LoginUserDto
 	{

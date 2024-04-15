@@ -7,9 +7,6 @@ import { UpdateCategoryModal } from "./_components/UpdateCategoryModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteCategoryModal } from "./_components/DeleteCategoryModal";
 import { CreateCategoryModal } from "./_components/CreateCategoryModal";
-import { useEffect } from "react";
-import { isKeyPressed } from "../Utils/Util";
-import { useCreateCategory } from "../../api/Category/useCreateCategory";
 
 export const Route = createFileRoute("/category/")({
   component: Index,
@@ -86,17 +83,4 @@ function Index() {
       <DeleteCategoryModal />
     </div>
   );
-  useEffect(() => {
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (isKeyPressed(event, [{ key: 'p', modifier: 'Ctrl' }])) {
-      setCreateCategoryModal("true");
-    }
-  };
-
-  window.addEventListener('keydown', handleKeyDown);
-
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-}, [useCreateCategory]);
 }

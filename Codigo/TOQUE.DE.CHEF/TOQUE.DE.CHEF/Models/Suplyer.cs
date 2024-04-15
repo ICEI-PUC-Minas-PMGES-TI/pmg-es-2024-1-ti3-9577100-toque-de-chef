@@ -2,7 +2,7 @@
 
 namespace TOQUE.DE.CHEF.Models
 {
-    [Table("SUPPLIERS")]
+    [Table("SUPLyERS")]
     public class Suplyer
     {
         //atributos
@@ -20,6 +20,9 @@ namespace TOQUE.DE.CHEF.Models
 
         [Column("DESCRIPTION")]
         public string Description { get; set; }
+
+        [Column("DELETED_AT")]
+        public DateTime? DeletedAt { get; set; }
 
         public ICollection<Purchase> Purchases { get; set; }
     }

@@ -6,6 +6,7 @@ import "./styles.scss";
 import {
   BorderAll,
   Box,
+  Coin,
   Diamond,
   GearWide,
   GraphUpArrow,
@@ -18,6 +19,11 @@ const routesGeneral = [
     name: "Dashboard",
     path: "/dashboard",
     icon: <BorderAll />,
+  },
+  {
+    name: "Compra",
+    path: "/purchase",
+    icon: <Coin />,
   },
   {
     name: "Produto",

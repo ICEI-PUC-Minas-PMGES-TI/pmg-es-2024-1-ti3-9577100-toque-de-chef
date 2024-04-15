@@ -1,14 +1,14 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { api } from "../api";
-import { ProductResponse } from "../../types/product";
+import { PurchaseResponse } from "../../types/purchase";
 
-export const readProducts = async (
+export const readPurchases = async (
   search: string | null,
   page: number = 1,
   take: number = 15
 ) => {
   const res = await api(
-    `Product/getAllProducts?search=${search || ""}&page=${page}&take=${take}`,
+    `Purchase/GetAllPurchases?search=${search || ""}&page=${page}&take=${take}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -20,19 +20,19 @@ export const readProducts = async (
     throw new Error("Erro ao carregar produtos");
   }
 
-  const productResponse = (await res.json()) as ProductResponse;
+  const purchaseResponse = (await res.json()) as PurchaseResponse;
 
-  return productResponse;
+  return purchaseResponse;
 };
 
-export const useReadProducts = (
+export const useReadPurchases = (
   search: string | null,
   page: number = 1,
   take: number = 15,
   props?: UseQueryOptions<
-    ProductResponse,
+    PurchaseResponse,
     Error,
-    ProductResponse,
+    PurchaseResponse,
     [
       string | null,
       {
@@ -45,7 +45,7 @@ export const useReadProducts = (
 ) => {
   return useQuery({
     ...props,
-    queryKey: ["readProducts", { search, page, take }],
-    queryFn: () => readProducts(search, page, take),
+    queryKey: ["readPurchases", { search, page, take }],
+    queryFn: () => readPurchases(search, page, take),
   });
 };

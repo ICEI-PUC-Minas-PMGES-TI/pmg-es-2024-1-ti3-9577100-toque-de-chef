@@ -8,9 +8,16 @@ namespace TOQUE.DE.CHEF.Models
         
         }
 
-        public DbSet<Category> categories { get; set; }
-        public DbSet<Suplyer>  suppliers { get; set; }
-        public DbSet<Product>  products { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<Category> categories { get; set; }
+        public DbSet<Product> products { get; set; }
+        public DbSet<Suplyer> suplyers { get; set; }
+
+
+
+        public DbSet<Purchase> purchases { get; set; }
+        public DbSet<PurchaseItem> purchaseItems { get; set; }
+
+        public DbSet<PurchaseItem> purchasesItems { get; set; }
     }
 }

@@ -3,7 +3,7 @@ import { api } from "../api";
 import { Suplyer, SuplyerResponse } from "../../types/suplyer";
 
 export const readSuplyers = async () => {
-  const res = await api(`Suplyer/getSuplyers`, {
+  const res = await api(`Suplyer/GetAllSuplyers`, {
     headers: {
       "Content-Type": "application/json",
     },

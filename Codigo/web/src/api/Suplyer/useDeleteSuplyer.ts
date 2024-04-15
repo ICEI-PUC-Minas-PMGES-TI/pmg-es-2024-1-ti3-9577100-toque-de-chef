@@ -2,12 +2,8 @@ import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { api } from "../api";
 
 export const deleteSuplyer = async (id: number) => {
-  const formData = new FormData();
-  formData.append("id", id.toString());
-
-  const res = await api(`Suplyer/deleteSuplyer`, {
+  const res = await api(`Suplyer/DeleteSuplyer/${id}`, {
     method: "DELETE",
-    body: formData,
   });
 
   if (!res.ok) {
@@ -18,9 +14,7 @@ export const deleteSuplyer = async (id: number) => {
     return { id };
   }
 
-  console.log("res", res);
-
-  // return (await res.json()) as Suplyer;
+  return await res.json();
 };
 
 export const useDeleteSuplyer = (

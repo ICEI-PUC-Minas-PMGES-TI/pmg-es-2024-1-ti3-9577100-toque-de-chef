@@ -7,8 +7,6 @@ import { UpdateSuplyerModal } from "./_components/UpdateSuplyerModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteSuplyerModal } from "./_components/DeleteSuplyerModal";
 import { CreateSuplyerModal } from "./_components/CreateSuplyerModal";
-import { useEffect } from "react";
-import { isKeyPressed } from "../Utils/Util";
 
 export const Route = createFileRoute("/suplyer/")({
   component: Index,
@@ -86,17 +84,4 @@ function Index() {
       <DeleteSuplyerModal />
     </div>
   );
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isKeyPressed(event, [{ key: 'p', modifier: 'Ctrl' }])) {
-        setCreateSuplyerModal("true");
-      }
-    };
-  
-    window.addEventListener('keydown', handleKeyDown);
-  
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [useReadSuplyers]);
 }

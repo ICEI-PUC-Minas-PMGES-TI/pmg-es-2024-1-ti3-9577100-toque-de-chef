@@ -2,7 +2,7 @@ import { useSearchParam } from "../../../hooks/useSearchParams";
 import { Button, Modal } from "react-bootstrap";
 import { useQueryClient } from "@tanstack/react-query";
 import { useReadProducts } from "../../../api/Product/useReadProducts";
-import { useDeleteProduct } from "../../../api/Product/useDeleteProduct";
+import { useDeleteProduct } from "../../../api/Product/useDeleteProducts";
 
 export const DeleteProductModal = () => {
   const queryClient = useQueryClient();

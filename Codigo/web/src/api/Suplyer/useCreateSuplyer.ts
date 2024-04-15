@@ -3,19 +3,17 @@ import { api } from "../api";
 import { Suplyer } from "../../types/suplyer";
 
 export const createSuplyer = async (suplyer: Partial<Suplyer>) => {
-  const formData = new FormData();
-  formData.append("name", suplyer.name || "");
-  formData.append("description", suplyer.description || "");
-  formData.append("phone", suplyer.phone || "");
-  formData.append("email", suplyer.email || "");
-
-  await api("Suplyer/createSupyer", {
+  const res = await api("Suplyer/CreateSuplyer", {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(suplyer),
   });
-  // if (!res.ok) {
-  //   throw new Error("Erro ao fazer o cadastro!");
-  // }
+
+  if (!res.ok) {
+    throw new Error("Erro ao fazer o cadastro!");
+  }
 
   return suplyer;
 };
