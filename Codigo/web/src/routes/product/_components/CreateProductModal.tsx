@@ -5,6 +5,7 @@ import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProduct } from "../../../api/Product/useCreateProduct";
 import { useQueryClient } from "@tanstack/react-query";
+import { useReadCategories } from "../../../api/Category/useReadCategories";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
@@ -40,6 +41,8 @@ export const CreateProductModal = () => {
     setCreateProductModal(undefined);
     await mutateAsync(data);
   };
+
+  const { data: categoryData } = useReadCategories();
 
   return (
     <Modal
@@ -101,23 +104,18 @@ export const CreateProductModal = () => {
             )}
           </FloatingLabel>
 
-          <FloatingLabel
-            controlId="categoryId"
-            label="Categoria"
-            className="mb-3"
+          <Form.Select
+            aria-label="Default select example"
+            {...register("categoryId", { valueAsNumber: true })}
+            isInvalid={Boolean(formState.errors.categoryId)}
           >
-            <Form.Control
-              type="number"
-              placeholder="Categoria"
-              {...register("categoryId", { valueAsNumber: true })}
-              isInvalid={Boolean(formState.errors.categoryId)}
-            />
-            {formState.errors.categoryId && (
-              <Form.Control.Feedback type="invalid">
-                {formState.errors.categoryId.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
+            <option value="">Selecione uma categoria</option>
+            {categoryData?.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.name}
+              </option>
+            ))}
+          </Form.Select>
 
           <div className="d-flex gap-2 mt-2">
             <Button

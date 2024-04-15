@@ -21,37 +21,113 @@ namespace TOQUE.DE.CHEF.Controllers
         [HttpGet]
         public IActionResult GetAllProducts(string search = null, int page = 1, int take = 15)
         {
-            return _productService.GetAllProducts(search, page, take);
+            try
+            {
+                var products = _productService.GetAllProducts(search, page, take);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductDto dto)
         {
-            return _productService.CreateProduct(dto);
+            try
+            {
+                var product = _productService.CreateProduct(dto);
+                return Ok(product);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpDelete("Product/deleteProduct/{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            return _productService.DeleteProduct(id);
+            try
+            {
+                _productService.DeleteProduct(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPut("Product/editProduct/{id}")]
         public IActionResult EditProduct(int id, [FromBody] ProductDto dto)
         {
-            return _productService.EditProduct(id, dto);
+            try
+            {
+                var product = _productService.EditProduct(id, dto);
+                return Ok(product);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
         public IActionResult GetProductById(int id)
         {
-            return _productService.GetProductById(id);
+            try
+            {
+                var product = _productService.GetProductById(id);
+                return Ok(product);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult ImportExcelProducts([FromForm] IFormFile file)
         {
-            return _productService.ImportExcelProducts(file);
+            try
+            {
+                _productService.ImportExcelProducts(file);
+                return Ok("Produtos importados com sucesso.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

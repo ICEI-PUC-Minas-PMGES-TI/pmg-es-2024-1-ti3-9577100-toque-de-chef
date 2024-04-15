@@ -27,6 +27,7 @@ export const CreateCategoryModal = () => {
         queryKey: ["readCategories"],
       });
     },
+    
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: ["readCategories"],

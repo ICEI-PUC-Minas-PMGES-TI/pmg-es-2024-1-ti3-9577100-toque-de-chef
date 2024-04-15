@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using TOQUE.DE.CHEF.Models;
-using TOQUE.DE.CHEF.Services; // Certifique-se de importar o namespace correto para o ProductService
+using TOQUE.DE.CHEF.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,14 +49,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Adicionando a configuração para registrar ProductService
+// Adicionando a configuração para add services
 builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<CategoryService>();
 
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error"); // Adicione o middleware de tratamento de erro aqui
+    app.UseExceptionHandler("/Home/Error"); 
     app.UseHsts();
 }
 

@@ -1,20 +1,17 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TOQUE.DE.CHEF.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using TOQUE.DE.CHEF.Dto;
+using TOQUE.DE.CHEF.Services;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
-    //[Authorize]
     public class CategoryController : Controller
     {
-        public List<Category> listCategories { get; set; }
+        private readonly CategoryService _categoryService;
 
-        private readonly Context _context;
-
-        public CategoryController(Context context)
+        public CategoryController(CategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         public IActionResult Index()
@@ -23,84 +20,97 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
-        public JsonResult getAllCategories(string search = null, int page = 1, int take = 15)
-        {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine(userId);
-            listCategories = _context.categories.ToList();
-            int totalRegistros = 0;
-            int skip = (page - 1) * take;
-
-
-            totalRegistros = listCategories.Count;
-
-            if (string.IsNullOrEmpty(search).Equals(false))
-            {
-                listCategories = listCategories.Where(x => x.Name.Contains(search) || x.Description.Contains(search)).ToList();
-            }
-
-            return Json(
-                    new
-                    {
-                        obj = listCategories.Skip(skip).Take(take),
-                        count = totalRegistros
-                    }
-                );
-        }
-
-        [HttpGet]
-        public string addCategory(string name, string description)
+        public IActionResult GetAllCategories(string search = null, int page = 1, int take = 15)
         {
             try
             {
-                Category category = new Category();
-                category.Name = name;
-                category.Description = description;
-
-                _context.categories.Add(category);
-                _context.SaveChanges();
-                return "OK";
+                var categories = _categoryService.GetAllCategories(search, page, take);
+                return Ok(categories);
             }
-            catch {
-                return "ERROR";
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CreateCategory([FromBody] CategoryDto dto)
+        {
+            try
+            {
+                var category = _categoryService.CreateCategory(dto);
+                return Ok(category);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpDelete]
-        public string deleteCategory(int id) {
+        public IActionResult DeleteCategory(int id)
+        {
             try
             {
-                _context.Remove(_context.categories.Single(x => x.Id == id));
-                _context.SaveChanges();
-                return "OK";
+                _categoryService.DeleteCategory(id);
+                return NoContent();
             }
-            catch 
+            catch (InvalidOperationException ex)
             {
-                return "ERRO";
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpPut]
-        public string editCategory(int id,string newName,string newDescription) {
+        public IActionResult EditCategory(int id, [FromBody] CategoryDto dto)
+        {
             try
             {
-                Category categoryToEdit = _context.categories.FirstOrDefault(x => x.Id == id);
-                categoryToEdit.Name = newName;
-                categoryToEdit.Description = newDescription;
-                _context.categories.Update(categoryToEdit);
-                _context.SaveChanges();
-                return "OK";
+                var category = _categoryService.EditCategory(id, dto);
+                return Ok(category);
             }
-            catch 
+            catch (ArgumentException ex)
             {
-                return "ERRO";
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpGet]
-        public JsonResult getCategoryById(int id) {            
-            Category category = _context.categories.FirstOrDefault(x => x.Id == id);
-            return Json(category);
+        public IActionResult GetCategoryById(int id)
+        {
+            try
+            {
+                var category = _categoryService.GetCategoryById(id);
+                return Ok(category);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

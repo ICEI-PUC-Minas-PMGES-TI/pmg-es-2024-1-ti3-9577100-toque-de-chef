@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ClosedXML.Excel;
+﻿using Microsoft.EntityFrameworkCore;
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Models;
+using ClosedXML.Excel;
 
 namespace TOQUE.DE.CHEF.Services
 {
@@ -15,205 +14,144 @@ namespace TOQUE.DE.CHEF.Services
             _context = context;
         }
 
-        public IActionResult CreateProduct(ProductDto dto)
+        public Product CreateProduct(ProductDto dto)
         {
-            try
+            var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
+            if (category == null)
             {
-                var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
-                if (category == null)
-                {
-                    return new BadRequestObjectResult($"Categoria com ID '{dto.CategoryId}' não encontrada.");
-                }
-
-                var product = new Product
-                {
-                    Name = dto.Name,
-                    Description = dto.Description,
-                    Unit_Price = dto.UnitPrice,
-                    Category = category
-                };
-
-                _context.products.Add(product);
-                _context.SaveChanges();
-
-                return new OkObjectResult(product);
+                throw new ArgumentException($"Categoria com ID '{dto.CategoryId}' não encontrada.");
             }
-            catch (Exception ex)
+
+            var product = new Product
             {
-                return new ObjectResult($"Erro ao adicionar produto: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
-            }
+                Name = dto.Name,
+                Description = dto.Description,
+                Unit_Price = dto.UnitPrice,
+                Category = category
+            };
+
+            _context.products.Add(product);
+            _context.SaveChanges();
+
+            return product;
         }
 
-        public IActionResult DeleteProduct(int id)
+        public void DeleteProduct(int id)
         {
-            try
+            var product = _context.products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
-                var product = _context.products.FirstOrDefault(x => x.Id == id);
-                if (product == null)
-                {
-                    return new NotFoundObjectResult($"Produto com ID '{id}' não encontrado.");
-                }
-
-                product.DeletedAt = DateTime.UtcNow;
-
-                _context.SaveChanges();
-
-                return new OkObjectResult(product);
+                throw new InvalidOperationException($"Produto com ID '{id}' não encontrado.");
             }
-            catch (Exception ex)
-            {
-                return new ObjectResult($"Erro ao excluir produto: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
-            }
+
+            product.DeletedAt = DateTime.UtcNow;
+            _context.SaveChanges();
         }
 
-        public IActionResult EditProduct(int id, ProductDto dto)
+        public Product EditProduct(int id, ProductDto dto)
         {
-            try
+            var product = _context.products.Include(x => x.Category).FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
-                var product = _context.products.Include(x => x.Category).FirstOrDefault(x => x.Id == id);
-                if (product == null)
-                {
-                    return new NotFoundObjectResult($"Produto com ID '{id}' não encontrado.");
-                }
-
-                var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
-                if (category == null)
-                {
-                    return new BadRequestObjectResult($"Categoria com ID '{dto.CategoryId}' não encontrada.");
-                }
-
-                product.Name = dto.Name;
-                product.Description = dto.Description;
-                product.Unit_Price = dto.UnitPrice;
-                product.Category = category;
-
-                _context.SaveChanges();
-
-                return new OkObjectResult(product);
+                throw new InvalidOperationException($"Produto com ID '{id}' não encontrado.");
             }
-            catch (Exception ex)
+
+            var category = _context.categories.FirstOrDefault(x => x.Id == dto.CategoryId);
+            if (category == null)
             {
-                return new ObjectResult($"Erro ao editar produto: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
+                throw new ArgumentException($"Categoria com ID '{dto.CategoryId}' não encontrada.");
             }
+
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.Unit_Price = dto.UnitPrice;
+            product.Category = category;
+
+            _context.SaveChanges();
+
+            return product;
         }
 
-        public IActionResult GetAllProducts(string search = null, int page = 1, int take = 15)
+        public ApiResponse<Product> GetAllProducts(string search = null, int page = 1, int take = 15)
         {
-            try
+            var query = _context.products
+                .Include(p => p.Category)
+                .Where(p => p.DeletedAt == null)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
             {
-                var query = _context.products
-                    .Include(p => p.Category)
-                    .Where(p => p.DeletedAt == null)
-                    .AsQueryable();
-
-                if (!string.IsNullOrEmpty(search))
-                {
-                    query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
-                }
-
-                var products = query.Skip((page - 1) * take).Take(take).ToList();
-                var totalRecords = query.Count();
-
-                return new JsonResult(new { obj = products, count = totalRecords });
+                query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
             }
-            catch (Exception ex)
+
+            var totalRecords = query.Count();
+            var products = query.Skip((page - 1) * take).Take(take).ToList();
+
+            return new ApiResponse<Product>
             {
-                return new ObjectResult($"Erro ao recuperar produtos: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
-            }
+                Count = totalRecords,
+                obj = products
+            };
         }
 
-        public IActionResult GetProductById(int id)
+        public Product GetProductById(int id)
         {
-            try
-            {
-                var product = _context.products
-                    .Include(p => p.Category)
-                    .FirstOrDefault(x => x.Id == id && x.DeletedAt == null);
+            var product = _context.products
+                .Include(p => p.Category)
+                .FirstOrDefault(p => p.Id == id && p.DeletedAt == null);
 
-                if (product == null)
-                {
-                    return new NotFoundObjectResult($"Produto com ID '{id}' não encontrado.");
-                }
-
-                return new JsonResult(product);
-            }
-            catch (Exception ex)
+            if (product == null)
             {
-                return new ObjectResult($"Erro ao recuperar produto: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
+                throw new InvalidOperationException($"Produto com ID '{id}' não encontrado.");
             }
+
+            return product;
         }
 
-        public IActionResult ImportExcelProducts(IFormFile file)
+        public void ImportExcelProducts(IFormFile file)
         {
-            try
+            if (file == null || file.Length <= 0)
             {
-                if (file == null || file.Length <= 0)
-                {
-                    return new BadRequestObjectResult("Arquivo não selecionado ou vazio.");
-                }
+                throw new ArgumentException("Arquivo não selecionado ou vazio.");
+            }
 
-                using (var stream = new MemoryStream())
-                {
-                    file.CopyTo(stream);
-                    stream.Position = 0;
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                stream.Position = 0;
 
-                    using (var workbook = new XLWorkbook(stream))
+                using (var workbook = new XLWorkbook(stream))
+                {
+                    var worksheet = workbook.Worksheet(1);
+
+                    var rows = worksheet.RowsUsed().Skip(1);
+
+                    foreach (var row in rows)
                     {
-                        var worksheet = workbook.Worksheet(1);
+                        string name = row.Cell(1).Value.ToString();
+                        string categoryName = row.Cell(2).Value.ToString();
+                        double price = Convert.ToDouble(row.Cell(3).Value.ToString());
+                        string description = row.Cell(4).Value.ToString();
 
-                        var rows = worksheet.RowsUsed().Skip(1);
-
-                        foreach (var row in rows)
+                        var category = _context.categories.FirstOrDefault(x => x.Name == categoryName);
+                        if (category == null)
                         {
-                            string name = row.Cell(1).Value.ToString();
-                            string categoryName = row.Cell(2).Value.ToString();
-                            double price = Convert.ToDouble(row.Cell(3).Value.ToString());
-                            string description = row.Cell(4).Value.ToString();
-
-                            var category = _context.categories.FirstOrDefault(x => x.Name == categoryName);
-                            if (category == null)
-                            {
-                                return new BadRequestObjectResult($"Categoria '{categoryName}' não encontrada.");
-                            }
-
-                            var product = new Product
-                            {
-                                Name = name,
-                                Description = description,
-                                Unit_Price = price,
-                                Category = category
-                            };
-
-                            _context.products.Add(product);
+                            throw new ArgumentException($"Categoria '{categoryName}' não encontrada.");
                         }
 
-                        _context.SaveChanges();
-                    }
-                }
+                        var product = new Product
+                        {
+                            Name = name,
+                            Description = description,
+                            Unit_Price = price,
+                            Category = category
+                        };
 
-                return new OkObjectResult("Produtos importados com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult($"Erro ao importar produtos: {ex.Message}")
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
+                        _context.products.Add(product);
+                    }
+
+                    _context.SaveChanges();
+                }
             }
         }
     }

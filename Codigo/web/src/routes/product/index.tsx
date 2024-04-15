@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
-import { useReadSuplyers } from "../../api/Suplyer/useReadSuplyers";
 import { PencilFill, Search, TrashFill } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
 import { UpdateProductModal } from "./_components/UpdateProductModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
+import { useReadProducts } from "../../api/Product/useReadProducts";
 
 export const Route = createFileRoute("/product/")({
   component: Index,
@@ -17,7 +17,9 @@ function Index() {
   const [, setUpdateProductModal] = useSearchParam("updateProductModal");
   const [, setDeleteProductModal] = useSearchParam("deleteProductModal");
 
-  const { data: suplyerData } = useReadSuplyers();
+  const { data: productData } = useReadProducts(null);
+
+  console.log("productData", productData);
 
   return (
     <div className="m-4">
@@ -52,23 +54,24 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {suplyerData?.map((suplyer, index) => (
+            {productData?.obj?.map((product, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
-                <td>{suplyer.name}</td>
-                <td>{suplyer.email}</td>
-                <td>{suplyer.phone}</td>
-                <td>{suplyer.description}</td>
+                <td>{product.name}</td>
+                <td>{product.unitPrice}</td>
+                <td>{product.description}</td>
+
+                <td>{product.category.name}</td>
                 <td className="d-flex gap-2 ">
                   <Button
-                    onClick={() => setUpdateProductModal(suplyer.id.toString())}
+                    onClick={() => setUpdateProductModal(product.id.toString())}
                     className="text-white"
                   >
                     <PencilFill />
                   </Button>
                   <Button
                     className="text-white"
-                    onClick={() => setDeleteProductModal(suplyer.id.toString())}
+                    onClick={() => setDeleteProductModal(product.id.toString())}
                   >
                     <TrashFill />
                   </Button>

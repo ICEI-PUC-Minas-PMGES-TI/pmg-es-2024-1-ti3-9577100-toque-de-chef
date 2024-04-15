@@ -7,14 +7,12 @@ type UpdateCategoryProps = {
 };
 
 export const updateCategory = async ({ category }: UpdateCategoryProps) => {
-  const formData = new FormData();
-  formData.append("newName", category.name || "");
-  formData.append("newDescription", category.description || "");
-  formData.append("id", category.id?.toString() || "");
-
-  const res = await api(`Category/editCategory`, {
+  const res = await api(`Category/editCategory/${category.id}`, {
     method: "PUT",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(category),
   });
 
   if (!res.ok) {
@@ -25,9 +23,9 @@ export const updateCategory = async ({ category }: UpdateCategoryProps) => {
 };
 
 export const useUpdateCategory = (
-  props?: UseMutationOptions<unknown, Error, UpdateCategoryProps, unknown>
+  props?: UseMutationOptions<Category, Error, UpdateCategoryProps, unknown>
 ) => {
-  return useMutation({
+  return useMutation<Category, Error, UpdateCategoryProps, unknown>({
     ...props,
     mutationKey: ["updateCategory"],
     mutationFn: updateCategory,

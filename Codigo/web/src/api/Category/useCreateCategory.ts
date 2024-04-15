@@ -22,18 +22,20 @@ import { Category } from "../../types/category";
 
 export const createCategory = async (category: Partial<Category>) => {
   try {
-    const queryParams = new URLSearchParams({
-      name: category.name || "",
-      description: category.description || "",
+    const res = await api(`Category/CreateCategory`, {
+      method: "POST",
+      body: JSON.stringify(category), // Enviar dados da categoria no corpo da solicitação
+      headers: {
+        "Content-Type": "application/json", // Definir cabeçalho Content-Type para indicar que o corpo da solicitação é JSON
+      },
     });
 
-    const res = await api(`Category/addCategory?${queryParams}`, {
-      method: "GET",
-    });
+    if (!res.ok) {
+      throw new Error("Erro ao criar categoria");
+    }
 
-    // const data = await res.json();
-    // console.log("res", data);
-    // return data;
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.error("Erro ao fazer a solicitação:", error);
     throw error;

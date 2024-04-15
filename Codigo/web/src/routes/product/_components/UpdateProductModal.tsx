@@ -7,6 +7,7 @@ import { useUpdateProduct } from "../../../api/Product/useUpdateProduct";
 import { useQueryClient } from "@tanstack/react-query";
 import { useReadProducts } from "../../../api/Product/useReadProducts";
 import { useEffect } from "react";
+import { useReadCategories } from "../../../api/Category/useReadCategories";
 
 const schemaEdit = z.object({
   name: z.string({ required_error: "Obrigatório" }),
@@ -63,6 +64,8 @@ export const UpdateProductModal = () => {
     });
   };
 
+  const { data: categoryData } = useReadCategories();
+
   useEffect(() => {
     if (productData) {
       reset(selectedProductToUpdate);
@@ -112,23 +115,6 @@ export const UpdateProductModal = () => {
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
-          <FloatingLabel
-            controlId="categoryId"
-            label="Categoria"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Categoria"
-              {...update("category.id", { valueAsNumber: true })}
-              isInvalid={Boolean(formStateUpdate.errors.category?.id)}
-            />
-            {formStateUpdate.errors.category?.id && (
-              <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.category?.id?.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
 
           <FloatingLabel controlId="floatingDescription" label="Descrição">
             <Form.Control
@@ -143,6 +129,19 @@ export const UpdateProductModal = () => {
               </Form.Control.Feedback>
             )}
           </FloatingLabel>
+
+          <Form.Select
+            aria-label="Default select example"
+            {...update("category.id", { valueAsNumber: true })}
+            isInvalid={Boolean(formStateUpdate.errors.category?.id)}
+          >
+            <option value="">Selecione uma categoria</option>
+            {categoryData?.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.name}
+              </option>
+            ))}
+          </Form.Select>
 
           <div className="d-flex gap-2 mt-2">
             <Button
