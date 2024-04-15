@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
-import { PencilFill, Search, TrashFill } from "react-bootstrap-icons";
+import { Button, Card, Form, InputGroup, Stack, Table } from "react-bootstrap";
+import {
+  FileEarmarkArrowDown,
+  FileEarmarkArrowUp,
+  PencilFill,
+  Search,
+  TrashFill,
+} from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
 import { UpdateProductModal } from "./_components/UpdateProductModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
@@ -54,47 +60,41 @@ function Index() {
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           onClick={() => setCreateProductModal("true")}
         >
-          <PlusCircle /> <strong>Adicionar novo produto</strong>
+          <PlusCircle /> <strong>Cadastrar Novo Produto</strong>
+        </Button>
+        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+          <FileEarmarkArrowDown /> <strong>Exportar Planilha</strong>
+        </Button>
+        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+          <FileEarmarkArrowUp /> <strong>Importar Planilha</strong>
         </Button>
       </Stack>
-      <div className="p-1">
-        <Table responsive>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody className="table-group-divider">
-            {productData?.obj?.map((product, index) => (
-              <tr key={index}>
-                <th scope="row">{index + 1}</th>
-                <td>{product.name}</td>
-                <td>{product.unitPrice}</td>
-                <td>{product.description}</td>
-
-                <td>{product.category.name}</td>
-                <td className="d-flex gap-2 ">
-                  <Button
-                    onClick={() => setUpdateProductModal(product.id.toString())}
-                    className="text-white"
-                  >
-                    <PencilFill />
-                  </Button>
-                  <Button
-                    className="text-white"
-                    onClick={() => setDeleteProductModal(product.id.toString())}
-                  >
-                    <TrashFill />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+      <div
+        className="p-1"
+        style={{ display: "grid", gap: "16px", gridTemplateColumns: "1fr 1fr" }}
+      >
+        {productData?.obj?.map((product, index) => (
+          <Card>
+            <Card.Body key={index}>
+              <Card.Title>{product.name}</Card.Title>
+              <Card.Text>{product.category.name}</Card.Text>
+              <div className="d-flex gap-2 ">
+                <Button
+                  onClick={() => setUpdateProductModal(product.id.toString())}
+                  className="text-white"
+                >
+                  <PencilFill />
+                </Button>
+                <Button
+                  className="text-white"
+                  onClick={() => setDeleteProductModal(product.id.toString())}
+                >
+                  <TrashFill />
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        ))}
       </div>
 
       <CreateProductModal />

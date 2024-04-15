@@ -1,4 +1,4 @@
-import { Container, Image, Dropdown } from "react-bootstrap";
+import { Container, Image, Dropdown, DropdownDivider } from "react-bootstrap";
 import Cookies from "universal-cookie";
 import { useNavigate } from "@tanstack/react-router";
 import { useCurrentUser } from "../../api/User/useCurrentUser";
@@ -25,6 +25,12 @@ export const RigthSidebar = () => {
           style={{ width: "42px", height: "42px", marginTop: "4px" }}
         />
         <div>Usuário: {data?.name}</div>
+
+        <div>
+
+          
+        </div>
+
         <Dropdown>
           <Dropdown.Toggle></Dropdown.Toggle>
 
