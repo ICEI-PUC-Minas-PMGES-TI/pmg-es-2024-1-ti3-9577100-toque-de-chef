@@ -1,3 +1,4 @@
+import { Product } from "./product";
 import { Suplyer } from "./suplyer";
 
 export type PurchaseDto = {
@@ -17,13 +18,15 @@ export type PurchaseItem = {
   description: string;
   unitPrice: number;
   categoryId: number;
+  quantity: number;
+  product: Product;
 };
 
 export type Purchase = {
   id: number;
   purchaseDate: Date;
   suplyer: Suplyer;
-  purchaseItems: Purchase[];
+  purchaseItems: PurchaseItem[];
 };
 
 export type PurchaseResponse = {
