@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Card, Form, InputGroup, Stack, Table } from "react-bootstrap";
+import { Button, Card, Form, InputGroup, Stack } from "react-bootstrap";
 import {
   FileEarmarkArrowDown,
   FileEarmarkArrowUp,
@@ -14,7 +14,6 @@ import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
 import { useEffect } from "react";
-import { useCreateProduct } from "../../api/Product/useCreateProduct";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 
 export const Route = createFileRoute("/product/")({
@@ -40,7 +39,7 @@ function Index() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [useCreateProduct]);
+  }, [setCreateProductModal]);
 
   return (
     <div className="m-4">
@@ -62,10 +61,16 @@ function Index() {
         >
           <PlusCircle /> <strong>Cadastrar Novo Produto</strong>
         </Button>
-        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+        <Button
+          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+          disabled
+        >
           <FileEarmarkArrowDown /> <strong>Exportar Planilha</strong>
         </Button>
-        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+        <Button
+          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+          disabled
+        >
           <FileEarmarkArrowUp /> <strong>Importar Planilha</strong>
         </Button>
       </Stack>

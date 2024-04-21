@@ -16,6 +16,8 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { CreatePurchaseModal } from "./_components/CreatePurchaseModal";
 import { useReadPurchases } from "../../api/Purchase/useReadPurchases";
 import { Purchase } from "../../types/purchase";
+import { useEffect } from "react";
+import { isKeyPressed } from "../../helpers/Utils/Util";
 
 export const Route = createFileRoute("/purchase/")({
   component: Index,
@@ -37,6 +39,20 @@ function Index() {
     return new Date(date).toLocaleString("pt-BR", options);
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isKeyPressed(event, [{ key: "j", modifier: "Ctrl" }])) {
+        setCreatePurchaseModal("true");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setCreatePurchaseModal]);
+
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
@@ -56,10 +72,16 @@ function Index() {
         >
           <PlusCircle /> <strong>Cadastrar Nova Compra</strong>
         </Button>
-        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+        <Button
+          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+          disabled
+        >
           <FileEarmarkArrowDown /> <strong>Exportar Planilha</strong>
         </Button>
-        <Button className="p-2 d-flex gap-2 align-items-center text-nowrap text-white">
+        <Button
+          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+          disabled
+        >
           <FileEarmarkArrowUp /> <strong>Importar Planilha</strong>
         </Button>
       </Stack>

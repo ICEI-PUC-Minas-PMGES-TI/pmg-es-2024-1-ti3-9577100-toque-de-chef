@@ -2,10 +2,9 @@
 
 namespace TOQUE.DE.CHEF.Models
 {
-    [Table("SUPLyERS")]
+    [Table("SUPLYERS")]
     public class Suplyer
     {
-        //atributos
         [Column("ID")]
         public int Id { get; set; }
 

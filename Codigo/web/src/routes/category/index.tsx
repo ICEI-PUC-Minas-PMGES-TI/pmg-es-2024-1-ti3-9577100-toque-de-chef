@@ -8,7 +8,6 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteCategoryModal } from "./_components/DeleteCategoryModal";
 import { CreateCategoryModal } from "./_components/CreateCategoryModal";
 import { useEffect } from "react";
-import { useCreateCategory } from "../../api/Category/useCreateCategory";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 
 export const Route = createFileRoute("/category/")({
@@ -33,7 +32,7 @@ function Index() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [useCreateCategory]);
+  }, [setCreateCategoryModal]);
 
   return (
     <div className="m-4">

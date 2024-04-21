@@ -33,7 +33,7 @@ function Index() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [useReadSuplyers]);
+  }, [setCreateSuplyerModal]);
 
   return (
     <div className="m-4">

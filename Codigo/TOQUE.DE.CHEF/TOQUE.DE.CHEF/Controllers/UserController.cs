@@ -2,6 +2,7 @@
 using TOQUE.DE.CHEF.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using TOQUE.DE.CHEF.Dto;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
@@ -67,21 +68,7 @@ namespace TOQUE.DE.CHEF.Controllers
             }
         }
 
-        [HttpDelete]
-        public string deleteUser(int id)
-        {
-            try
-            {
-                _context.Remove(_context.users.Single(x => x.Id == id));
-                _context.SaveChanges();
-                return "OK";
-            }
-            catch
-            {
-                return "ERRO";
-            }
-        }
-
+       
         [HttpGet]
         public JsonResult getUserById(int id)
         {
@@ -91,16 +78,16 @@ namespace TOQUE.DE.CHEF.Controllers
 
 
         [HttpPut]
-        public string editUser(int id, string newName, string newEmail, string newPassword, bool newActive, string newType)
+        public string editUser([FromBody] UserEditDto dto)
         {
             try
             {
-                User UserToEdit = _context.users.FirstOrDefault(x => x.Id == id);
-                UserToEdit.Name = newName;
-                UserToEdit.Email = newEmail;
-                UserToEdit.Password = newPassword;
-                UserToEdit.Active = newActive;
-                UserToEdit.Type = newType;
+                var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
+                User UserToEdit = _context.users.FirstOrDefault(x => x.Id == userId);
+
+                UserToEdit.Name = dto.Name;
+                UserToEdit.Password = dto.Password;
                 _context.users.Update(UserToEdit);
                 _context.SaveChanges();
                 return "OK";
