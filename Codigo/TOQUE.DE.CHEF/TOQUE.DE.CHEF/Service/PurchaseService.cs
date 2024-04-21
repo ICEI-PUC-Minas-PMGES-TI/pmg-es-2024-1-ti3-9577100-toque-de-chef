@@ -32,14 +32,14 @@ namespace TOQUE.DE.CHEF.Services
                     Suplyer = suplyer,
                     PurchaseItems = new List<PurchaseItem>()
                 };
+                _context.purchases.Add(purchase);
 
                 foreach (var itemDto in dto.PurchaseItems)
                 {
                     var purchaseItem = _purchaseItemService.CreatePurchaseItem(purchase, itemDto);
                     purchase.PurchaseItems.Add(purchaseItem);
                 }
-
-                _context.purchases.Add(purchase);
+                
                 _context.SaveChanges();
 
                 return purchase;
@@ -109,13 +109,12 @@ namespace TOQUE.DE.CHEF.Services
                     }
                 }
 
-                // Remover itens de compra que não estão presentes no dto
                 foreach (var existingPurchaseItem in purchase.PurchaseItems.ToList())
                 {
                     if (!dto.PurchaseItems.Any(itemDto => itemDto.ProductId == existingPurchaseItem.Product.Id))
                     {
                         purchase.PurchaseItems.Remove(existingPurchaseItem);
-                        _context.purchaseItems.Remove(existingPurchaseItem); // Remova o item da base de dados também, se necessário
+                        _context.purchaseItems.Remove(existingPurchaseItem); 
                     }
                 }
 

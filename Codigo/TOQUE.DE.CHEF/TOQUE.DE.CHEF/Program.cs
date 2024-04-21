@@ -55,6 +55,8 @@ builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<PurchaseService>();
 builder.Services.AddTransient<PurchaseItemService>();
 builder.Services.AddTransient<SuplyerService>();
+builder.Services.AddTransient<StockService>();
+
 
 var app = builder.Build();
 
