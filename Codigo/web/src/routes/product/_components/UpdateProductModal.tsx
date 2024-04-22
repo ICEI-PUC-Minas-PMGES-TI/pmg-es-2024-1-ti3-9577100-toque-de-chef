@@ -12,7 +12,6 @@ import { useReadCategories } from "../../../api/Category/useReadCategories";
 const schemaEdit = z.object({
   name: z.string({ required_error: "Obrigatório" }),
   description: z.string({ required_error: "Obrigatório" }),
-  unit_Price: z.number({ required_error: "Obrigatório" }).min(1),
   category: z.object({
     id: z.number({ required_error: "Obrigatório" }).min(1),
   }),
@@ -57,7 +56,6 @@ export const UpdateProductModal = () => {
       product: {
         id: selectedProductToUpdate?.id,
         categoryId: data.category.id,
-        unitPrice: data.unit_Price,
         description: data.description,
         name: data.name,
       },
@@ -92,24 +90,6 @@ export const UpdateProductModal = () => {
             {formStateUpdate.errors.name && (
               <Form.Control.Feedback type="invalid">
                 {formStateUpdate.errors.name.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
-
-          <FloatingLabel
-            controlId="unitPrice"
-            label="Preço Unitário"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Preço Unitário"
-              {...update("unit_Price", { valueAsNumber: true })}
-              isInvalid={Boolean(formStateUpdate.errors.unit_Price)}
-            />
-            {formStateUpdate.errors.unit_Price && (
-              <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.unit_Price.message}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>

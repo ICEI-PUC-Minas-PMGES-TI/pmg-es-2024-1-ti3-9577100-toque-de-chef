@@ -10,7 +10,6 @@ import { useReadCategories } from "../../../api/Category/useReadCategories";
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
   description: z.string({ required_error: "Obrigatório" }),
-  unitPrice: z.number({ required_error: "Obrigatório" }).min(1),
   categoryId: z.number({ required_error: "Obrigatório" }).min(1),
 });
 
@@ -84,24 +83,6 @@ export const CreateProductModal = () => {
             {formState.errors.description && (
               <Form.Control.Feedback type="invalid">
                 {formState.errors.description.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
-
-          <FloatingLabel
-            controlId="unitPrice"
-            label="Preço Unitário"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Preço Unitário"
-              {...register("unitPrice", { valueAsNumber: true })}
-              isInvalid={Boolean(formState.errors.unitPrice)}
-            />
-            {formState.errors.unitPrice && (
-              <Form.Control.Feedback type="invalid">
-                {formState.errors.unitPrice.message}
               </Form.Control.Feedback>
             )}
           </FloatingLabel>

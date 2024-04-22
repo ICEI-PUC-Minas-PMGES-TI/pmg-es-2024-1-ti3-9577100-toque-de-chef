@@ -10,84 +10,84 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as IndexImport } from "./routes/index";
-import { Route as SuplyerIndexImport } from "./routes/suplyer/index";
-import { Route as RegistrationIndexImport } from "./routes/registration/index";
-import { Route as PurchaseIndexImport } from "./routes/purchase/index";
-import { Route as ProfileIndexImport } from "./routes/profile/index";
-import { Route as ProductIndexImport } from "./routes/product/index";
-import { Route as CategoryIndexImport } from "./routes/category/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
+import { Route as SuplyerIndexImport } from './routes/suplyer/index'
+import { Route as RegistrationIndexImport } from './routes/registration/index'
+import { Route as PurchaseIndexImport } from './routes/purchase/index'
+import { Route as ProfileIndexImport } from './routes/profile/index'
+import { Route as ProductIndexImport } from './routes/product/index'
+import { Route as CategoryIndexImport } from './routes/category/index'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
-  path: "/",
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const SuplyerIndexRoute = SuplyerIndexImport.update({
-  path: "/suplyer/",
+  path: '/suplyer/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const RegistrationIndexRoute = RegistrationIndexImport.update({
-  path: "/registration/",
+  path: '/registration/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const PurchaseIndexRoute = PurchaseIndexImport.update({
-  path: "/purchase/",
+  path: '/purchase/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const ProfileIndexRoute = ProfileIndexImport.update({
-  path: "/profile/",
+  path: '/profile/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const ProductIndexRoute = ProductIndexImport.update({
-  path: "/product/",
+  path: '/product/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const CategoryIndexRoute = CategoryIndexImport.update({
-  path: "/category/",
+  path: '/category/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/category/": {
-      preLoaderRoute: typeof CategoryIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/product/": {
-      preLoaderRoute: typeof ProductIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/": {
-      preLoaderRoute: typeof ProfileIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/purchase/": {
-      preLoaderRoute: typeof PurchaseIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/registration/": {
-      preLoaderRoute: typeof RegistrationIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/suplyer/": {
-      preLoaderRoute: typeof SuplyerIndexImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/category/': {
+      preLoaderRoute: typeof CategoryIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/product/': {
+      preLoaderRoute: typeof ProductIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/': {
+      preLoaderRoute: typeof ProfileIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/purchase/': {
+      preLoaderRoute: typeof PurchaseIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/registration/': {
+      preLoaderRoute: typeof RegistrationIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/suplyer/': {
+      preLoaderRoute: typeof SuplyerIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -101,6 +101,6 @@ export const routeTree = rootRoute.addChildren([
   PurchaseIndexRoute,
   RegistrationIndexRoute,
   SuplyerIndexRoute,
-]);
+])
 
 /* prettier-ignore-end */

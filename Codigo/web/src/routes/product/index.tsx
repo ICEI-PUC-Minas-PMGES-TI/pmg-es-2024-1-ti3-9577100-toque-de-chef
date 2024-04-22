@@ -61,17 +61,21 @@ function Index() {
         >
           <PlusCircle /> <strong>Cadastrar Novo Produto</strong>
         </Button>
+
         <Button
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           disabled
         >
-          <FileEarmarkArrowDown /> <strong>Exportar Planilha</strong>
+          <FileEarmarkArrowDown />
+          <strong>Importar Planilha</strong>
         </Button>
+
         <Button
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           disabled
         >
-          <FileEarmarkArrowUp /> <strong>Importar Planilha</strong>
+          <FileEarmarkArrowUp />
+          <strong>Exportar Planilha</strong>
         </Button>
       </Stack>
       <div
