@@ -26,7 +26,6 @@ namespace TOQUE.DE.CHEF.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Unit_Price = dto.UnitPrice,
                 Category = category
             };
 
@@ -64,7 +63,6 @@ namespace TOQUE.DE.CHEF.Services
 
             product.Name = dto.Name;
             product.Description = dto.Description;
-            product.Unit_Price = dto.UnitPrice;
             product.Category = category;
 
             _context.SaveChanges();
@@ -143,7 +141,6 @@ namespace TOQUE.DE.CHEF.Services
                         {
                             Name = name,
                             Description = description,
-                            Unit_Price = price,
                             Category = category
                         };
 

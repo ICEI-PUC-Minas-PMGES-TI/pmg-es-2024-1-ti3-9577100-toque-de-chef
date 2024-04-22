@@ -7,4 +7,5 @@ export const ROUTE_TO_NAME: RouteMapping = {
   "/suplyer": "Fornecedor",
   "/category": "Categoria",
   "/purchase": "Compra",
+  "/profile": "Perfil",
 };

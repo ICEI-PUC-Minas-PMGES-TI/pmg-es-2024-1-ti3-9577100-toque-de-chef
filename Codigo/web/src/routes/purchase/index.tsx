@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Accordion, Button, Form, InputGroup, Stack } from "react-bootstrap";
 import {
   Box,
-  FileEarmarkArrowDown,
   FileEarmarkArrowUp,
   Search,
   CurrencyDollar,
@@ -72,17 +71,13 @@ function Index() {
         >
           <PlusCircle /> <strong>Cadastrar Nova Compra</strong>
         </Button>
+
         <Button
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           disabled
         >
-          <FileEarmarkArrowDown /> <strong>Exportar Planilha</strong>
-        </Button>
-        <Button
-          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-          disabled
-        >
-          <FileEarmarkArrowUp /> <strong>Importar Planilha</strong>
+          <FileEarmarkArrowUp />
+          <strong>Exportar Planilha</strong>
         </Button>
       </Stack>
       <div className="p-1">

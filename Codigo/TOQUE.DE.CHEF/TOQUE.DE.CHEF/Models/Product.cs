@@ -14,8 +14,6 @@ namespace TOQUE.DE.CHEF.Models
         [Column("DESCRIPTION")]
         public string Description { get; set; }
 
-        [Column("UNIT_PRICE")]
-        public double Unit_Price { get; set; }
 
         public Category Category { get; set; }
 

@@ -50,12 +50,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Adicionando a configuração para add services
-builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<CategoryService>();
+builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<PurchaseService>();
 builder.Services.AddTransient<PurchaseItemService>();
 builder.Services.AddTransient<SuplyerService>();
 builder.Services.AddTransient<StockService>();
+builder.Services.AddTransient<UserService>();
+
 
 
 var app = builder.Build();

@@ -51,23 +51,25 @@ export const RigthSidebar = () => {
         </Dropdown>
       </div>
 
-      <div style={{ paddingTop: "36px" }} className="text-secondary">
-        <h6>
-          <strong>Atalhos Rápidos</strong>
-        </h6>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 6fr",
-            alignItems: "center",
-            padding: "8px",
-          }}
-        >
-          <PlusCircle /> Ctrl + J | Cadastrar {routerName}
-          <FileEarmarkArrowDown /> Exportar Planilha
-          <FileEarmarkArrowUp /> Importar Planilha
+      {routerName != "Perfil" && (
+        <div style={{ paddingTop: "36px" }} className="text-secondary">
+          <h6>
+            <strong>Atalhos Rápidos</strong>
+          </h6>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 6fr",
+              alignItems: "center",
+              padding: "8px",
+            }}
+          >
+            <PlusCircle /> Ctrl + J | Cadastrar {routerName}
+            <FileEarmarkArrowDown /> Importar Planilha
+            <FileEarmarkArrowUp /> Exportar Planilha
+          </div>
         </div>
-      </div>
+      )}
     </Container>
   );
 };
