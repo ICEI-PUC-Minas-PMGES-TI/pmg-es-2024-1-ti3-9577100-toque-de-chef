@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TOQUE.DE.CHEF.Models;
+﻿using TOQUE.DE.CHEF.Models;
+using TOQUE.DE.CHEF.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TOQUE.DE.CHEF.Dto;
@@ -8,102 +9,56 @@ namespace TOQUE.DE.CHEF.Controllers
 {
     public class UserController : Controller
     {
-        public List<User> listUsers { get; set; }
+        private readonly UserService _userService;
 
-        private readonly Context _context;
-
-        public UserController(Context context)
+        public UserController(UserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
+
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        public JsonResult getUser(string search = null, int page = 1, int take = 15)
+        public JsonResult GetUser(string search = null, int page = 1, int take = 15)
         {
-            listUsers = _context.users.ToList();
-            int totalRegistros = 0;
-            int skip = (page - 1) * take;
-
-
-            totalRegistros = listUsers.Count;
-
-            if (string.IsNullOrEmpty(search).Equals(false))
-            {
-                listUsers = listUsers.Where(x => x.Name.Contains(search) || x.Email.Contains(search)).ToList();
-            }
+            var result = _userService.GetUsers(search, page, take);
+            int totalRegistros = result.Count;
 
             return Json(
-                    new
+                    new ApiResponse<User>
                     {
-                        obj = listUsers.Skip(skip).Take(take),
-                        count = totalRegistros
+                        obj = result,
+                        Count = totalRegistros
                     }
                 );
         }
 
         [HttpPost]
-        public string createUser(string name, string email, string password, bool active, string type)
+        public string CreateUser(string name, string email, string password, bool active, string type)
         {
-            try
-            {
-                User newUser = new User();
-                newUser.Name = name;
-                newUser.Email = email;
-                newUser.Password = password;
-                newUser.Active = active;
-                newUser.Type = type;
-
-                _context.users.Add(newUser);
-                _context.SaveChanges();
-
-                return "OK";
-            }
-            catch
-            {
-                return "ERROR";
-            }
+            return _userService.CreateUser(name, email, password, active, type);
         }
 
-       
         [HttpGet]
-        public JsonResult getUserById(int id)
+        public JsonResult GetUserById(int id)
         {
-            User User = _context.users.FirstOrDefault(x => x.Id == id);
-            return Json(User);
+            User user = _userService.GetUserById(id);
+            return Json(user);
         }
-
 
         [HttpPut]
-        public string editUser([FromBody] UserEditDto dto)
+        public string EditUser([FromBody] UserEditDto dto)
         {
-            try
-            {
-                var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-
-                User UserToEdit = _context.users.FirstOrDefault(x => x.Id == userId);
-
-                UserToEdit.Name = dto.Name;
-                UserToEdit.Password = dto.Password;
-                _context.users.Update(UserToEdit);
-                _context.SaveChanges();
-                return "OK";
-            }
-            catch
-            {
-                return "ERRO";
-            }
+            return _userService.EditUser(dto, User);
         }
 
         [HttpGet]
-        public User getCurrentUser()
+        public User GetCurrentUser()
         {
-
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            return _context.users.Single(x => x.Id == userId);
+            return _userService.GetCurrentUser(User);
         }
     }
 }
