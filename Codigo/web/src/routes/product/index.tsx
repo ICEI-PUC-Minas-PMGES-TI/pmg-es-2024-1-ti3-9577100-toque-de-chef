@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Card, Form, InputGroup, Stack } from "react-bootstrap";
+import { Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
 import {
   FileEarmarkArrowDown,
   FileEarmarkArrowUp,
@@ -78,32 +78,42 @@ function Index() {
           <strong>Exportar Planilha</strong>
         </Button>
       </Stack>
-      <div
-        className="p-1"
-        style={{ display: "grid", gap: "16px", gridTemplateColumns: "1fr 1fr" }}
-      >
-        {productData?.obj?.map((product, index) => (
-          <Card>
-            <Card.Body key={index}>
-              <Card.Title>{product.name}</Card.Title>
-              <Card.Text>{product.category.name}</Card.Text>
-              <div className="d-flex gap-2 ">
-                <Button
-                  onClick={() => setUpdateProductModal(product.id.toString())}
-                  className="text-white"
-                >
-                  <PencilFill />
-                </Button>
-                <Button
-                  className="text-white"
-                  onClick={() => setDeleteProductModal(product.id.toString())}
-                >
-                  <TrashFill />
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}
+
+      <div className="p-1">
+        <Table responsive>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Categoria</th>
+            </tr>
+          </thead>
+          <tbody className="table-group-divider">
+            {productData?.obj?.map((product, index) => (
+              <tr key={index}>
+                <th scope="row">{index + 1}</th>
+                <td>{product.name}</td>
+                <td>{product.description}</td>
+                <td>{product.category.name}</td>
+                <td className="d-flex gap-2 ">
+                  <Button
+                    onClick={() => setUpdateProductModal(product.id.toString())}
+                    className="text-white"
+                  >
+                    <PencilFill />
+                  </Button>
+                  <Button
+                    className="text-white"
+                    onClick={() => setDeleteProductModal(product.id.toString())}
+                  >
+                    <TrashFill />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
 
       <CreateProductModal />
