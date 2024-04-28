@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Services;
@@ -19,6 +20,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetAllProducts(string search = null, int page = 1, int take = 15)
         {
             try
@@ -34,6 +36,7 @@ namespace TOQUE.DE.CHEF.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public IActionResult CreateProduct([FromBody] ProductDto dto)
         {
             try

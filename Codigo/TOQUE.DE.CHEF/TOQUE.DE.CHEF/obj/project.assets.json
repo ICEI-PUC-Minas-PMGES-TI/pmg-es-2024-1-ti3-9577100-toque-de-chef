@@ -8825,19 +8825,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pedro\\.nuget\\packages\\": {}
+    "C:\\Users\\lucas\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
+      "projectUniqueName": "C:\\Users\\lucas\\Documents\\GitHub\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
       "projectName": "TOQUE.DE.CHEF",
-      "projectPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
-      "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\obj\\",
+      "projectPath": "C:\\Users\\lucas\\Documents\\GitHub\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
+      "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lucas\\Documents\\GitHub\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8857,6 +8857,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -8929,7 +8934,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

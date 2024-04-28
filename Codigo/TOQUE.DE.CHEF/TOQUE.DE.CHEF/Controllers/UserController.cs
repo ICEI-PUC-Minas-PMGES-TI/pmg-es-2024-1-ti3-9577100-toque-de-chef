@@ -22,6 +22,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
+       
         public JsonResult GetUser(string search = null, int page = 1, int take = 15)
         {
             var result = _userService.GetUsers(search, page, take);
@@ -37,6 +38,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
+       
         public string CreateUser(string name, string email, string password, bool active, string type)
         {
             return _userService.CreateUser(name, email, password, active, type);
@@ -50,12 +52,14 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public string EditUser([FromBody] UserEditDto dto)
         {
             return _userService.EditUser(dto, User);
         }
 
         [HttpGet]
+        [Authorize]
         public User GetCurrentUser()
         {
             return _userService.GetCurrentUser(User);

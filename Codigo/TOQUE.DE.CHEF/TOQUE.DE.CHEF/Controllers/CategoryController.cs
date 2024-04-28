@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Services;
@@ -20,6 +21,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetAllCategories(string search = null, int page = 1, int take = 15)
         {
             try
@@ -34,6 +36,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult CreateCategory([FromBody] CategoryDto dto)
         {
             try
@@ -56,6 +59,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public IActionResult DeleteCategory(int id)
         {
             try
@@ -74,6 +78,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public IActionResult EditCategory(int id, [FromBody] CategoryDto dto)
         {
             try
@@ -96,6 +101,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetCategoryById(int id)
         {
             try

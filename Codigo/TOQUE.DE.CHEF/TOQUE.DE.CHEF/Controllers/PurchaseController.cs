@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Services;
 
@@ -19,6 +20,7 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult CreatePurchase([FromBody] PurchaseDto dto)
         {
             try
