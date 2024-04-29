@@ -13,20 +13,16 @@ namespace TOQUE.DE.CHEF.Services
             _context = context;
         }
 
-        public ApiResponse<Suplyer> GetAllSuplyers(string search = null, int page = 1, int take = 15)
+        public ApiResponse<Suplyer> GetAllSuplyers(string search = "", int page = 1, int take = 15)
         {
             var query = _context.suplyers
-                .Include(p => p.Purchases)
-                .Where(p => p.DeletedAt == null)
+                .Where(p => p.DeletedAt == null && p.Name.Contains(search))
+                .Skip((page - 1) * take)
+                .Take(take)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
-            }
-
-            int totalRecords = query.Count();
-            List<Suplyer> suplyers = query.Skip((page - 1) * take).Take(take).ToList();
+            var totalRecords = _context.suplyers.Count();
+            var suplyers = query.ToList();
 
             return new ApiResponse<Suplyer>
             {

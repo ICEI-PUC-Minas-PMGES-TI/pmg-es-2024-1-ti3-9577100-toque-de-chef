@@ -1,22 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\",
+  "WorkspaceRootPath": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|c:\\users\\pedro.oliveira\\source\\repos\\toque.de.chef\\toque.de.chef\\views\\category\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\views\\category\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|c:\\users\\administrator\\source\\repos\\icei-puc-minas-pmges-ti\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\codigo\\toque.de.chef\\toque.de.chef\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\toque.de.chef\\wwwroot\\js\\category.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\wwwroot\\js\\category.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|c:\\users\\administrator\\source\\repos\\icei-puc-minas-pmges-ti\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\codigo\\toque.de.chef\\toque.de.chef\\service\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\service\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\toque.de.chef\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|c:\\users\\administrator\\source\\repos\\icei-puc-minas-pmges-ti\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\codigo\\toque.de.chef\\toque.de.chef\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|c:\\users\\administrator\\source\\repos\\icei-puc-minas-pmges-ti\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\codigo\\toque.de.chef\\toque.de.chef\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\toque.de.chef\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D40826A-D2EE-4ECF-A6C3-CF70C8473364}|TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj|solutionrelative:toque.de.chef\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,51 +37,56 @@
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Views\\Category\\Index.cshtml",
-              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Views\\Category\\Index.cshtml",
-              "ToolTip": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Views\\Category\\Index.cshtml",
-              "RelativeToolTip": "TOQUE.DE.CHEF\\Views\\Category\\Index.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-14T17:05:42.049Z",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Program.cs",
+              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Program.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Program.cs",
+              "RelativeToolTip": "TOQUE.DE.CHEF\\Program.cs",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-28T22:17:37.192Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Category.cs",
-              "DocumentMoniker": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Models\\Category.cs",
-              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Models\\Category.cs",
-              "ToolTip": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Models\\Category.cs",
-              "RelativeToolTip": "TOQUE.DE.CHEF\\Models\\Category.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-14T16:16:42.072Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "category.js",
-              "DocumentMoniker": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\wwwroot\\js\\category.js",
-              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\wwwroot\\js\\category.js",
-              "ToolTip": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\wwwroot\\js\\category.js",
-              "RelativeToolTip": "TOQUE.DE.CHEF\\wwwroot\\js\\category.js",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-03-14T13:23:17.244Z"
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Service\\ProductService.cs",
+              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Service\\ProductService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Service\\ProductService.cs",
+              "RelativeToolTip": "TOQUE.DE.CHEF\\Service\\ProductService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAKMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-28T15:52:20.962Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "ProductController.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\ProductController.cs",
+              "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Controllers\\ProductController.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\ProductController.cs",
+              "RelativeToolTip": "TOQUE.DE.CHEF\\Controllers\\ProductController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-28T15:35:43.282Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CategoryController.cs",
-              "DocumentMoniker": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
               "RelativeDocumentMoniker": "TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
-              "ToolTip": "C:\\Users\\pedro.oliveira\\source\\repos\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\ICEI-PUC-Minas-PMGES-TI\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
               "RelativeToolTip": "TOQUE.DE.CHEF\\Controllers\\CategoryController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAowCwAAAAbAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACwAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-14T13:14:14.941Z"
             }

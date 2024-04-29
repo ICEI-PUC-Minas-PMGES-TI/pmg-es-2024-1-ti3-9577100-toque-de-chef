@@ -58,22 +58,19 @@ namespace TOQUE.DE.CHEF.Services
         }
 
 
-        public ApiResponse<Purchase> GetAllPurchases(string search = null, int page = 1, int take = 15)
+        public ApiResponse<Purchase> GetAllPurchases(string search = "", int page = 1, int take = 15)
         {
             var query = _context.purchases
                 .Include(p => p.Suplyer)
                 .Include(p => p.PurchaseItems)
                 .ThenInclude(pi => pi.Product)
+                .Skip((page - 1) * take)
+                .Take(take)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                // Adicione aqui as condições de pesquisa específicas para compras, se necessário
-            }
-
-            var totalRecords = query.Count();
-            var purchases = query.Skip((page - 1) * take).Take(take).ToList();
-
+            var totalRecords = _context.purchases.Count();
+            var purchases = query.ToList();
+ 
             return new ApiResponse<Purchase>
             {
                 Count = totalRecords,
