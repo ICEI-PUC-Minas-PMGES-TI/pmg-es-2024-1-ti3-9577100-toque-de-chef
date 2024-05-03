@@ -35,6 +35,11 @@ namespace TOQUE.DE.CHEF.Services
         {
             try
             {
+                if (!PasswordMeetsCriteria(password))
+                {
+                    return "ERROR: A senha deve conter letras, números, caracteres especiais e ter mais de 4 caracteres.";
+                }
+
                 User newUser = new User();
                 newUser.Name = name;
                 newUser.Email = email;
@@ -51,6 +56,23 @@ namespace TOQUE.DE.CHEF.Services
             {
                 return "ERROR";
             }
+        }
+
+        private bool PasswordMeetsCriteria(string password)
+        {
+            if (password.Length < 5)
+                return false;
+
+            if (!password.Any(char.IsLetter))
+                return false;
+
+            if (!password.Any(char.IsDigit))
+                return false;
+
+            if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+                return false;
+
+            return true;
         }
 
         public User GetUserById(int id)
