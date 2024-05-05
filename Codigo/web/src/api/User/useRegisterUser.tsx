@@ -8,7 +8,7 @@ export const registerUser = async (user: Partial<User>) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ...user, active: true, type: "1" }),
+    body: JSON.stringify({ ...user, active: true }),
   });
 
   if (!res.ok) {

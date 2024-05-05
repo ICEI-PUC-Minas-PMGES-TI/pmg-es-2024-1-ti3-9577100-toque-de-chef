@@ -1,5 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Accordion, Button, Form, InputGroup, Stack } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Form,
+  InputGroup,
+  Pagination,
+  Stack,
+} from "react-bootstrap";
 import {
   Box,
   FileEarmarkArrowUp,
@@ -8,6 +15,7 @@ import {
   Diamond,
   Clipboard,
   CashCoin,
+  PencilFill,
 } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
 import { UpdatePurchaseModal } from "./_components/UpdatePurchaseModal";
@@ -85,8 +93,15 @@ function Index() {
           {purchaseData?.obj?.map((purchase: Purchase, index: number) => (
             <Accordion.Item eventKey={index.toString()} key={index}>
               <Accordion.Header>
-                {formatPurchaseDate(purchase.purchaseDate)} -{" "}
-                {purchase.suplyer.name}
+                <div className="d-flex align-items-center justify-content-between w-100 pe-4">
+                  <div>
+                    {formatPurchaseDate(purchase.purchaseDate)} -{" "}
+                    {purchase.suplyer.name}
+                  </div>
+                  <Button className="text-white">
+                    <PencilFill />
+                  </Button>
+                </div>
               </Accordion.Header>
               <Accordion.Body>
                 <div
@@ -133,6 +148,35 @@ function Index() {
             </Accordion.Item>
           ))}
         </Accordion>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gap: "16px",
+          paddingTop: "16px",
+          justifyContent: "center",
+        }}
+      >
+        <Pagination>
+          <Pagination.First />
+          <Pagination.Prev />
+          <Pagination.Item> {1}</Pagination.Item>
+          <Pagination.Ellipsis />
+
+          <Pagination.Item>{10}</Pagination.Item>
+          <Pagination.Item>{11}</Pagination.Item>
+          <Pagination.Item active className="bg-primary">
+            {12}
+          </Pagination.Item>
+          <Pagination.Item>{13}</Pagination.Item>
+          <Pagination.Item disabled>{14}</Pagination.Item>
+
+          <Pagination.Ellipsis />
+          <Pagination.Item>{20}</Pagination.Item>
+          <Pagination.Next />
+          <Pagination.Last />
+        </Pagination>
       </div>
 
       <CreatePurchaseModal />

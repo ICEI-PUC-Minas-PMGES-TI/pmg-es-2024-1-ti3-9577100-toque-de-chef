@@ -4,5 +4,5 @@ export type User = {
   email: string;
   password: string;
   active: boolean;
-  type: string;
+  type: number;
 };

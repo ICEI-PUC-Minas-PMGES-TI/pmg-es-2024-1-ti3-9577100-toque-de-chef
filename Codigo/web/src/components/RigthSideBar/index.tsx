@@ -9,9 +9,11 @@ import {
 } from "react-bootstrap-icons";
 import { ROUTE_TO_NAME } from "../../helpers/Utils/Enum";
 import IconUser from "../IconUser";
+import { useQueryClient } from "@tanstack/react-query";
 const cookies = new Cookies();
 
 export const RigthSidebar = () => {
+  const queryClient = useQueryClient();
   const router = useRouterState();
   const routerName = ROUTE_TO_NAME[router.location.pathname];
 
@@ -24,6 +26,9 @@ export const RigthSidebar = () => {
       to: "/",
     });
     cookies.remove("user");
+    queryClient.removeQueries({
+      queryKey: ["getCurrentUser"],
+    });
   };
 
   const getProfile = () => {
@@ -31,7 +36,11 @@ export const RigthSidebar = () => {
       to: "/profile",
     });
   };
-
+  const getAccessControl = () => {
+    navigate({
+      to: "/accessControl/",
+    });
+  };
   return (
     <Container
       className="pt-4 px-4  h-100"
@@ -46,6 +55,10 @@ export const RigthSidebar = () => {
 
           <Dropdown.Menu>
             <Dropdown.Item onClick={getProfile}>Perfil</Dropdown.Item>
+            <Dropdown.Item onClick={getAccessControl}>
+              Controle de Acesso
+            </Dropdown.Item>
+
             <Dropdown.Item onClick={logout}>Sair</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

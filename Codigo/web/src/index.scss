@@ -15,6 +15,10 @@ $utilities-text-colors: map-loop(
   "text"
 );
 $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+$pagination-active-bg: #ff8800;
+$pagination-active-border-color: #ff8800;
+$pagination-color: #ff8800;
+$nav-link-color: #ff8800;
 
 @import "bootstrap";
 

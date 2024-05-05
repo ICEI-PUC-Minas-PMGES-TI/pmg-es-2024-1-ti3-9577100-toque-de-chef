@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TOQUE.DE.CHEF.Dto;
 using Safety.Web.Models;
+using TOQUE.DE.CHEF.Enum;
 
 namespace TOQUE.DE.CHEF.Services
 {
@@ -31,7 +32,7 @@ namespace TOQUE.DE.CHEF.Services
             return listUsers.Skip(skip).Take(take).ToList();
         }
 
-        public string CreateUser(string name, string email, string password, bool active, string type)
+        public string CreateUser(string name, string email, string password, bool active, UserRole role)
         {
             try
             {
@@ -45,7 +46,8 @@ namespace TOQUE.DE.CHEF.Services
                 newUser.Email = email;
                 newUser.Password = Cryptography.Encrypt(password);
                 newUser.Active = active;
-                newUser.Type = type;
+
+                newUser.Type = role;
 
                 _context.users.Add(newUser);
                 _context.SaveChanges();
@@ -89,7 +91,12 @@ namespace TOQUE.DE.CHEF.Services
                 User UserToEdit = _context.users.FirstOrDefault(x => x.Id == userId);
 
                 UserToEdit.Name = dto.Name;
-                UserToEdit.Password = Cryptography.Encrypt(dto.Password);
+
+                if (!string.IsNullOrEmpty(dto.Password))
+                {
+                    UserToEdit.Password = Cryptography.Encrypt(dto.Password);
+                }
+
                 _context.users.Update(UserToEdit);
                 _context.SaveChanges();
                 return "OK";

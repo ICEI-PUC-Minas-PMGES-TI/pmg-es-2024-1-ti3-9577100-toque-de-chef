@@ -17,7 +17,12 @@ export const Route = createRootRoute({
   },
 });
 
-const excludedNavBarRoutes = ["/", "/login", "/registration"];
+const excludedNavBarRoutes = [
+  "/",
+  "/login",
+  "/registration",
+  "/awaiting-system-access/",
+];
 function Root() {
   const router = useRouterState();
 

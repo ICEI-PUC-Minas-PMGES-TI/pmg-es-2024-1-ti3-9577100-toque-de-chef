@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TOQUE.DE.CHEF.Dto;
+using TOQUE.DE.CHEF.Enum;
 
 namespace TOQUE.DE.CHEF.Controllers
 {
@@ -39,9 +40,9 @@ namespace TOQUE.DE.CHEF.Controllers
 
         [HttpPost]
        
-        public string CreateUser(string name, string email, string password, bool active, string type)
+        public string CreateUser(string name, string email, string password)
         {
-            return _userService.CreateUser(name, email, password, active, type);
+            return _userService.CreateUser(name, email, password, true, UserRole.Pending);
         }
 
         [HttpGet]
@@ -52,14 +53,12 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         public string EditUser([FromBody] UserEditDto dto)
         {
             return _userService.EditUser(dto, User);
         }
 
         [HttpGet]
-        [Authorize]
         public User GetCurrentUser()
         {
             return _userService.GetCurrentUser(User);
