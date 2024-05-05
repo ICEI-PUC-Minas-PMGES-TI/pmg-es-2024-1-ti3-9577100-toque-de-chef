@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TOQUE.DE.CHEF.Enum;
 
 
 namespace TOQUE.DE.CHEF.Models
@@ -30,10 +31,8 @@ namespace TOQUE.DE.CHEF.Models
         public bool Active { get; set; }
 
         [Required(ErrorMessage = "Type is required.")]
-        [StringLength(50, ErrorMessage = "Type must not exceed 50 characters.")]
         [Column("TYPE")]
-
-        public string Type { get; set; }
+        public UserRole Type { get; set; }
 
         public ICollection<TransactionStockOperation> TransactionStockOperations { get; set; }
 

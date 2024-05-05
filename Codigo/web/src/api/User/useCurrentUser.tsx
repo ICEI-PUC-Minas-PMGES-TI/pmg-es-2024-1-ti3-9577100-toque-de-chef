@@ -1,6 +1,8 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { api } from "../api";
 import { User } from "../../types/user";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 export const getCurrentUser = async () => {
   const res = await api("User/getCurrentUser", {
@@ -29,5 +31,6 @@ export const useCurrentUser = (
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
+    enabled: Boolean(cookies.get("user")),
   });
 };

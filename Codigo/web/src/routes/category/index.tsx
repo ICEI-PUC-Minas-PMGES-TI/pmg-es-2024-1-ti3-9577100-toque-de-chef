@@ -1,5 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  InputGroup,
+  Pagination,
+  Stack,
+  Table,
+} from "react-bootstrap";
 import { useReadCategories } from "../../api/Category/useReadCategories";
 import { PencilFill, Search, TrashFill } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
@@ -92,6 +99,35 @@ function Index() {
             ))}
           </tbody>
         </Table>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gap: "16px",
+          paddingTop: "16px",
+          justifyContent: "center",
+        }}
+      >
+        <Pagination>
+          <Pagination.First />
+          <Pagination.Prev />
+          <Pagination.Item> {1}</Pagination.Item>
+          <Pagination.Ellipsis />
+
+          <Pagination.Item>{10}</Pagination.Item>
+          <Pagination.Item>{11}</Pagination.Item>
+          <Pagination.Item active className="bg-primary">
+            {12}
+          </Pagination.Item>
+          <Pagination.Item>{13}</Pagination.Item>
+          <Pagination.Item disabled>{14}</Pagination.Item>
+
+          <Pagination.Ellipsis />
+          <Pagination.Item>{20}</Pagination.Item>
+          <Pagination.Next />
+          <Pagination.Last />
+        </Pagination>
       </div>
 
       <CreateCategoryModal />

@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { Image } from "react-bootstrap";
 import { useLoginUser } from "../api/User/useLoginUser";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "../helpers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import Cookies from "universal-cookie";
+import { useState } from "react";
 const cookies = new Cookies();
 
 export const Route = createFileRoute("/")({
@@ -19,23 +20,32 @@ const schema = z.object({
 
 function Index() {
   const navigate = useNavigate();
-
-  const { mutateAsync } = useLoginUser({
-    onSuccess(data) {
-      cookies.set("user", data.token, { path: "/" });
-
-      navigate({
-        to: "/product",
-      });
-    },
-  });
+  const { mutateAsync } = useLoginUser();
   const { register, handleSubmit } = useForm<z.infer<typeof schema>>();
+  const [loginError, setLoginError] = useState(""); // Estado para controlar o erro de login
 
-  const handleLogin: SubmitHandler<z.infer<typeof schema>> = (data) => {
-    mutateAsync({
-      email: data.email,
-      password: data.password,
-    });
+  const handleLogin: SubmitHandler<z.infer<typeof schema>> = async (data) => {
+    try {
+      const response = await mutateAsync({
+        email: data.email,
+        password: data.password,
+      });
+
+      // Verifica o tipo de usuário após o login
+      if (response && response.user.type === 4) {
+        setLoginError("Acesso negado entre em contato com o seu Gestor");
+      } else if (response && response.user.type === 3) {
+        navigate({ to: "/awaiting-system-access/" }); // Substitua "/destinationForType3" pelo destino correto para o tipo 3
+      } else {
+        navigate({ to: "/product" });
+      }
+
+      // Salva o token de usuário nos cookies
+      cookies.set("user", response.token, { path: "/" });
+    } catch (error) {
+      // Em caso de erro no login, exibe a mensagem de erro
+      setLoginError("Credenciais inválidas");
+    }
   };
 
   return (
@@ -84,11 +94,7 @@ function Index() {
             <div className="d-flex gap-2">
               <Button
                 variant="secondary"
-                onClick={() =>
-                  navigate({
-                    to: "/registration",
-                  })
-                }
+                onClick={() => navigate({ to: "/registration" })}
               >
                 <strong>Registrar-se</strong>
               </Button>
@@ -97,6 +103,8 @@ function Index() {
               </Button>
             </div>
           </Form>
+          {/* Exibe mensagem de erro de login */}
+          {loginError && <Alert variant="danger">{loginError}</Alert>}
         </div>
       </div>
     </>

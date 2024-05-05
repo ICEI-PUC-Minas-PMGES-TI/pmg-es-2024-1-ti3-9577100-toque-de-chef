@@ -8,4 +8,5 @@ export const ROUTE_TO_NAME: RouteMapping = {
   "/category": "Categoria",
   "/purchase": "Compra",
   "/profile": "Perfil",
+  "/acessControll": "ControleAcesso",
 };

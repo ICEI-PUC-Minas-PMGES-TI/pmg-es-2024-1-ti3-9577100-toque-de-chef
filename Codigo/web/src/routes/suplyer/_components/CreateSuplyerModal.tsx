@@ -5,13 +5,22 @@ import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateSuplyer } from "../../../api/Suplyer/useCreateSuplyer";
 import { useQueryClient } from "@tanstack/react-query";
+import InputMask from "react-input-mask";
+
+const phoneRegExp = /^\(\d{2}\) \d{5}-\d{4}$/;
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
   email: z.string({ required_error: "Obrigatório" }).email(),
   description: z.string({ required_error: "Obrigatório" }).min(1),
-  phone: z.string({ required_error: "Obrigatório" }),
+  phone: z
+    .string({ required_error: "Obrigatório" })
+    .refine((value) => phoneRegExp.test(value), {
+      message:
+        "Formato inválido para número de telefone. Use o formato: (99) 99999-9999",
+    }),
 });
+
 export const CreateSuplyerModal = () => {
   const queryClient = useQueryClient();
   const [createSuplyerModal, setCreateSuplyerModal] =
@@ -78,15 +87,14 @@ export const CreateSuplyerModal = () => {
               {...register("name")}
             />
           </FloatingLabel>
-          <FloatingLabel
-            controlId="floatingContato"
-            label="Contato"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Contato"
+          <FloatingLabel controlId="phoneInput" label="Contato">
+            <InputMask
+              mask="(99) 99999-9999"
+              maskChar="_" // This is optional, you can customize the placeholder character for empty positions in the mask
+              type="tel" // Use "tel" type for phone numbers
+              placeholder="(00) 00000-0000"
               {...register("phone")}
+              as={Form.Control} // Use as prop to render the InputMask as a Form.Control
             />
           </FloatingLabel>
           <FloatingLabel
