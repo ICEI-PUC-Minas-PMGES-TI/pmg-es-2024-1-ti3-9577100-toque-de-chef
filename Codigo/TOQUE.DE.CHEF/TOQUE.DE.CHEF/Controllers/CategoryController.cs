@@ -36,7 +36,6 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult CreateCategory([FromBody] CategoryDto dto)
         {
             try
