@@ -29,6 +29,12 @@ export type Purchase = {
   purchaseItems: PurchaseItem[];
 };
 
+export type PurchaseToUpdateDto = {
+  id: number;
+  suplyerId: number;
+  purchaseItems: PurchaseItemDto[];
+};
+
 export type PurchaseResponse = {
   count: number;
   obj: Purchase[];

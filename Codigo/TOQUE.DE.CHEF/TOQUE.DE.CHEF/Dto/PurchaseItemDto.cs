@@ -2,6 +2,7 @@
 {
     public class PurchaseItemDto
     {
+        public int id { get; set; }
         public int ProductId { get; set; }
 
         public int Quantity { get; set; }

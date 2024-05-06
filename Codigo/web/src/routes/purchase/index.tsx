@@ -39,6 +39,8 @@ export const Route = createFileRoute("/purchase/")({
 
 function Index() {
   const [, setCreatePurchaseModal] = useSearchParam("createPurchaseModal");
+  const [, setUpdatePurchaseModal] = useSearchParam("updatePurchaseModal");
+
   const { handleSubmit, register, formState, getValues } =
     useForm<z.infer<typeof schema>>();
 
@@ -162,12 +164,17 @@ function Index() {
                       {formatPurchaseDate(purchase.purchaseDate)} -{" "}
                       {purchase.suplyer.name}
                     </div>
-                    <Button className="text-white">
-                      <PencilFill />
-                    </Button>
                   </div>
                 </Accordion.Header>
                 <Accordion.Body>
+                  <Button
+                    className="text-white mb-2"
+                    onClick={() =>
+                      setUpdatePurchaseModal(purchase.id.toString())
+                    }
+                  >
+                    Editar Compra <PencilFill />
+                  </Button>
                   <div
                     style={{
                       display: "grid",

@@ -28,6 +28,7 @@ export const CreatePurchaseModal = () => {
   const [createPurchaseModal, setCreatePurchaseModal] = useSearchParam(
     "createPurchaseModal"
   );
+
   const { handleSubmit, register, formState } = useForm<z.infer<typeof schema>>(
     {
       resolver: zodResolver(schema),

@@ -96,27 +96,38 @@ namespace TOQUE.DE.CHEF.Services
                     throw new ArgumentException($"Compra com ID '{purchaseId}' não encontrada.");
                 }
 
-                foreach (var itemDto in dto.PurchaseItems)
+                if (purchase.SuplyerId != dto.SuplyerId)
                 {
-                    var existingPurchaseItem = purchase.PurchaseItems.FirstOrDefault(pi => pi.Product.Id == itemDto.ProductId);
+                    purchase.Suplyer = _context.suplyers.FirstOrDefault(s => s.Id == dto.SuplyerId);
+                }
 
-                    if (existingPurchaseItem != null)
+                // Verificar itens de compra existentes
+                foreach (var existingPurchaseItem in purchase.PurchaseItems.ToList())
+                {
+                    var itemDto = dto.PurchaseItems.FirstOrDefault(dtoItem => dtoItem.id == existingPurchaseItem.Purchase.Id);
+                    if (itemDto != null)
                     {
-                        _purchaseItemService.EditPurchaseItem(existingPurchaseItem.Id, itemDto);
+                        // Se o item de compra existente foi encontrado no DTO, verifica se houve alterações e atualiza-o se necessário
+                        if (existingPurchaseItem.UnitPrice != itemDto.UnitPrice || existingPurchaseItem.Quantity != itemDto.Quantity)
+                        {
+                            _purchaseItemService.EditPurchaseItem(existingPurchaseItem.Id, itemDto);
+                        }
                     }
                     else
                     {
-                        var purchaseItem = _purchaseItemService.CreatePurchaseItem(purchase, itemDto);
-                        purchase.PurchaseItems.Add(purchaseItem);
+                        // Se o item de compra existente não foi encontrado no DTO, remove-o
+                        purchase.PurchaseItems.Remove(existingPurchaseItem);
+                        _context.purchaseItems.Remove(existingPurchaseItem);
                     }
                 }
 
-                foreach (var existingPurchaseItem in purchase.PurchaseItems.ToList())
+                // Adicionar novos itens de compra
+                foreach (var itemDto in dto.PurchaseItems)
                 {
-                    if (!dto.PurchaseItems.Any(itemDto => itemDto.ProductId == existingPurchaseItem.Product.Id))
+                    if (!purchase.PurchaseItems.Any(pi => pi.Product.Id == itemDto.ProductId))
                     {
-                        purchase.PurchaseItems.Remove(existingPurchaseItem);
-                        _context.purchaseItems.Remove(existingPurchaseItem); 
+                        var purchaseItem = _purchaseItemService.CreatePurchaseItem(purchase, itemDto);
+                        purchase.PurchaseItems.Add(purchaseItem);
                     }
                 }
 
@@ -129,6 +140,7 @@ namespace TOQUE.DE.CHEF.Services
                 throw new Exception($"Erro ao editar compra: {ex.Message}");
             }
         }
+
 
     }
 }
