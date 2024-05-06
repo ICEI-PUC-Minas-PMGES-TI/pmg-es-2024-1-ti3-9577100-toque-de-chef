@@ -12,7 +12,6 @@ import {
   FileEarmarkArrowUp,
   PencilFill,
   Search,
-  Trash,
   TrashFill,
 } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
@@ -21,12 +20,9 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
-import { isKeyPressed } from "../../helpers/Utils/Util";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 import { useCurrentUser } from "../../api/User/useCurrentUser";
-import { useFilteredProduct } from "../../api/Product/useFilteredProduct";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 
