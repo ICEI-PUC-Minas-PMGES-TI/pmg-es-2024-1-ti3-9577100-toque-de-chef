@@ -70,6 +70,8 @@ namespace TOQUE.DE.CHEF.Services
             return product;
         }
 
+
+
         public ApiResponse<Product> GetAllProducts(string search = null, int page = 1, int take = 15)
         {
             var query = _context.products
@@ -79,7 +81,7 @@ namespace TOQUE.DE.CHEF.Services
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
+                query = query.Where(x => x.DeletedAt == null && x.Name.Contains(search));
             }
 
             query = query.OrderBy(x => x.Name);

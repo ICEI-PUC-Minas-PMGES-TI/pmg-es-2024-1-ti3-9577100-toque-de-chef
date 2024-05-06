@@ -12,6 +12,7 @@ import {
   InfoCircle,
   Truck,
 } from "react-bootstrap-icons";
+import { useCurrentUser } from "../../api/User/useCurrentUser";
 
 const routesGeneral = [
   {
@@ -61,6 +62,8 @@ const routesSupport = [
 
 export const Sidebar = () => {
   const router = useRouterState();
+  const { data: currentUser } = useCurrentUser();
+  const isUserType2 = currentUser && currentUser.type === 2;
 
   return (
     <Container className="pt-4 px-5 container-sidebar">
@@ -69,11 +72,16 @@ export const Sidebar = () => {
           <strong>GERAL</strong>
         </h6>
         <ul className="sidebar-list">
-          {routesGeneral.map((route) => (
-            <Link key={route.path} to={route.path}>
-              {route.icon} {route.name}
-            </Link>
-          ))}
+          {routesGeneral.map((route) => {
+            if (isUserType2 && route.path !== "/product") {
+              return null; // Não renderizar o link se o tipo de usuário for 2 e o caminho não for "/product"
+            }
+            return (
+              <Link key={route.path} to={route.path}>
+                {route.icon} {route.name}
+              </Link>
+            );
+          })}
         </ul>
       </div>
 

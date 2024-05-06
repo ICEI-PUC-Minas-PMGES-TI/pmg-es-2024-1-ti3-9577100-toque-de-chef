@@ -32,8 +32,7 @@ builder.Services.AddCors(options =>
 
 var configuration = builder.Configuration;
 builder.Services.AddDbContext<Context>(options =>
-    options.UseSqlServer("Data Source=LAPTOP-GLSRHFHQ;Initial Catalog=DB_TOQUE_DE_CHEF;Integrated Security=false;User ID=sa;Password=Pedrozix1v9;Connect Timeout=15;Encrypt=false;TrustServerCertificate=false"));
-
+    options.UseSqlServer("Data Source=localhost,1433;Initial Catalog=DB_TOQUE_DE_CHEF;Integrated Security=false;User ID=sa;Password=Easg#4560;Connect Timeout=15;Encrypt=false;TrustServerCertificate=false"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
