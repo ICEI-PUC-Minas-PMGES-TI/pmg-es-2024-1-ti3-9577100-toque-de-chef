@@ -121,6 +121,13 @@ function Login() {
     }
   };
 
+  const disabledButton = () => {
+    if (passwordStrength == 100) {
+      return false;
+    }
+    return true;
+  };
+
   return (
     <div
       style={{
@@ -248,7 +255,11 @@ function Login() {
             >
               <strong>Voltar ao login</strong>
             </Button>
-            <Button type="submit" className="w-100 text-white">
+            <Button
+              type="submit"
+              className="w-100 text-white"
+              disabled={disabledButton()}
+            >
               <strong>Registrar</strong>
             </Button>
           </div>
