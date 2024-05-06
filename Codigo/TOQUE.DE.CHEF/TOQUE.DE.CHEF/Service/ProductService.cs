@@ -84,15 +84,20 @@ namespace TOQUE.DE.CHEF.Services
                 {
                     throw new ArgumentException($"Produto com ID '{productId}' não encontrado.");
                 }
+                else
+                {
+                    product.StockQtd += quantity;
+                    _context.SaveChanges();
+                }
 
-                product.StockQtd += quantity;
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
                 throw new Exception($"Erro ao atualizar o estoque do produto: {ex.Message}");
             }
         }
+
+
 
         public ApiResponse<Product> GetAllProducts(string search = null, int page = 1, int take = 15)
         {

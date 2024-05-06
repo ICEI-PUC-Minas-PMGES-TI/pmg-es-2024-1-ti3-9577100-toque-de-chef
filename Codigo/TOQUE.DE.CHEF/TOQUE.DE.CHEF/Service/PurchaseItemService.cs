@@ -8,11 +8,14 @@ namespace TOQUE.DE.CHEF.Services
     {
         private readonly Context _context;
         private readonly StockService _stockService;
+        private readonly ProductService _productService;
 
-        public PurchaseItemService(Context context, StockService  stockService)
+
+        public PurchaseItemService(Context context, StockService  stockService, ProductService productService)
         {
             _context = context;
             _stockService = stockService;
+            _productService = productService;
         }
 
         public PurchaseItem CreatePurchaseItem(Purchase purchase, PurchaseItemDto dto)
@@ -37,7 +40,7 @@ namespace TOQUE.DE.CHEF.Services
                 _context.purchaseItems.Add(purchaseItem);
                 _context.SaveChanges();
 
-                _stockService.UpdateStock(dto.ProductId, dto.Quantity);
+                _productService.UpdateProductStock(dto.ProductId, dto.Quantity);
 
                 return purchaseItem;
             }
