@@ -11,6 +11,7 @@ import { RigthSidebar } from "../components/RigthSideBar";
 import Cookies from "universal-cookie";
 import { useCurrentUser } from "../api/User/useCurrentUser";
 import { useEffect } from "react";
+import { queryClient } from "../app";
 
 const cookies = new Cookies();
 
@@ -19,6 +20,9 @@ export const Route = createRootRoute({
   component: Root,
   beforeLoad: async ({ location }) => {
     if (!cookies.get("user") && !excludedNavBarRoutes.includes(location.href)) {
+      queryClient.removeQueries({
+        queryKey: ["getCurrentUser"],
+      });
       throw redirect({
         to: "/",
       });
@@ -36,12 +40,9 @@ const excludedNavBarRoutes = [
 function Root() {
   const router = useRouterState();
   const navigate = useNavigate();
-  const { data: currentUser } = useCurrentUser({
-    enabled: false,
-  });
+  const { data: currentUser } = useCurrentUser();
 
   useEffect(() => {
-    console.log("currentUser", currentUser);
     if (currentUser?.type === 2) {
       const userRoutes = ["/product", "/profile"];
       console.log("user", !userRoutes.includes(router.location.href));
@@ -52,7 +53,7 @@ function Root() {
         });
       }
     }
-  }, [router.location.href, currentUser]);
+  }, [router.location.href, currentUser, navigate]);
 
   const isLoggedRoutes = excludedNavBarRoutes.includes(router.location.href);
 
