@@ -62,7 +62,7 @@ export const UpdateProductModal = () => {
     });
   };
 
-  const { data: categoryData } = useReadCategories();
+  const { data: categoryData } = useReadCategories(null);
 
   useEffect(() => {
     if (productData) {
@@ -114,7 +114,7 @@ export const UpdateProductModal = () => {
             isInvalid={Boolean(formStateUpdate.errors.category?.id)}
           >
             <option value="">Selecione uma categoria</option>
-            {categoryData?.map((categoria) => (
+            {categoryData?.obj.map((categoria) => (
               <option key={categoria.id} value={categoria.id}>
                 {categoria.name}
               </option>

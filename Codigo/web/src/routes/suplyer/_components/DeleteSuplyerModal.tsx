@@ -9,8 +9,8 @@ export const DeleteSuplyerModal = () => {
   const [deleteSuplyerModal, setDeleteSuplyerModal] =
     useSearchParam("deleteSuplyerModal");
 
-  const { data: suplyerData } = useReadSuplyers();
-  const selectedSuplyerToDelete = suplyerData?.find(
+  const { data: suplyerData } = useReadSuplyers(null);
+  const selectedSuplyerToDelete = suplyerData?.obj.find(
     (suplyer) => suplyer.id === Number(deleteSuplyerModal)
   );
   const { mutateAsync: mutateAsyncDelete } = useDeleteSuplyer({

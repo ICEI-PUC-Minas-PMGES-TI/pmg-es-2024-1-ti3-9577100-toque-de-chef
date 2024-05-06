@@ -47,7 +47,7 @@ export const CreatePurchaseModal = () => {
     },
   });
 
-  const { data: suplyerData } = useReadSuplyers();
+  const { data: suplyerData } = useReadSuplyers(null);
   const { data: productsData } = useReadProducts(null);
 
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItemDto[]>([]);
@@ -96,7 +96,7 @@ export const CreatePurchaseModal = () => {
             isInvalid={Boolean(formState.errors.suplyerId)}
           >
             <option value="">Selecione um Fornecedor</option>
-            {suplyerData?.map((suplyer) => (
+            {suplyerData?.obj.map((suplyer) => (
               <option key={suplyer.id} value={suplyer.id}>
                 {suplyer.name}
               </option>

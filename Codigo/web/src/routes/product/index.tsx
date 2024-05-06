@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -41,12 +41,12 @@ function Index() {
   const [, setUpdateProductModal] = useSearchParam("updateProductModal");
   const [, setDeleteProductModal] = useSearchParam("deleteProductModal");
 
-  const { handleSubmit, register, formState, getValues, setValue } =
+  const { handleSubmit, register, formState, getValues } =
     useForm<z.infer<typeof schema>>();
 
   const { data: currentUser } = useCurrentUser();
 
-  const { data: productData, refetch } = useReadProducts(getValues("name"));
+  const { data: productData } = useReadProducts(getValues("name"));
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -77,7 +77,7 @@ function Index() {
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
-        <div className="p-2">Produto</div>
+        <div className="p-2">Produtos</div>
         <Form onSubmit={handleSubmit(searchProdut)}>
           <InputGroup className="p-2 me-auto w-8">
             <Form.Control

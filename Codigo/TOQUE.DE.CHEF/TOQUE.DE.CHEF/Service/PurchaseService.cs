@@ -68,6 +68,7 @@ namespace TOQUE.DE.CHEF.Services
 
             if (!string.IsNullOrEmpty(search))
             {
+                query = query.Where(x => x.Suplyer.Name.Contains(search));
             }
 
             query = query.OrderByDescending(p => p.PurchaseDate);

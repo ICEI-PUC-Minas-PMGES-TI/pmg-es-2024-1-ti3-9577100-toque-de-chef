@@ -16,6 +16,13 @@ import { CreateSuplyerModal } from "./_components/CreateSuplyerModal";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useCurrentUser } from "../../api/User/useCurrentUser";
+
+const schema = z.object({
+  name: z.string({ required_error: "Obrigatório" }),
+});
 
 export const Route = createFileRoute("/suplyer/")({
   component: Index,
@@ -26,7 +33,11 @@ function Index() {
   const [, setUpdateSuplyerModal] = useSearchParam("updateSuplyerModal");
   const [, setDeleteSuplyerModal] = useSearchParam("deleteSuplyerModal");
 
-  const { data: suplyerData } = useReadSuplyers();
+  const { handleSubmit, register, formState, getValues } =
+    useForm<z.infer<typeof schema>>();
+
+  const { data: suplyerData } = useReadSuplyers(getValues("name"));
+  const { data: currentUser } = useCurrentUser();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -57,28 +68,60 @@ function Index() {
 
   // Calculate start and end index for pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, suplyerData?.length || 0);
+  const endIndex = Math.min(
+    startIndex + itemsPerPage,
+    suplyerData?.obj.length || 0
+  );
+
+  const searchSuplyer = async () => {};
 
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
         <div className="p-2">Fornecedor</div>
-        <InputGroup className="p-2 me-auto w-8">
-          <Form.Control
-            placeholder="Pesquisar Fornecedor"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-          />
-          <Button variant="outline-secondary" id="button-addon2">
-            <Search />
+        <Form onSubmit={handleSubmit(searchSuplyer)}>
+          <InputGroup className="p-2 me-auto w-8">
+            <Form.Control
+              type="text"
+              placeholder="Pesquisar Fornecedor"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              {...register("name")}
+              isInvalid={Boolean(formState.errors.name)}
+            />
+
+            {formState.errors.name && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.name.message}
+              </Form.Control.Feedback>
+            )}
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              type="submit"
+            >
+              <Search />
+            </Button>
+            {/* <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              onClick={async () => {
+                await setValue("name", "");
+                await refetch();
+              }}
+            >
+              <Trash />
+            </Button> */}
+          </InputGroup>
+        </Form>
+        {currentUser && currentUser.type !== 2 && (
+          <Button
+            className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+            onClick={() => setCreateSuplyerModal("true")}
+          >
+            <PlusCircle /> <strong>Adicionar novo fornecedor</strong>
           </Button>
-        </InputGroup>
-        <Button
-          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-          onClick={() => setCreateSuplyerModal("true")}
-        >
-          <PlusCircle /> <strong>Adicionar novo fornecedor</strong>
-        </Button>
+        )}
       </Stack>
       <div className="p-1">
         <Table responsive>
@@ -92,29 +135,35 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {suplyerData?.slice(startIndex, endIndex).map((suplyer, index) => (
-              <tr key={index}>
-                <th scope="row">{startIndex + index + 1}</th>
-                <td>{suplyer.name}</td>
-                <td>{suplyer.email}</td>
-                <td>{suplyer.phone}</td>
-                <td>{suplyer.description}</td>
-                <td className="d-flex gap-2 ">
-                  <Button
-                    onClick={() => setUpdateSuplyerModal(suplyer.id.toString())}
-                    className="text-white"
-                  >
-                    <PencilFill />
-                  </Button>
-                  <Button
-                    className="text-white"
-                    onClick={() => setDeleteSuplyerModal(suplyer.id.toString())}
-                  >
-                    <TrashFill />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {suplyerData?.obj
+              .slice(startIndex, endIndex)
+              .map((suplyer, index) => (
+                <tr key={index}>
+                  <th scope="row">{startIndex + index + 1}</th>
+                  <td>{suplyer.name}</td>
+                  <td>{suplyer.email}</td>
+                  <td>{suplyer.phone}</td>
+                  <td>{suplyer.description}</td>
+                  <td className="d-flex gap-2 ">
+                    <Button
+                      onClick={() =>
+                        setUpdateSuplyerModal(suplyer.id.toString())
+                      }
+                      className="text-white"
+                    >
+                      <PencilFill />
+                    </Button>
+                    <Button
+                      className="text-white"
+                      onClick={() =>
+                        setDeleteSuplyerModal(suplyer.id.toString())
+                      }
+                    >
+                      <TrashFill />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </div>
@@ -130,7 +179,11 @@ function Index() {
         <Pagination>
           <Pagination.First onClick={() => setCurrentPage(1)} />
           <Pagination.Prev onClick={handlePaginationPrev} />
-          {[...Array(Math.ceil((suplyerData?.length || 0) / itemsPerPage)).keys()].map((page) => (
+          {[
+            ...Array(
+              Math.ceil((suplyerData?.obj.length || 0) / itemsPerPage)
+            ).keys(),
+          ].map((page) => (
             <Pagination.Item
               key={page}
               active={page + 1 === currentPage}
@@ -142,7 +195,9 @@ function Index() {
           <Pagination.Next onClick={handlePaginationNext} />
           <Pagination.Last
             onClick={() =>
-              setCurrentPage(Math.ceil((suplyerData?.length || 0) / itemsPerPage))
+              setCurrentPage(
+                Math.ceil((suplyerData?.obj.length || 0) / itemsPerPage)
+              )
             }
           />
         </Pagination>

@@ -10,8 +10,8 @@ export const DeleteCategoryModal = () => {
     "deleteCategoryModal"
   );
 
-  const { data: categoryData } = useReadCategories();
-  const selectedCategoryToDelete = categoryData?.find(
+  const { data: categoryData } = useReadCategories(null);
+  const selectedCategoryToDelete = categoryData?.obj.find(
     (category) => category.id === Number(deleteCategoryModal)
   );
   const { mutateAsync: mutateAsyncDelete } = useDeleteCategory({
