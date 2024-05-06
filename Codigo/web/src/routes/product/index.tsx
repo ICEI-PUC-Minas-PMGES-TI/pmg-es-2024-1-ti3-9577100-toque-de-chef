@@ -21,10 +21,8 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
-<<<<<<< HEAD
 import { isKeyPressed } from "../../helpers/Utils/Util";
 import { createFileRoute } from "@tanstack/react-router";
-=======
 import { useEffect, useState } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 import { useCurrentUser } from "../../api/User/useCurrentUser";
@@ -35,7 +33,6 @@ import { useForm } from "react-hook-form";
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
 });
->>>>>>> 21fad159a9a323a9d02949eafddca2ec07ea8f79
 
 export const Route = createFileRoute("/product/")({
   component: Index,
@@ -69,17 +66,17 @@ function Index() {
     };
   }, [setCreateProductModal]);
 
-<<<<<<< HEAD
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, productData?.obj?.length || 0);
+  const endIndex = Math.min(
+    startIndex + itemsPerPage,
+    productData?.obj?.length || 0
+  );
   const totalPages = Math.ceil((productData?.obj?.length || 0) / itemsPerPage);
-=======
   const searchProdut = async () => {};
->>>>>>> 21fad159a9a323a9d02949eafddca2ec07ea8f79
 
   return (
     <div className="m-4">
@@ -159,34 +156,36 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {productData?.obj?.slice(startIndex, endIndex).map((product, index) => (
-              <tr key={index}>
-                <th scope="row">{startIndex + index + 1}</th>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>{product.category.name}</td>
-                {currentUser && currentUser.type !== 2 && (
-                  <td className="d-flex gap-2 ">
-                    <Button
-                      onClick={() =>
-                        setUpdateProductModal(product.id.toString())
-                      }
-                      className="text-white"
-                    >
-                      <PencilFill />
-                    </Button>
-                    <Button
-                      className="text-white"
-                      onClick={() =>
-                        setDeleteProductModal(product.id.toString())
-                      }
-                    >
-                      <TrashFill />
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            ))}
+            {productData?.obj
+              ?.slice(startIndex, endIndex)
+              .map((product, index) => (
+                <tr key={index}>
+                  <th scope="row">{startIndex + index + 1}</th>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{product.category.name}</td>
+                  {currentUser && currentUser.type !== 2 && (
+                    <td className="d-flex gap-2 ">
+                      <Button
+                        onClick={() =>
+                          setUpdateProductModal(product.id.toString())
+                        }
+                        className="text-white"
+                      >
+                        <PencilFill />
+                      </Button>
+                      <Button
+                        className="text-white"
+                        onClick={() =>
+                          setDeleteProductModal(product.id.toString())
+                        }
+                      >
+                        <TrashFill />
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              ))}
           </tbody>
         </Table>
       </div>
@@ -214,7 +213,9 @@ function Index() {
             </Pagination.Item>
           ))}
           <Pagination.Next
-            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+            onClick={() =>
+              handlePageChange(Math.min(currentPage + 1, totalPages))
+            }
           />
           <Pagination.Last onClick={() => handlePageChange(totalPages)} />
         </Pagination>
