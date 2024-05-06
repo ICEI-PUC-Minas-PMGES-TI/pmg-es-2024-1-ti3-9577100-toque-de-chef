@@ -14,6 +14,8 @@ const cookies = new Cookies();
 
 export const RigthSidebar = () => {
   const queryClient = useQueryClient();
+  const { data: currentUser } = useCurrentUser();
+
   const router = useRouterState();
   const routerName = ROUTE_TO_NAME[router.location.pathname];
 
@@ -55,9 +57,12 @@ export const RigthSidebar = () => {
 
           <Dropdown.Menu>
             <Dropdown.Item onClick={getProfile}>Perfil</Dropdown.Item>
-            <Dropdown.Item onClick={getAccessControl}>
-              Controle de Acesso
-            </Dropdown.Item>
+
+            {currentUser && currentUser.type !== 2 && (
+              <Dropdown.Item onClick={getAccessControl}>
+                Controle de Acesso
+              </Dropdown.Item>
+            )}
 
             <Dropdown.Item onClick={logout}>Sair</Dropdown.Item>
           </Dropdown.Menu>
