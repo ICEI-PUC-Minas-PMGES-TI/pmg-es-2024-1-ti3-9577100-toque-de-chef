@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {
   Button,
   Form,
@@ -14,8 +13,9 @@ import { UpdateSuplyerModal } from "./_components/UpdateSuplyerModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteSuplyerModal } from "./_components/DeleteSuplyerModal";
 import { CreateSuplyerModal } from "./_components/CreateSuplyerModal";
-import { useEffect } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/suplyer/")({
   component: Index,
@@ -27,6 +27,10 @@ function Index() {
   const [, setDeleteSuplyerModal] = useSearchParam("deleteSuplyerModal");
 
   const { data: suplyerData } = useReadSuplyers();
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -41,6 +45,19 @@ function Index() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setCreateSuplyerModal]);
+
+  // Pagination handlers
+  const handlePaginationNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePaginationPrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  // Calculate start and end index for pagination
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, suplyerData?.length || 0);
 
   return (
     <div className="m-4">
@@ -75,9 +92,9 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {suplyerData?.map((suplyer, index) => (
+            {suplyerData?.slice(startIndex, endIndex).map((suplyer, index) => (
               <tr key={index}>
-                <th scope="row">{index + 1}</th>
+                <th scope="row">{startIndex + index + 1}</th>
                 <td>{suplyer.name}</td>
                 <td>{suplyer.email}</td>
                 <td>{suplyer.phone}</td>
@@ -102,6 +119,7 @@ function Index() {
         </Table>
       </div>
 
+      {/* Pagination component */}
       <div
         style={{
           display: "grid",
@@ -110,23 +128,23 @@ function Index() {
         }}
       >
         <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item> {1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active className="bg-primary">
-            {12}
-          </Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
+          <Pagination.First onClick={() => setCurrentPage(1)} />
+          <Pagination.Prev onClick={handlePaginationPrev} />
+          {[...Array(Math.ceil((suplyerData?.length || 0) / itemsPerPage)).keys()].map((page) => (
+            <Pagination.Item
+              key={page}
+              active={page + 1 === currentPage}
+              onClick={() => setCurrentPage(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={handlePaginationNext} />
+          <Pagination.Last
+            onClick={() =>
+              setCurrentPage(Math.ceil((suplyerData?.length || 0) / itemsPerPage))
+            }
+          />
         </Pagination>
       </div>
 
@@ -136,3 +154,5 @@ function Index() {
     </div>
   );
 }
+
+export default Index;

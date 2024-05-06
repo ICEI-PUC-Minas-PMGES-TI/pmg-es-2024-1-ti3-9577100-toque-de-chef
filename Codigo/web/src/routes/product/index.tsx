@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -20,14 +20,16 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
-import { useEffect } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/product/")({
   component: Index,
 });
 
 function Index() {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10); // Definindo itemsPerPage
   const [, setCreateProductModal] = useSearchParam("createProductModal");
   const [, setUpdateProductModal] = useSearchParam("updateProductModal");
   const [, setDeleteProductModal] = useSearchParam("deleteProductModal");
@@ -47,6 +49,14 @@ function Index() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setCreateProductModal]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, productData?.obj?.length || 0);
+  const totalPages = Math.ceil((productData?.obj?.length || 0) / itemsPerPage);
 
   return (
     <div className="m-4">
@@ -97,9 +107,9 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {productData?.obj?.map((product, index) => (
+            {productData?.obj?.slice(startIndex, endIndex).map((product, index) => (
               <tr key={index}>
-                <th scope="row">{index + 1}</th>
+                <th scope="row">{startIndex + index + 1}</th>
                 <td>{product.name}</td>
                 <td>{product.description}</td>
                 <td>{product.category.name}</td>
@@ -132,23 +142,23 @@ function Index() {
         }}
       >
         <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item> {1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active className="bg-primary">
-            {12}
-          </Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
+          <Pagination.First onClick={() => handlePageChange(1)} />
+          <Pagination.Prev
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page}
+              active={page + 1 === currentPage}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+          />
+          <Pagination.Last onClick={() => handlePageChange(totalPages)} />
         </Pagination>
       </div>
 
@@ -158,3 +168,5 @@ function Index() {
     </div>
   );
 }
+
+export default Index;

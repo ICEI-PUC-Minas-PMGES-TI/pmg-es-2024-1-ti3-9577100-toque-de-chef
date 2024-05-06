@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {
   Accordion,
   Button,
@@ -23,8 +22,9 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { CreatePurchaseModal } from "./_components/CreatePurchaseModal";
 import { useReadPurchases } from "../../api/Purchase/useReadPurchases";
 import { Purchase } from "../../types/purchase";
-import { useEffect } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/purchase/")({
   component: Index,
@@ -46,6 +46,10 @@ function Index() {
     return new Date(date).toLocaleString("pt-BR", options);
   }
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isKeyPressed(event, [{ key: "j", modifier: "Ctrl" }])) {
@@ -59,6 +63,19 @@ function Index() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setCreatePurchaseModal]);
+
+  // Pagination handlers
+  const handlePaginationNext = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePaginationPrev = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  // Calculate start and end index for pagination
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, purchaseData?.obj?.length || 0);
 
   return (
     <div className="m-4">
@@ -90,7 +107,7 @@ function Index() {
       </Stack>
       <div className="p-1">
         <Accordion>
-          {purchaseData?.obj?.map((purchase: Purchase, index: number) => (
+          {purchaseData?.obj?.slice(startIndex, endIndex).map((purchase: Purchase, index: number) => (
             <Accordion.Item eventKey={index.toString()} key={index}>
               <Accordion.Header>
                 <div className="d-flex align-items-center justify-content-between w-100 pe-4">
@@ -150,6 +167,7 @@ function Index() {
         </Accordion>
       </div>
 
+      {/* Pagination component */}
       <div
         style={{
           display: "grid",
@@ -159,23 +177,23 @@ function Index() {
         }}
       >
         <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item> {1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active className="bg-primary">
-            {12}
-          </Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
+          <Pagination.First onClick={() => setCurrentPage(1)} />
+          <Pagination.Prev onClick={handlePaginationPrev} />
+          {[...Array(Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)).keys()].map((page) => (
+            <Pagination.Item
+              key={page}
+              active={page + 1 === currentPage}
+              onClick={() => setCurrentPage(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={handlePaginationNext} />
+          <Pagination.Last
+            onClick={() =>
+              setCurrentPage(Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage))
+            }
+          />
         </Pagination>
       </div>
 

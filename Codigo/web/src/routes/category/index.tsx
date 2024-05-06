@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -7,20 +7,23 @@ import {
   Stack,
   Table,
 } from "react-bootstrap";
-import { useReadCategories } from "../../api/Category/useReadCategories";
 import { PencilFill, Search, TrashFill } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
-import { UpdateCategoryModal } from "./_components/UpdateCategoryModal";
+import { useReadCategories } from "../../api/Category/useReadCategories";
 import { useSearchParam } from "../../hooks/useSearchParams";
-import { DeleteCategoryModal } from "./_components/DeleteCategoryModal";
-import { CreateCategoryModal } from "./_components/CreateCategoryModal";
-import { useEffect } from "react";
 import { isKeyPressed } from "../../helpers/Utils/Util";
+import { createFileRoute } from "@tanstack/react-router";
+import { CreateCategoryModal } from "./_components/CreateCategoryModal";
+import { DeleteCategoryModal } from "./_components/DeleteCategoryModal";
+import { UpdateCategoryModal } from "./_components/UpdateCategoryModal";
 
 export const Route = createFileRoute("/category/")({
   component: Index,
 });
+
 function Index() {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10);
   const [, setCreateCategoryModal] = useSearchParam("createCategoryModal");
   const [, setUpdateCategoryModal] = useSearchParam("updateCategoryModal");
   const [, setDeleteCategoryModal] = useSearchParam("deleteCategoryModal");
@@ -40,6 +43,14 @@ function Index() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setCreateCategoryModal]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, categoryData?.length || 0);
+  const totalPages = Math.ceil((categoryData?.length || 0) / itemsPerPage);
 
   return (
     <div className="m-4">
@@ -72,25 +83,21 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {categoryData?.map((category, index) => (
+            {categoryData?.slice(startIndex, endIndex).map((category, index) => (
               <tr key={index}>
-                <th scope="row">{index + 1}</th>
+                <th scope="row">{startIndex + index + 1}</th>
                 <td>{category.name}</td>
                 <td>{category.description}</td>
                 <td className="d-flex gap-2 ">
                   <Button
-                    onClick={() =>
-                      setUpdateCategoryModal(category.id.toString())
-                    }
+                    onClick={() => setUpdateCategoryModal(category.id.toString())}
                     className="text-white"
                   >
                     <PencilFill />
                   </Button>
                   <Button
                     className="text-white"
-                    onClick={() =>
-                      setDeleteCategoryModal(category.id.toString())
-                    }
+                    onClick={() => setDeleteCategoryModal(category.id.toString())}
                   >
                     <TrashFill />
                   </Button>
@@ -110,23 +117,23 @@ function Index() {
         }}
       >
         <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item> {1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active className="bg-primary">
-            {12}
-          </Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
+          <Pagination.First onClick={() => handlePageChange(1)} />
+          <Pagination.Prev
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page}
+              active={page + 1 === currentPage}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+          />
+          <Pagination.Last onClick={() => handlePageChange(totalPages)} />
         </Pagination>
       </div>
 
@@ -136,3 +143,5 @@ function Index() {
     </div>
   );
 }
+
+export default Index;
