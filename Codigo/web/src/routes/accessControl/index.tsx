@@ -21,6 +21,7 @@ function Index() {
       return 4;
     }
   };
+  console.log("type()", type());
 
   const formatText = () => {
     let butao1 = "";
@@ -97,9 +98,9 @@ function Index() {
           }}
         >
           {data &&
-            data.map((user) => (
+            data.map((user, index) => (
               <Card
-                key={`${user.email}+${user.name}+${user.type}+`}
+                key={`${user.email}${index}`}
                 style={{
                   padding: "16px",
                   width: "max-content",
