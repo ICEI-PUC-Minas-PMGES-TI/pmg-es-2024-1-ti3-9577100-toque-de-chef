@@ -25,7 +25,6 @@ namespace TOQUE.DE.CHEF.Models
 
         public User User { get; set; }
 
-        public Stock Stock { get; set; }
 
     }
 }

@@ -7,14 +7,12 @@ namespace TOQUE.DE.CHEF.Services
     public class PurchaseItemService
     {
         private readonly Context _context;
-        private readonly StockService _stockService;
         private readonly ProductService _productService;
 
 
-        public PurchaseItemService(Context context, StockService  stockService, ProductService productService)
+        public PurchaseItemService(Context context,  ProductService productService)
         {
             _context = context;
-            _stockService = stockService;
             _productService = productService;
         }
 
