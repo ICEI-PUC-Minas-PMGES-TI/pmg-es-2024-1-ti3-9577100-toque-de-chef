@@ -70,7 +70,7 @@ namespace TOQUE.DE.CHEF.Services
             return product;
         }
 
-      
+
 
         public ApiResponse<Product> GetAllProducts(string search = null, int page = 1, int take = 15)
         {
