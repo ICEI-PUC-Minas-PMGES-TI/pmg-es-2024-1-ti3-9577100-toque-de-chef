@@ -57,7 +57,6 @@ function Index() {
         padding: "24px",
         margin: "48px",
         gap: "16px",
-        height: "100%",
       }}
     >
       <h3>Controle de Acesso</h3>
@@ -95,6 +94,9 @@ function Index() {
             gap: "16px",
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
+            height: "600px",
+
+            overflowY: "auto",
           }}
         >
           {data &&

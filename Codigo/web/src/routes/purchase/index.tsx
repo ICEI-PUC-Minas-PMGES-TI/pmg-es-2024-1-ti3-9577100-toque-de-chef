@@ -46,7 +46,7 @@ function Index() {
 
   const { data: purchaseData } = useReadPurchases(getValues("name"));
 
-  function formatPurchaseDate(date) {
+  function formatPurchaseDate(date: Date) {
     const options = {
       day: "2-digit",
       month: "2-digit",
@@ -93,6 +93,20 @@ function Index() {
   const { data: currentUser } = useCurrentUser();
 
   const searchSuplyer = async () => {};
+
+  function compareDate(date: Date): boolean {
+    const purchaseDate = new Date(date);
+    const now = new Date();
+
+    const purchaseDateString = purchaseDate.toISOString().substring(0, 10);
+
+    console.log("purchaseDateString", purchaseDateString);
+
+    const nowDateString = now.toISOString().substring(0, 10);
+    console.log("nowDateString", nowDateString);
+
+    return purchaseDateString === nowDateString;
+  }
 
   return (
     <div className="m-4">
@@ -167,14 +181,16 @@ function Index() {
                   </div>
                 </Accordion.Header>
                 <Accordion.Body>
-                  <Button
-                    className="text-white mb-2"
-                    onClick={() =>
-                      setUpdatePurchaseModal(purchase.id.toString())
-                    }
-                  >
-                    Editar Compra <PencilFill />
-                  </Button>
+                  {compareDate(purchase.purchaseDate) && (
+                    <Button
+                      className="text-white mb-2"
+                      onClick={() =>
+                        setUpdatePurchaseModal(purchase.id.toString())
+                      }
+                    >
+                      Editar Compra <PencilFill />
+                    </Button>
+                  )}
                   <div
                     style={{
                       display: "grid",
