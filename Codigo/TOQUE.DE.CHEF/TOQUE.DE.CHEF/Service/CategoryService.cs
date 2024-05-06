@@ -56,17 +56,19 @@ namespace TOQUE.DE.CHEF.Services
             return category;
         }
 
-        public ApiResponse<Category> GetAllCategories(string search = null, int page = 1, int take = 15)
+       public ApiResponse<Category> GetAllCategories(string search = null, int page = 1, int take = 15)
         {
             var query = _context.categories
-                .Include(c => c.Products)
-                .Where(x => x.DeletedAt == null) 
-                .AsQueryable();
+        .Include(c => c.Products)
+        .Where(x => x.DeletedAt == null)
+        .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
             }
+
+            query = query.OrderBy(x => x.Name);
 
             var totalRecords = query.Count();
             var categories = query.Skip((page - 1) * take).Take(take).ToList();
@@ -74,7 +76,7 @@ namespace TOQUE.DE.CHEF.Services
             return new ApiResponse<Category>
             {
                 Count = totalRecords,
-                obj = categories 
+                obj = categories
             };
         }
 

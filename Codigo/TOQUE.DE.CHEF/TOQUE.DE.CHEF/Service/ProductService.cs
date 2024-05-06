@@ -75,14 +75,16 @@ namespace TOQUE.DE.CHEF.Services
         public ApiResponse<Product> GetAllProducts(string search = null, int page = 1, int take = 15)
         {
             var query = _context.products
-                .Include(p => p.Category)
-                .Where(p => p.DeletedAt == null)
-                .AsQueryable();
+        .Include(p => p.Category)
+        .Where(p => p.DeletedAt == null)
+        .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(x => x.DeletedAt == null && x.Name.Contains(search));
             }
+
+            query = query.OrderBy(x => x.Name);
 
             var totalRecords = query.Count();
             var products = query.Skip((page - 1) * take).Take(take).ToList();
