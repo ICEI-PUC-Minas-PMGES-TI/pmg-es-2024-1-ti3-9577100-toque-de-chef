@@ -6,3 +6,9 @@ export type User = {
   active: boolean;
   type: number;
 };
+
+export type UserInfoType = {
+  name: string;
+  email: string;
+  type: number;
+};
