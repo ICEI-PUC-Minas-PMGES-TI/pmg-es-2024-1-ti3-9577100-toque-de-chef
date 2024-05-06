@@ -148,6 +148,7 @@ function Index() {
               <th scope="col">#</th>
               <th scope="col">Nome</th>
               <th scope="col">Descrição</th>
+              <th scope="col">Quantidade</th>
               <th scope="col">Categoria</th>
             </tr>
           </thead>
@@ -159,6 +160,7 @@ function Index() {
                   <th scope="row">{startIndex + index + 1}</th>
                   <td>{product.name}</td>
                   <td>{product.description}</td>
+                  <td>{product.stockQtd}</td>
                   <td>{product.category.name}</td>
                   {currentUser && currentUser.type !== 2 && (
                     <td className="d-flex gap-2 ">
