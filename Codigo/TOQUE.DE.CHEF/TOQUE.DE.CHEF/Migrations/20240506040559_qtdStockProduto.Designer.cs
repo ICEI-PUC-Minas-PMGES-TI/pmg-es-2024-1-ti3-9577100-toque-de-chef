@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TOQUE.DE.CHEF.Models;
 
@@ -11,9 +12,11 @@ using TOQUE.DE.CHEF.Models;
 namespace TOQUE.DE.CHEF.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240506040559_qtdStockProduto")]
+    partial class qtdStockProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,6 +145,29 @@ namespace TOQUE.DE.CHEF.Migrations
                     b.ToTable("PURCHASE_ITENS");
                 });
 
+            modelBuilder.Entity("TOQUE.DE.CHEF.Models.Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("QUANTITY");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("STOCKS");
+                });
+
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.Suplyer", b =>
                 {
                     b.Property<int>("Id")
@@ -235,10 +261,15 @@ namespace TOQUE.DE.CHEF.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("OperationType");
 
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StockId");
 
                     b.HasIndex("UserId");
 
@@ -326,6 +357,17 @@ namespace TOQUE.DE.CHEF.Migrations
                     b.Navigation("Purchase");
                 });
 
+            modelBuilder.Entity("TOQUE.DE.CHEF.Models.Stock", b =>
+                {
+                    b.HasOne("TOQUE.DE.CHEF.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.TransactionPurchaseOperation", b =>
                 {
                     b.HasOne("TOQUE.DE.CHEF.Models.Purchase", "Purchase")
@@ -343,11 +385,19 @@ namespace TOQUE.DE.CHEF.Migrations
 
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.TransactionStockOperation", b =>
                 {
+                    b.HasOne("TOQUE.DE.CHEF.Models.Stock", "Stock")
+                        .WithMany("TransactionStockOperation")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TOQUE.DE.CHEF.Models.User", "User")
                         .WithMany("TransactionStockOperations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Stock");
 
                     b.Navigation("User");
                 });
@@ -360,6 +410,11 @@ namespace TOQUE.DE.CHEF.Migrations
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.Purchase", b =>
                 {
                     b.Navigation("PurchaseItems");
+                });
+
+            modelBuilder.Entity("TOQUE.DE.CHEF.Models.Stock", b =>
+                {
+                    b.Navigation("TransactionStockOperation");
                 });
 
             modelBuilder.Entity("TOQUE.DE.CHEF.Models.Suplyer", b =>

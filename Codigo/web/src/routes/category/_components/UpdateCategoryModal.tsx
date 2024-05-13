@@ -27,8 +27,8 @@ export const UpdateCategoryModal = () => {
     resolver: zodResolver(schemaEdit),
   });
 
-  const { data: categoryData, isLoading } = useReadCategories();
-  const selectedCategoryToUpdate = categoryData?.find(
+  const { data: categoryData, isLoading } = useReadCategories(null);
+  const selectedCategoryToUpdate = categoryData?.obj.find(
     (category) => category.id === Number(updateCategoryModal)
   );
   const { mutateAsync: mutateAsyncUpdate } = useUpdateCategory({

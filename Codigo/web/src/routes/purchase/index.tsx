@@ -25,6 +25,13 @@ import { Purchase } from "../../types/purchase";
 import { isKeyPressed } from "../../helpers/Utils/Util";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { useCurrentUser } from "../../api/User/useCurrentUser";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+
+const schema = z.object({
+  name: z.string({ required_error: "Obrigatório" }),
+});
 
 export const Route = createFileRoute("/purchase/")({
   component: Index,
@@ -32,10 +39,14 @@ export const Route = createFileRoute("/purchase/")({
 
 function Index() {
   const [, setCreatePurchaseModal] = useSearchParam("createPurchaseModal");
+  const [, setUpdatePurchaseModal] = useSearchParam("updatePurchaseModal");
 
-  const { data: purchaseData } = useReadPurchases(null);
+  const { handleSubmit, register, formState, getValues } =
+    useForm<z.infer<typeof schema>>();
 
-  function formatPurchaseDate(date) {
+  const { data: purchaseData } = useReadPurchases(getValues("name"));
+
+  function formatPurchaseDate(date: Date) {
     const options = {
       day: "2-digit",
       month: "2-digit",
@@ -73,97 +84,156 @@ function Index() {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
-  // Calculate start and end index for pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, purchaseData?.obj?.length || 0);
+  const endIndex = Math.min(
+    startIndex + itemsPerPage,
+    purchaseData?.obj?.length || 0
+  );
+
+  const { data: currentUser } = useCurrentUser();
+
+  const searchSuplyer = async () => {};
+
+  function compareDate(date: Date): boolean {
+    const purchaseDate = new Date(date);
+    const now = new Date();
+
+    const purchaseDateString = purchaseDate.toISOString().substring(0, 10);
+
+    console.log("purchaseDateString", purchaseDateString);
+
+    const nowDateString = now.toISOString().substring(0, 10);
+    console.log("nowDateString", nowDateString);
+
+    return purchaseDateString === nowDateString;
+  }
 
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
-        <InputGroup className="p-2 me-auto w-8">
-          <Form.Control
-            placeholder="Pesquisar compra"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-          />
-          <Button variant="outline-secondary" id="button-addon2">
-            <Search />
-          </Button>
-        </InputGroup>
-        <Button
-          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-          onClick={() => setCreatePurchaseModal("true")}
-        >
-          <PlusCircle /> <strong>Cadastrar Nova Compra</strong>
-        </Button>
+        <div className="p-2">Compras</div>
+        <Form onSubmit={handleSubmit(searchSuplyer)}>
+          <InputGroup className="p-2 me-auto w-8">
+            <Form.Control
+              type="text"
+              placeholder="Pesquisar Produto"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              {...register("name")}
+              isInvalid={Boolean(formState.errors.name)}
+            />
 
-        <Button
-          className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-          disabled
-        >
-          <FileEarmarkArrowUp />
-          <strong>Exportar Planilha</strong>
-        </Button>
+            {formState.errors.name && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.name.message}
+              </Form.Control.Feedback>
+            )}
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              type="submit"
+            >
+              <Search />
+            </Button>
+            {/* <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              onClick={async () => {
+                await setValue("name", "");
+                await refetch();
+              }}
+            >
+              <Trash />
+            </Button> */}
+          </InputGroup>
+        </Form>
+        {currentUser && currentUser.type !== 2 && (
+          <>
+            <Button
+              className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+              onClick={() => setCreatePurchaseModal("true")}
+            >
+              <PlusCircle /> <strong>Cadastrar Nova Compra</strong>
+            </Button>
+
+            <Button
+              className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+              disabled
+            >
+              <FileEarmarkArrowUp />
+              <strong>Exportar Planilha</strong>
+            </Button>
+          </>
+        )}
       </Stack>
       <div className="p-1">
         <Accordion>
-          {purchaseData?.obj?.slice(startIndex, endIndex).map((purchase: Purchase, index: number) => (
-            <Accordion.Item eventKey={index.toString()} key={index}>
-              <Accordion.Header>
-                <div className="d-flex align-items-center justify-content-between w-100 pe-4">
-                  <div>
-                    {formatPurchaseDate(purchase.purchaseDate)} -{" "}
-                    {purchase.suplyer.name}
-                  </div>
-                  <Button className="text-white">
-                    <PencilFill />
-                  </Button>
-                </div>
-              </Accordion.Header>
-              <Accordion.Body>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    gap: "16px",
-                  }}
-                >
-                  {purchase?.purchaseItems.map((item, index2) => (
-                    <div
-                      key={index2}
-                      style={{
-                        display: "grid",
-                        justifyContent: "center",
-                        gap: "16px",
-                        boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.1)",
-                        borderRadius: "8px",
-                        padding: "16px",
-                      }}
-                    >
-                      <div>
-                        <Box /> Nome: {item.product.name}
-                      </div>
-                      <div>
-                        <Clipboard /> Categoria:{" "}
-                        {item?.product?.category?.name || "tempero"}
-                      </div>
-                      <div>
-                        <CurrencyDollar /> Preço Unitário: {item.unitPrice}
-                      </div>
-                      <div>
-                        <Diamond /> Quantidade: {item.quantity}
-                      </div>
-                      <div>
-                        {" "}
-                        <CashCoin /> Preço Total:
-                        {item.quantity * item.unitPrice}
-                      </div>
+          {purchaseData?.obj
+            ?.slice(startIndex, endIndex)
+            .map((purchase: Purchase, index: number) => (
+              <Accordion.Item eventKey={index.toString()} key={index}>
+                <Accordion.Header>
+                  <div className="d-flex align-items-center justify-content-between w-100 pe-4">
+                    <div>
+                      {formatPurchaseDate(purchase.purchaseDate)} -{" "}
+                      {purchase.suplyer.name}
                     </div>
-                  ))}
-                </div>
-              </Accordion.Body>
-            </Accordion.Item>
-          ))}
+                  </div>
+                </Accordion.Header>
+                <Accordion.Body>
+                  {compareDate(purchase.purchaseDate) && (
+                    <Button
+                      className="text-white mb-2"
+                      onClick={() =>
+                        setUpdatePurchaseModal(purchase.id.toString())
+                      }
+                    >
+                      Editar Compra <PencilFill />
+                    </Button>
+                  )}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
+                    {purchase?.purchaseItems.map((item, index2) => (
+                      <div
+                        key={index2}
+                        style={{
+                          display: "grid",
+                          justifyContent: "center",
+                          gap: "16px",
+                          boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.1)",
+                          borderRadius: "8px",
+                          padding: "16px",
+                        }}
+                      >
+                        <div>
+                          <Box /> Nome: {item.product.name}
+                        </div>
+                        <div>
+                          <Clipboard /> Categoria:{" "}
+                          {item?.product?.category?.name || "tempero"}
+                        </div>
+                        <div>
+                          <CurrencyDollar /> Preço Unitário: {item.unitPrice}
+                        </div>
+                        <div>
+                          <Diamond /> Quantidade: {item.quantity}
+                        </div>
+                        <div>
+                          {" "}
+                          <CashCoin /> Preço Total:
+                          {item.quantity * item.unitPrice}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+            ))}
         </Accordion>
       </div>
 
@@ -179,7 +249,11 @@ function Index() {
         <Pagination>
           <Pagination.First onClick={() => setCurrentPage(1)} />
           <Pagination.Prev onClick={handlePaginationPrev} />
-          {[...Array(Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)).keys()].map((page) => (
+          {[
+            ...Array(
+              Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)
+            ).keys(),
+          ].map((page) => (
             <Pagination.Item
               key={page}
               active={page + 1 === currentPage}
@@ -191,7 +265,9 @@ function Index() {
           <Pagination.Next onClick={handlePaginationNext} />
           <Pagination.Last
             onClick={() =>
-              setCurrentPage(Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage))
+              setCurrentPage(
+                Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)
+              )
             }
           />
         </Pagination>

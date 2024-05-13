@@ -22,7 +22,7 @@ namespace TOQUE.DE.CHEF.Services
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Name.Contains(search) || x.Description.Contains(search));
+                query = query.Where(x => x.Name.Contains(search) && x.DeletedAt == null);
             }
 
             query = query.OrderBy(x => x.Name);

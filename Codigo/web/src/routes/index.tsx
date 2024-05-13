@@ -22,7 +22,7 @@ function Index() {
   const navigate = useNavigate();
   const { mutateAsync } = useLoginUser();
   const { register, handleSubmit } = useForm<z.infer<typeof schema>>();
-  const [loginError, setLoginError] = useState(""); // Estado para controlar o erro de login
+  const [loginError, setLoginError] = useState("");
 
   const handleLogin: SubmitHandler<z.infer<typeof schema>> = async (data) => {
     try {
@@ -31,19 +31,15 @@ function Index() {
         password: data.password,
       });
 
-      // Verifica o tipo de usuário após o login
+      cookies.set("user", response.token, { path: "/" });
       if (response && response.user.type === 4) {
         setLoginError("Acesso negado entre em contato com o seu Gestor");
       } else if (response && response.user.type === 3) {
-        navigate({ to: "/awaiting-system-access/" }); // Substitua "/destinationForType3" pelo destino correto para o tipo 3
+        navigate({ to: "/awaiting-system-access/" });
       } else {
         navigate({ to: "/product" });
       }
-
-      // Salva o token de usuário nos cookies
-      cookies.set("user", response.token, { path: "/" });
     } catch (error) {
-      // Em caso de erro no login, exibe a mensagem de erro
       setLoginError("Credenciais inválidas");
     }
   };

@@ -28,6 +28,7 @@ export const CreatePurchaseModal = () => {
   const [createPurchaseModal, setCreatePurchaseModal] = useSearchParam(
     "createPurchaseModal"
   );
+
   const { handleSubmit, register, formState } = useForm<z.infer<typeof schema>>(
     {
       resolver: zodResolver(schema),
@@ -47,7 +48,7 @@ export const CreatePurchaseModal = () => {
     },
   });
 
-  const { data: suplyerData } = useReadSuplyers();
+  const { data: suplyerData } = useReadSuplyers(null);
   const { data: productsData } = useReadProducts(null);
 
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItemDto[]>([]);
@@ -96,7 +97,7 @@ export const CreatePurchaseModal = () => {
             isInvalid={Boolean(formState.errors.suplyerId)}
           >
             <option value="">Selecione um Fornecedor</option>
-            {suplyerData?.map((suplyer) => (
+            {suplyerData?.obj.map((suplyer) => (
               <option key={suplyer.id} value={suplyer.id}>
                 {suplyer.name}
               </option>

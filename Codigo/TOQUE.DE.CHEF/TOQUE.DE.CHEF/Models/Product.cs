@@ -14,6 +14,9 @@ namespace TOQUE.DE.CHEF.Models
         [Column("DESCRIPTION")]
         public string Description { get; set; }
 
+        [Column("STOCK")]
+        public int StockQtd { get; set; }
+
 
         public Category Category { get; set; }
 

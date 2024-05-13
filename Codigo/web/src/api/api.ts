@@ -5,7 +5,10 @@ const cookies = new Cookies();
 export const api = async (endpoint: string, init?: RequestInit | undefined) => {
   const token = cookies.get("user");
 
-  const response = await fetch(`http://localhost:5041/${endpoint}`, {
+  //cplara https://localhost:7039/${endpoint}
+  //cpPedo http://localhost:5041/${endpoint}
+
+  const response = await fetch(`https://localhost:7039/${endpoint}`, {
     ...init,
     headers: {
       ...init?.headers,

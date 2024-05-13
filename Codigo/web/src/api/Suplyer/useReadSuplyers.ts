@@ -1,13 +1,20 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { api } from "../api";
-import { Suplyer, SuplyerResponse } from "../../types/suplyer";
+import { SuplyerResponse } from "../../types/suplyer";
 
-export const readSuplyers = async () => {
-  const res = await api(`Suplyer/GetAllSuplyers`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const readSuplyers = async (
+  search: string | null,
+  page: number = 1,
+  take: number = 15
+) => {
+  const res = await api(
+    `Suplyer/GetAllSuplyers?search=${search || ""}&page=${page}&take=${take}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Erro ao carregar fornecedores");
@@ -15,15 +22,30 @@ export const readSuplyers = async () => {
 
   const allSuplyers = (await res.json()) as SuplyerResponse;
 
-  return allSuplyers.obj;
+  return allSuplyers;
 };
 
 export const useReadSuplyers = (
-  props?: UseQueryOptions<unknown, Error, Suplyer[], string[]>
+  search: string | null,
+  page: number = 1,
+  take: number = 15,
+  props?: UseQueryOptions<
+    SuplyerResponse,
+    Error,
+    SuplyerResponse,
+    [
+      string | null,
+      {
+        search: string | null;
+        page: number;
+        take: number;
+      },
+    ]
+  >
 ) => {
   return useQuery({
     ...props,
-    queryKey: ["readSuplyers"],
-    queryFn: readSuplyers,
+    queryKey: ["readSuplyers", { search, page, take }],
+    queryFn: () => readSuplyers(search, page, take),
   });
 };

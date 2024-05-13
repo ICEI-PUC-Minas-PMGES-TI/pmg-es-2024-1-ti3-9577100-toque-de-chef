@@ -28,8 +28,8 @@ export const UpdateSuplyerModal = () => {
     resolver: zodResolver(schemaEdit),
   });
 
-  const { data: suplyerData, isLoading } = useReadSuplyers();
-  const selectedSuplyerToUpdate = suplyerData?.find(
+  const { data: suplyerData, isLoading } = useReadSuplyers(null);
+  const selectedSuplyerToUpdate = suplyerData?.obj.find(
     (suplyer) => suplyer.id === Number(updateSuplyerModal)
   );
   const { mutateAsync: mutateAsyncUpdate } = useUpdateSuplyer({

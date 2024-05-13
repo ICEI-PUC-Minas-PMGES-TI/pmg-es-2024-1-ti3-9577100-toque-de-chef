@@ -9,6 +9,7 @@ export type ProductDto = {
 export type Product = {
   id: number;
   name: string;
+  stockQtd: number;
   description: string;
   categoryId: number;
   category: Category;

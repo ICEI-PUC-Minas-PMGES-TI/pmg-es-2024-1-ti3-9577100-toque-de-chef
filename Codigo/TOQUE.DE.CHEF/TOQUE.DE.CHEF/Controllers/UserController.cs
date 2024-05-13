@@ -63,5 +63,20 @@ namespace TOQUE.DE.CHEF.Controllers
         {
             return _userService.GetCurrentUser(User);
         }
+
+        [HttpGet]
+        public IActionResult GetUsersByType(int userType)
+        {
+            var users = _userService.GetUsersByType(userType);
+
+            if (users != null)
+            {
+                return Ok(users); 
+            }
+            else
+            {
+                return NoContent(); 
+            }
+        }
     }
 }

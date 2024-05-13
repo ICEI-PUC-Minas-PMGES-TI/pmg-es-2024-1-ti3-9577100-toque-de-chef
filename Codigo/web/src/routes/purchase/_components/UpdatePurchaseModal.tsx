@@ -1,50 +1,65 @@
 import { useSearchParam } from "../../../hooks/useSearchParams";
-import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpdateProduct } from "../../../api/Product/useUpdateProduct";
 import { useQueryClient } from "@tanstack/react-query";
-import { useReadProducts } from "../../../api/Product/useReadProducts";
 import { useEffect } from "react";
 import { useReadCategories } from "../../../api/Category/useReadCategories";
+import { useReadSuplyers } from "../../../api/Suplyer/useReadSuplyers";
+import { PlusCircle, Trash } from "react-bootstrap-icons";
+import { useReadPurchases } from "../../../api/Purchase/useReadPurchases";
+import { useUpdatePurchase } from "../../../api/Purchase/useUpdatePurchase";
+import { PurchaseItem, PurchaseItemDto } from "../../../types/purchase";
+import { useReadProducts } from "../../../api/Product/useReadProducts";
 
 const schemaEdit = z.object({
-  name: z.string({ required_error: "Obrigatório" }),
-  description: z.string({ required_error: "Obrigatório" }),
-  unit_Price: z.number({ required_error: "Obrigatório" }).min(1),
-  category: z.object({
-    id: z.number({ required_error: "Obrigatório" }).min(1),
-  }),
+  suplyerId: z.number({ required_error: "Obrigatório" }).min(1),
+  purchaseItems: z.array(
+    z.object({
+      product: z.object({
+        id: z.number(),
+      }),
+      unitPrice: z.number({ required_error: "Obrigatório" }).min(1),
+      quantity: z.number({ required_error: "Obrigatório" }).min(1),
+    })
+  ),
 });
-
 export const UpdatePurchaseModal = () => {
   const queryClient = useQueryClient();
 
-  const [updateProductModal, setUpdatePurchaseModal] =
-    useSearchParam("updateProductModal");
+  const { data: suplyerData } = useReadSuplyers(null);
+  const [updatePurchaseModal, setUpdatePurchaseModal] = useSearchParam(
+    "updatePurchaseModal"
+  );
+
   const {
     handleSubmit: handleSubmitUpdate,
     register: update,
     formState: formStateUpdate,
     reset,
+    getValues,
+    setValue,
+    watch,
   } = useForm<z.infer<typeof schemaEdit>>({
     resolver: zodResolver(schemaEdit),
   });
 
-  const { data: productData, isLoading } = useReadProducts(null);
-  const selectedProductToUpdate = productData?.obj?.find(
-    (product) => product.id === Number(updateProductModal)
+  const { data: purchaseData, isLoading } = useReadPurchases(null);
+  const selectedPurchaseToUpdate = purchaseData?.obj?.find(
+    (product) => product.id === Number(updatePurchaseModal)
   );
-  const { mutateAsync: mutateAsyncUpdate } = useUpdateProduct({
+
+  console.log("purchaseData", purchaseData);
+  const { mutateAsync: mutateAsyncUpdate } = useUpdatePurchase({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readProducts"],
+        queryKey: ["readPurchases"],
       });
     },
     onError: () => {
       queryClient.invalidateQueries({
-        queryKey: ["readProducts"],
+        queryKey: ["readPurchases"],
       });
     },
   });
@@ -54,102 +69,186 @@ export const UpdatePurchaseModal = () => {
   ) => {
     setUpdatePurchaseModal(undefined);
     await mutateAsyncUpdate({
-      product: {
-        id: selectedProductToUpdate?.id,
-        categoryId: data.category.id,
-        unitPrice: data.unit_Price,
-        description: data.description,
-        name: data.name,
+      purchase: {
+        id: selectedPurchaseToUpdate?.id,
+        suplyerId: data.suplyerId,
+        purchaseItems: data.purchaseItems.map((item) => {
+          return {
+            productId: item.product.id,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+          };
+        }),
       },
     });
   };
 
-  const { data: categoryData } = useReadCategories();
+  const { data: productsData } = useReadProducts(null);
+  const { data: categoryData } = useReadCategories(null);
 
   useEffect(() => {
-    if (productData) {
-      reset(selectedProductToUpdate);
+    if (purchaseData) {
+      reset(selectedPurchaseToUpdate);
     }
-  }, [isLoading, reset, selectedProductToUpdate, productData]);
+  }, [isLoading, reset, selectedPurchaseToUpdate, purchaseData]);
 
   return (
     <Modal
-      show={Boolean(updateProductModal)}
+      show={Boolean(updatePurchaseModal)}
       onHide={() => setUpdatePurchaseModal(undefined)}
+      size="lg"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Editar Produto</Modal.Title>
+        <Modal.Title>Cadastrar Compra</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmitUpdate(onSubmitUpdate)}>
-          <FloatingLabel controlId="name" label="Nome" className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Nome"
-              {...update("name")}
-              isInvalid={Boolean(formStateUpdate.errors.name)}
-            />
-            {formStateUpdate.errors.name && (
-              <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.name.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
-
-          <FloatingLabel
-            controlId="unitPrice"
-            label="Preço Unitário"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder="Preço Unitário"
-              {...update("unit_Price", { valueAsNumber: true })}
-              isInvalid={Boolean(formStateUpdate.errors.unit_Price)}
-            />
-            {formStateUpdate.errors.unit_Price && (
-              <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.unit_Price.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
-
-          <FloatingLabel controlId="floatingDescription" label="Descrição">
-            <Form.Control
-              type="text"
-              placeholder="Descrição"
-              {...update("description")}
-              isInvalid={Boolean(formStateUpdate.errors.description)}
-            />
-            {formStateUpdate.errors.description && (
-              <Form.Control.Feedback type="invalid">
-                {formStateUpdate.errors.description.message}
-              </Form.Control.Feedback>
-            )}
-          </FloatingLabel>
+          <div> Fornecedor</div>
 
           <Form.Select
             aria-label="Default select example"
-            {...update("category.id", { valueAsNumber: true })}
-            isInvalid={Boolean(formStateUpdate.errors.category?.id)}
+            {...update("suplyerId", {
+              valueAsNumber: true,
+              required: "Obrigatório",
+            })}
+            isInvalid={Boolean(formStateUpdate.errors.suplyerId)}
           >
-            <option value="">Selecione uma categoria</option>
-            {categoryData?.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.name}
+            <option value="">Selecione um Fornecedor</option>
+            {suplyerData?.obj.map((suplyer) => (
+              <option key={suplyer.id} value={suplyer.id}>
+                {suplyer.name}
               </option>
             ))}
           </Form.Select>
 
+          <div
+            style={{
+              display: "grid",
+              gap: "16px",
+              paddingTop: "16px",
+            }}
+          >
+            <div> Produtos</div>
+
+            <div
+              style={{
+                padding: "0 16px",
+                overflowY: "scroll",
+                maxHeight: "40vh",
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gap: "16px",
+                  justifyContent: "center",
+                  gridTemplateColumns: "1fr 1fr",
+                }}
+              >
+                {watch("purchaseItems")?.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: "16px",
+                      boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Form.Select
+                      aria-label="Default select example"
+                      {...update(`purchaseItems.${index}.product.id`, {
+                        valueAsNumber: true,
+                        required: "Obrigatório",
+                      })}
+                    >
+                      <option value="">Selecione um Produto</option>
+                      {productsData?.obj?.map((product) => (
+                        <option key={product.id} value={product.id}>
+                          {product.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "16px",
+                        marginTop: "16px",
+                        marginBottom: "16px",
+                      }}
+                    >
+                      <Form.Group controlId={`price-${index}`}>
+                        <Form.Control
+                          type="number"
+                          placeholder="Preço"
+                          {...update(`purchaseItems.${index}.unitPrice`, {
+                            valueAsNumber: true,
+                            required: "Obrigatório",
+                          })}
+                          isInvalid={Boolean(
+                            formStateUpdate.errors.purchaseItems?.[index]
+                              ?.unitPrice
+                          )}
+                        />
+                      </Form.Group>
+
+                      <Form.Group controlId={`quantity-${index}`}>
+                        <Form.Control
+                          type="number"
+                          placeholder="Quantidade"
+                          {...update(`purchaseItems.${index}.quantity`, {
+                            valueAsNumber: true,
+                            required: "Obrigatório",
+                          })}
+                          isInvalid={Boolean(
+                            formStateUpdate.errors.purchaseItems?.[index]
+                              ?.quantity
+                          )}
+                        />
+                      </Form.Group>
+                    </div>
+
+                    <Button
+                      variant="secondary"
+                      // onClick={() => removeProductField(index)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ justifySelf: "end" }}>
+              <Button
+                className="text-white"
+                onClick={() => {
+                  setValue("purchaseItems", [
+                    ...getValues("purchaseItems"),
+                    {
+                      product: {
+                        id: -1,
+                      },
+                      quantity: 1,
+                      unitPrice: 0,
+                    },
+                  ]);
+                }}
+              >
+                <PlusCircle />
+              </Button>
+            </div>
+          </div>
           <div className="d-flex gap-2 mt-2">
             <Button
               variant="secondary"
-              onClick={() => setUpdatePurchaseModal(undefined)}
+              // onClick={() => setCreatePurchaseModal(undefined)}
             >
               Fechar
             </Button>
             <Button type="submit" className="text-white">
-              Salvar
+              Editar
             </Button>
           </div>
         </Form>

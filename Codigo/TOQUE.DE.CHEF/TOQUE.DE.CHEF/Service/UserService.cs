@@ -82,6 +82,28 @@ namespace TOQUE.DE.CHEF.Services
             return _context.users.FirstOrDefault(x => x.Id == id);
         }
 
+
+        public List<UserInfoDto> GetUsersByType(int userType)
+        {
+            var users = _context.users.Where(u => u.Type == (UserRole)userType).ToList();
+
+            if (users.Any())
+            {
+                var usersInfoDto = users.Select(u => new UserInfoDto
+                {
+                    Name = u.Name,
+                    Email = u.Email,
+                    Type = (int)u.Type
+                }).ToList();
+
+                return usersInfoDto;
+            }
+            else
+            {
+                return null; 
+            }
+        }
+
         public string EditUser(UserEditDto dto, ClaimsPrincipal User)
         {
             try

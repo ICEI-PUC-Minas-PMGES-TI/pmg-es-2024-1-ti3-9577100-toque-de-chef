@@ -2,6 +2,7 @@
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Models;
 using ClosedXML.Excel;
+using TOQUE.DE.CHEF.Migrations;
 
 namespace TOQUE.DE.CHEF.Services
 {
@@ -26,6 +27,7 @@ namespace TOQUE.DE.CHEF.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
+                StockQtd = 0,
                 Category = category
             };
 
@@ -63,11 +65,36 @@ namespace TOQUE.DE.CHEF.Services
 
             product.Name = dto.Name;
             product.Description = dto.Description;
+            product.StockQtd = dto.StockQtd;
             product.Category = category;
 
             _context.SaveChanges();
 
             return product;
+        }
+
+
+        public void UpdateProductStock(int productId, int quantity)
+        {
+            try
+            {
+                var product = _context.products.FirstOrDefault(x => x.Id == productId);
+
+                if (product == null)
+                {
+                    throw new ArgumentException($"Produto com ID '{productId}' não encontrado.");
+                }
+                else
+                {
+                    product.StockQtd += quantity;
+                    _context.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao atualizar o estoque do produto: {ex.Message}");
+            }
         }
 
 

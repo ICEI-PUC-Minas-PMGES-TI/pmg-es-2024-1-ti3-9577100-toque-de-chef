@@ -14,7 +14,6 @@ namespace TOQUE.DE.CHEF.Models
         public DbSet<Suplyer> suplyers { get; set; }
         public DbSet<Purchase> purchases { get; set; }
         public DbSet<PurchaseItem> purchaseItems { get; set; }
-        public DbSet<Stock> stocks { get; set; }
         public DbSet<TransactionStockOperation> transactionStockOperations { get; set; }
 
     }

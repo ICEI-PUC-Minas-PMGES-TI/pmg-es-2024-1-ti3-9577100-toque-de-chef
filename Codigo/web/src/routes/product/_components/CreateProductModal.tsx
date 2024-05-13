@@ -43,7 +43,7 @@ export const CreateProductModal = () => {
     await mutateAsync(data);
   };
 
-  const { data: categoryData } = useReadCategories();
+  const { data: categoryData } = useReadCategories(null);
 
   return (
     <Modal
@@ -93,7 +93,7 @@ export const CreateProductModal = () => {
             isInvalid={Boolean(formState.errors.categoryId)}
           >
             <option value="">Selecione uma categoria</option>
-            {categoryData?.map((categoria) => (
+            {categoryData?.obj.map((categoria) => (
               <option key={categoria.id} value={categoria.id}>
                 {categoria.name}
               </option>

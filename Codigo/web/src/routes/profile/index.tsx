@@ -152,6 +152,13 @@ function Index() {
     }
   };
 
+  const disabledButton = () => {
+    if (passwordStrength == 100) {
+      return false;
+    }
+    return true;
+  };
+
   const typeText =
     currentUser && currentUser.type === 1 ? "ADMIN" : "VISUALIZADOR";
   return (
@@ -268,7 +275,11 @@ function Index() {
           </FloatingLabel>
 
           <div className="d-flex gap-2 mt-2">
-            <Button type="submit" className="text-white">
+            <Button
+              type="submit"
+              className="text-white"
+              disabled={disabledButton()}
+            >
               Salvar Edições
             </Button>
           </div>

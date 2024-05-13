@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -16,6 +16,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CreateCategoryModal } from "./_components/CreateCategoryModal";
 import { DeleteCategoryModal } from "./_components/DeleteCategoryModal";
 import { UpdateCategoryModal } from "./_components/UpdateCategoryModal";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+
+const schema = z.object({
+  name: z.string({ required_error: "Obrigatório" }),
+});
 
 export const Route = createFileRoute("/category/")({
   component: Index,
@@ -28,7 +34,10 @@ function Index() {
   const [, setUpdateCategoryModal] = useSearchParam("updateCategoryModal");
   const [, setDeleteCategoryModal] = useSearchParam("deleteCategoryModal");
 
-  const { data: categoryData } = useReadCategories();
+  const { handleSubmit, register, formState, getValues } =
+    useForm<z.infer<typeof schema>>();
+
+  const { data: categoryData } = useReadCategories(getValues("name"));
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -49,23 +58,54 @@ function Index() {
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, categoryData?.length || 0);
-  const totalPages = Math.ceil((categoryData?.length || 0) / itemsPerPage);
+  const endIndex = Math.min(
+    startIndex + itemsPerPage,
+    categoryData?.obj.length || 0
+  );
+  const totalPages = Math.ceil((categoryData?.obj.length || 0) / itemsPerPage);
+
+  const searchCategory = async () => {};
 
   return (
     <div className="m-4">
       <Stack direction="horizontal" gap={3}>
-        <div className="p-2">Categoria</div>
-        <InputGroup className="p-2 me-auto w-8">
-          <Form.Control
-            placeholder="Pesquisar Categoria"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-          />
-          <Button variant="outline-secondary" id="button-addon2">
-            <Search />
-          </Button>
-        </InputGroup>
+        <div className="p-2">Categorias</div>
+        <Form onSubmit={handleSubmit(searchCategory)}>
+          <InputGroup className="p-2 me-auto w-8">
+            <Form.Control
+              type="text"
+              placeholder="Pesquisar Produto"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              {...register("name")}
+              isInvalid={Boolean(formState.errors.name)}
+            />
+
+            {formState.errors.name && (
+              <Form.Control.Feedback type="invalid">
+                {formState.errors.name.message}
+              </Form.Control.Feedback>
+            )}
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              type="submit"
+            >
+              <Search />
+            </Button>
+            {/* <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              onClick={async () => {
+                await setValue("name", "");
+                await refetch();
+              }}
+            >
+              <Trash />
+            </Button> */}
+          </InputGroup>
+        </Form>
+
         <Button
           className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
           onClick={() => setCreateCategoryModal("true")}
@@ -83,27 +123,33 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {categoryData?.slice(startIndex, endIndex).map((category, index) => (
-              <tr key={index}>
-                <th scope="row">{startIndex + index + 1}</th>
-                <td>{category.name}</td>
-                <td>{category.description}</td>
-                <td className="d-flex gap-2 ">
-                  <Button
-                    onClick={() => setUpdateCategoryModal(category.id.toString())}
-                    className="text-white"
-                  >
-                    <PencilFill />
-                  </Button>
-                  <Button
-                    className="text-white"
-                    onClick={() => setDeleteCategoryModal(category.id.toString())}
-                  >
-                    <TrashFill />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {categoryData?.obj
+              .slice(startIndex, endIndex)
+              .map((category, index) => (
+                <tr key={index}>
+                  <th scope="row">{startIndex + index + 1}</th>
+                  <td>{category.name}</td>
+                  <td>{category.description}</td>
+                  <td className="d-flex gap-2 ">
+                    <Button
+                      onClick={() =>
+                        setUpdateCategoryModal(category.id.toString())
+                      }
+                      className="text-white"
+                    >
+                      <PencilFill />
+                    </Button>
+                    <Button
+                      className="text-white"
+                      onClick={() =>
+                        setDeleteCategoryModal(category.id.toString())
+                      }
+                    >
+                      <TrashFill />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </div>
@@ -131,7 +177,9 @@ function Index() {
             </Pagination.Item>
           ))}
           <Pagination.Next
-            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+            onClick={() =>
+              handlePageChange(Math.min(currentPage + 1, totalPages))
+            }
           />
           <Pagination.Last onClick={() => handlePageChange(totalPages)} />
         </Pagination>
