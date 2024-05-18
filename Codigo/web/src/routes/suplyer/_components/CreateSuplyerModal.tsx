@@ -92,7 +92,7 @@ export const CreateSuplyerModal = () => {
               mask="(99) 99999-9999"
               maskChar="_" // This is optional, you can customize the placeholder character for empty positions in the mask
               type="tel" // Use "tel" type for phone numbers
-              placeholder="(00) 00000-0000"
+              placeholder="(99) 99999-9999"
               {...register("phone")}
               as={Form.Control} // Use as prop to render the InputMask as a Form.Control
             />
