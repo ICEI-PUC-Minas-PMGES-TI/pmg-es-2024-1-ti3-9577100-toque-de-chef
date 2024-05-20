@@ -7,6 +7,7 @@ namespace TOQUE.DE.CHEF.Dto
         public string Name { get; set; }
         public string Email { get; set; }
         public int Type { get; set; }
+        public int Id { get; set; }
 
     }
 }

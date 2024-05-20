@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Table, InputGroup } from "react-bootstrap";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "../../../helpers/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ export const CreatePurchaseModal = () => {
       resolver: zodResolver(schema),
     }
   );
+  console.log("formState", formState);
 
   const { mutateAsync } = useCreatePurchase({
     onSuccess: () => {
@@ -71,6 +72,7 @@ export const CreatePurchaseModal = () => {
   };
 
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (data) => {
+    console.log("data", data);
     setCreatePurchaseModal(undefined);
     await mutateAsync(data);
   };
@@ -120,91 +122,91 @@ export const CreatePurchaseModal = () => {
                 maxHeight: "40vh",
               }}
             >
-              <div
-                style={{
-                  display: "grid",
-                  gap: "16px",
-                  justifyContent: "center",
-                  gridTemplateColumns: "1fr 1fr",
-                }}
-              >
-                {purchaseItems.map((item, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      padding: "16px",
-                      boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.1)",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <Form.Select
-                      aria-label="Default select example"
-                      {...register(`purchaseItems.${index}.productId`, {
-                        valueAsNumber: true,
-                        required: "Obrigatório",
-                      })}
-                      onChange={(e) => {
-                        const newPurchaseItems = [...purchaseItems];
-                        newPurchaseItems[index].productId = Number(
-                          e.target.value
-                        );
-                        setPurchaseItems(newPurchaseItems);
-                      }}
-                    >
-                      <option value="">Selecione um Produto</option>
-                      {productsData?.obj?.map((product) => (
-                        <option key={product.id} value={product.id}>
-                          {product.name}
-                        </option>
-                      ))}
-                    </Form.Select>
+              <div style={{}}>
+                <Table responsive>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Quantidade</th>
+                      <th scope="col">Valor Unitário</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-group-divider">
+                    {purchaseItems.map((item, index) => (
+                      <tr key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td>
+                          <Form.Select
+                            aria-label="Default select example"
+                            {...register(`purchaseItems.${index}.productId`, {
+                              valueAsNumber: true,
+                              required: "Obrigatório",
+                            })}
+                            onChange={(e) => {
+                              const newPurchaseItems = [...purchaseItems];
+                              newPurchaseItems[index].productId = Number(
+                                e.target.value
+                              );
+                              setPurchaseItems(newPurchaseItems);
+                            }}
+                          >
+                            <option value="">Selecione um Produto</option>
+                            {productsData?.obj?.map((product) => (
+                              <option key={product.id} value={product.id}>
+                                {product.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </td>
 
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "16px",
-                        marginTop: "16px",
-                        marginBottom: "16px",
-                      }}
-                    >
-                      <Form.Group controlId={`price-${index}`}>
-                        <Form.Control
-                          type="number"
-                          placeholder="Preço"
-                          {...register(`purchaseItems.${index}.unitPrice`, {
-                            valueAsNumber: true,
-                            required: "Obrigatório",
-                          })}
-                          isInvalid={Boolean(
-                            formState.errors.purchaseItems?.[index]?.unitPrice
-                          )}
-                        />
-                      </Form.Group>
-
-                      <Form.Group controlId={`quantity-${index}`}>
-                        <Form.Control
-                          type="number"
-                          placeholder="Quantidade"
-                          {...register(`purchaseItems.${index}.quantity`, {
-                            valueAsNumber: true,
-                            required: "Obrigatório",
-                          })}
-                          isInvalid={Boolean(
-                            formState.errors.purchaseItems?.[index]?.quantity
-                          )}
-                        />
-                      </Form.Group>
-                    </div>
-
-                    <Button
-                      variant="secondary"
-                      onClick={() => removeProductField(index)}
-                    >
-                      <Trash />
-                    </Button>
-                  </div>
-                ))}
+                        <td>
+                          <Form.Group controlId={`quantity-${index}`}>
+                            <Form.Control
+                              type="number"
+                              placeholder="Quantidade"
+                              {...register(`purchaseItems.${index}.quantity`, {
+                                valueAsNumber: true,
+                                required: "Obrigatório",
+                              })}
+                              isInvalid={Boolean(
+                                formState.errors.purchaseItems?.[index]
+                                  ?.quantity
+                              )}
+                            />
+                          </Form.Group>
+                        </td>
+                        <td>
+                          <InputGroup>
+                            <InputGroup.Text>$</InputGroup.Text>
+                            <Form.Control
+                              type="number"
+                              placeholder="Preço"
+                              {...register(`purchaseItems.${index}.unitPrice`, {
+                                valueAsNumber: true,
+                                required: "Obrigatório",
+                              })}
+                              isInvalid={Boolean(
+                                formState.errors.purchaseItems?.[index]
+                                  ?.unitPrice
+                              )}
+                            />
+                            <InputGroup.Text>.00</InputGroup.Text>
+                          </InputGroup>
+                        </td>
+                        <td>
+                          <Button
+                            variant="secondary"
+                            onClick={() => removeProductField(index)}
+                          >
+                            <Trash />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
               </div>
             </div>
 

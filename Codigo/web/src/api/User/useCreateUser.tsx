@@ -8,7 +8,7 @@ export const createUser = async (user: Partial<User>) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ...user, active: true, type: "1" }),
+    body: JSON.stringify({ ...user }),
   });
 
   if (!res.ok) {

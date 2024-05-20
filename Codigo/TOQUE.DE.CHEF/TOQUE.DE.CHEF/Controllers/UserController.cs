@@ -40,7 +40,7 @@ namespace TOQUE.DE.CHEF.Controllers
 
         [HttpPost]
        
-        public string CreateUser(string name, string email, string password)
+       public string CreateUser(string name, string email, string password)
         {
             return _userService.CreateUser(name, email, password, true, UserRole.Pending);
         }
@@ -56,6 +56,12 @@ namespace TOQUE.DE.CHEF.Controllers
         public string EditUser([FromBody] UserEditDto dto)
         {
             return _userService.EditUser(dto, User);
+        }
+
+        [HttpPut("User/EditUserAcess/{id}/{type}")]
+        public string EditUserAcess(int id, int type)
+        {
+            return _userService.EditUserAcess(id, type);
         }
 
         [HttpGet]

@@ -10,5 +10,6 @@ export type User = {
 export type UserInfoType = {
   name: string;
   email: string;
+  id: number;
   type: number;
 };

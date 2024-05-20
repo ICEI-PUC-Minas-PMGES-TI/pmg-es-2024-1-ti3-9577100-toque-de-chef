@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -6,10 +6,10 @@ import {
   Pagination,
   Stack,
   Table,
+  Spinner,
 } from "react-bootstrap";
 import {
   FileEarmarkArrowDown,
-  FileEarmarkArrowUp,
   PencilFill,
   Search,
   TrashFill,
@@ -20,33 +20,75 @@ import { useSearchParam } from "../../hooks/useSearchParams";
 import { DeleteProductModal } from "./_components/DeleteProductModal";
 import { CreateProductModal } from "./_components/CreateProductModal";
 import { useReadProducts } from "../../api/Product/useReadProducts";
+import { useUpdateProduct } from "../../api/Product/useUpdateProduct";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { isKeyPressed } from "../../helpers/Utils/Util";
+import { getDirtyValues } from "../../helpers/hook-form";
 import { useCurrentUser } from "../../api/User/useCurrentUser";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
+  products: z.array(
+    z.object({
+      id: z.number(),
+      stockQtd: z.number(),
+      name: z.string(),
+      description: z.string(),
+      category: z.object({
+        name: z.string(),
+      }),
+    })
+  ),
 });
+
+type Schema = z.infer<typeof schema>;
 
 export const Route = createFileRoute("/product/")({
   component: Index,
 });
 
 function Index() {
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10); // Definindo itemsPerPage
   const [, setCreateProductModal] = useSearchParam("createProductModal");
   const [, setUpdateProductModal] = useSearchParam("updateProductModal");
   const [, setDeleteProductModal] = useSearchParam("deleteProductModal");
 
-  const { handleSubmit, register, formState, getValues } =
+  const [isRealizandoRetirada, setIsRealizandoRetirada] = useState(false);
+
+  const { handleSubmit, register, formState, getValues, reset } =
     useForm<z.infer<typeof schema>>();
 
   const { data: currentUser } = useCurrentUser();
 
-  const { data: productData } = useReadProducts(getValues("name"));
+  const { data: productData, refetch } = useReadProducts(
+    getValues("name") || ""
+  );
+
+  const { mutateAsync: mutateAsyncUpdate } = useUpdateProduct({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["readProducts"],
+      });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["readProducts"],
+      });
+    },
+  });
+
+  useEffect(() => {
+    refetch().then(({ data }) => {
+      reset({
+        products: data?.obj || [],
+      });
+    });
+  }, [refetch, reset]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -66,13 +108,59 @@ function Index() {
     setCurrentPage(pageNumber);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(
-    startIndex + itemsPerPage,
-    productData?.obj?.length || 0
-  );
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = Math.min(
+  //   startIndex + itemsPerPage,
+  //   productData?.obj?.length || 0
+  // );
+
   const totalPages = Math.ceil((productData?.obj?.length || 0) / itemsPerPage);
-  const searchProdut = async () => {};
+  const searchProdut = async () => {
+    setTimeout(async () => {
+      const { data } = await refetch();
+      reset({
+        products: data?.obj || [],
+      });
+    }, 0);
+  };
+
+  const handleRealizarRetirada = async () => {
+    setIsRealizandoRetirada(true);
+    const values = getDirtyValues(formState.dirtyFields, getValues());
+    type Product = Pick<Schema, "products">["products"][number];
+    const products = Object.entries(
+      values.products as unknown as Record<string, Partial<Product>>
+    );
+
+    await Promise.all(
+      products.map(([index, value]) => {
+        const initialValueProduct = productData?.obj[Number(index)];
+        return mutateAsyncUpdate({
+          product: {
+            id: initialValueProduct?.id as number,
+            stockQtd: Number(value.stockQtd),
+            categoryId: initialValueProduct?.category.id,
+            description: initialValueProduct?.description,
+            name: initialValueProduct?.name,
+          },
+        });
+      })
+    );
+
+    reset({
+      products: getValues("products"),
+    });
+    setIsRealizandoRetirada(false);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent, index: number) => {
+    const product = productData?.obj[index].stockQtd || 0;
+    const value = ((event.target as unknown as { value: number }).value +
+      event.key) as unknown as number;
+    if (value > product) {
+      event.preventDefault();
+    }
+  };
 
   return (
     <div className="m-4">
@@ -124,18 +212,16 @@ function Index() {
 
             <Button
               className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-              disabled
+              disabled={!formState.dirtyFields.products || isRealizandoRetirada}
+              onClick={handleRealizarRetirada}
             >
               <FileEarmarkArrowDown />
-              <strong>Importar Planilha</strong>
-            </Button>
-
-            <Button
-              className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-              disabled
-            >
-              <FileEarmarkArrowUp />
-              <strong>Exportar Planilha</strong>
+              <strong>Realizar Retirada</strong>
+              {isRealizandoRetirada && (
+                <Spinner animation="border" role="status" size="sm">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              )}
             </Button>
           </>
         )}
@@ -153,37 +239,55 @@ function Index() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {productData?.obj
-              ?.slice(startIndex, endIndex)
-              .map((product, index) => (
-                <tr key={index}>
-                  <th scope="row">{startIndex + index + 1}</th>
-                  <td>{product.name}</td>
-                  <td>{product.description}</td>
-                  <td>{product.stockQtd}</td>
-                  <td>{product.category.name}</td>
-                  {currentUser && currentUser.type !== 2 && (
-                    <td className="d-flex gap-2 ">
-                      <Button
-                        onClick={() =>
-                          setUpdateProductModal(product.id.toString())
-                        }
-                        className="text-white"
-                      >
-                        <PencilFill />
-                      </Button>
-                      <Button
-                        className="text-white"
-                        onClick={() =>
-                          setDeleteProductModal(product.id.toString())
-                        }
-                      >
-                        <TrashFill />
-                      </Button>
-                    </td>
-                  )}
-                </tr>
-              ))}
+            {getValues("products")?.map((product, index) => (
+              <tr key={index}>
+                <th scope="row">{index + 1}</th>
+                <td>{product.name}</td>
+                <td>{product.description}</td>
+                <td>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Control
+                      type="number"
+                      placeholder="Estoque maximo"
+                      min={0}
+                      max={productData?.obj?.[index]?.stockQtd}
+                      onKeyPress={(e) => handleKeyPress(e, index)}
+                      disabled={
+                        productData?.obj?.[index]?.stockQtd === 0 ||
+                        isRealizandoRetirada
+                      }
+                      {...register(`products.${index}.stockQtd`, {
+                        valueAsNumber: true,
+                      })}
+                    />
+                  </Form.Group>
+                </td>
+                <td>{product.category.name}</td>
+                {currentUser && currentUser.type !== 2 && (
+                  <td className="d-flex gap-2 ">
+                    <Button
+                      onClick={() =>
+                        setUpdateProductModal(product.id.toString())
+                      }
+                      className="text-white"
+                    >
+                      <PencilFill />
+                    </Button>
+                    <Button
+                      className="text-white"
+                      onClick={() =>
+                        setDeleteProductModal(product.id.toString())
+                      }
+                    >
+                      <TrashFill />
+                    </Button>
+                  </td>
+                )}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>

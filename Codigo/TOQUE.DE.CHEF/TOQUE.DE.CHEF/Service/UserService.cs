@@ -32,7 +32,7 @@ namespace TOQUE.DE.CHEF.Services
             return listUsers.Skip(skip).Take(take).ToList();
         }
 
-        public string CreateUser(string name, string email, string password, bool active, UserRole role)
+         public string CreateUser(string name, string email, string password, bool active, UserRole role)
         {
             try
             {
@@ -92,6 +92,7 @@ namespace TOQUE.DE.CHEF.Services
                 var usersInfoDto = users.Select(u => new UserInfoDto
                 {
                     Name = u.Name,
+                    Id= u.Id,
                     Email = u.Email,
                     Type = (int)u.Type
                 }).ToList();
@@ -128,6 +129,28 @@ namespace TOQUE.DE.CHEF.Services
                 return "ERRO";
             }
         }
+
+        public string EditUserAcess(int id, int userType)
+        {
+            try
+            {
+
+                User UserToEdit = _context.users.FirstOrDefault(x => x.Id == id);
+                UserToEdit.Type = (UserRole)userType;
+                UserToEdit.Password = UserToEdit.Password;
+
+                _context.users.Update(UserToEdit);
+                _context.SaveChanges();
+                return "OK";
+            }
+            catch
+            {
+                return "ERRO";
+            }
+        }
+
+
+      
 
         public User GetCurrentUser(ClaimsPrincipal User)
         {

@@ -32,7 +32,7 @@ namespace TOQUE.DE.CHEF.Models
 
         [Required(ErrorMessage = "Type is required.")]
         [Column("TYPE")]
-        public UserRole Type { get; set; }
+          public UserRole Type { get; set; }
 
         public ICollection<TransactionStockOperation> TransactionStockOperations { get; set; }
 

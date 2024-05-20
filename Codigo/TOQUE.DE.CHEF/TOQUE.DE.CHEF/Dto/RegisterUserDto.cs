@@ -17,7 +17,7 @@ namespace TOQUE.DE.CHEF.Dto
                 Name = dto.Name,
                 Email = dto.Email,
                 Password = dto.Password,
-                Type = UserRole.Pending,
+              Type = UserRole.Pending,
                 Active = true // Set Active to true by default
             };
         }
