@@ -36,6 +36,12 @@ namespace TOQUE.DE.CHEF.Services
         {
             try
             {
+                bool emailExists = _context.users.Any(u => u.Email == email);
+                if (emailExists)
+                {
+                    return "ERROR: O email já está cadastrado.";
+                }
+
                 if (!PasswordMeetsCriteria(password))
                 {
                     return "ERROR: A senha deve conter letras, números, caracteres especiais e ter mais de 4 caracteres.";
@@ -46,7 +52,6 @@ namespace TOQUE.DE.CHEF.Services
                 newUser.Email = email;
                 newUser.Password = Cryptography.Encrypt(password);
                 newUser.Active = active;
-
                 newUser.Type = role;
 
                 _context.users.Add(newUser);
@@ -54,11 +59,12 @@ namespace TOQUE.DE.CHEF.Services
 
                 return "OK";
             }
-            catch
+            catch (Exception ex)
             {
-                return "ERROR";
+                return $"ERROR: {ex.Message}";
             }
         }
+
 
         private bool PasswordMeetsCriteria(string password)
         {
