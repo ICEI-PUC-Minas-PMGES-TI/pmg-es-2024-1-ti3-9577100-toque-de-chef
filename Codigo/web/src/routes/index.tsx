@@ -7,6 +7,7 @@ import { z } from "../helpers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import Cookies from "universal-cookie";
 import { useState } from "react";
+import { IMaskInput } from "react-imask";
 const cookies = new Cookies();
 
 export const Route = createFileRoute("/")({
@@ -72,12 +73,18 @@ function Index() {
           <Image style={{ height: "140px" }} src={"/public/logo.png"} />
           <Form style={{ width: "360px" }} onSubmit={handleSubmit(handleLogin)}>
             <Form.Group className="mb-4" controlId="exampleForm.ControlInput1">
-              <Form.Control
-                size="lg"
-                type="email"
-                placeholder="email"
-                {...register("email")}
-              />
+            <Form.Control
+    size="lg"
+    type="email"
+    placeholder="email"
+    {...register("email", {
+        required: "Email é obrigatório",
+        pattern: {
+            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            message: "Endereço de email inválido"
+        }
+    })}
+/>
             </Form.Group>
             <Form.Group className="mb-4" controlId="exampleForm.ControlInput1">
               <Form.Control

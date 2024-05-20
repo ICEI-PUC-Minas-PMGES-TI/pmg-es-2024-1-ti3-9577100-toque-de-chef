@@ -78,7 +78,13 @@ export const UpdateSuplyerModal = () => {
             <Form.Control
               type="email"
               placeholder="name@example.com"
-              {...update("email")}
+              {...update("email", {
+                required: "Email é obrigatório",
+                pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Endereço de email inválido"
+                }
+            })}
               isInvalid={Boolean(formStateUpdate.errors.email)}
             />
             {formStateUpdate.errors.email && (

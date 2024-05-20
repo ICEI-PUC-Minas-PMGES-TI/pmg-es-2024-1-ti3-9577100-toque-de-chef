@@ -8,7 +8,7 @@ namespace TOQUE.DE.CHEF.Models
     {
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Chave primária e coluna de identidade
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("ID")]
         public int Id { get; set; }
 

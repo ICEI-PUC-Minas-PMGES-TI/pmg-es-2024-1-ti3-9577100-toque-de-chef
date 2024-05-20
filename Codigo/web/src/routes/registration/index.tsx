@@ -176,7 +176,13 @@ function Login() {
             <Form.Control
               type="email"
               placeholder="name@example.com"
-              {...register("email")}
+              {...register("email", {
+                required: "Email é obrigatório",
+                pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Endereço de email inválido"
+                }
+            })}
               isInvalid={Boolean(formState.errors.email)}
             />
             {formState.errors.email && (
