@@ -21,7 +21,7 @@ const schema = z.object({
   name: z.string({ required_error: "Obrigatório" }),
 });
 
-function Product() {
+export function Product() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10); // Definindo itemsPerPage
   const [, setCreateProductModal] = useSearchParam("createProductModal");

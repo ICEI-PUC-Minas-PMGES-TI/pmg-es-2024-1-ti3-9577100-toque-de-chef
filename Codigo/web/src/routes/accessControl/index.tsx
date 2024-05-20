@@ -11,7 +11,7 @@ export const Route = createFileRoute("/accessControl/")({
 });
 
 function Index() {
-  const [activeTab, setActiveTab] = useState<string | null>();
+  const [activeTab, setActiveTab] = useState<string | null>("3");
 
   const type = useCallback(() => {
     switch (activeTab) {

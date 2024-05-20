@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PurchaseByDate } from "./_components/PurchaseByDate";
-import Product from "./_components/Product";
 import { PurchaseByMonth } from "./_components/PurchaseByMonth";
+import { Product } from "./_components/Product";
 
 export const Route = createFileRoute("/dashboard/")({
   component: Index,
