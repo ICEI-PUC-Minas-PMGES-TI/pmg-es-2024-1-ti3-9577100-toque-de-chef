@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TOQUE.DE.CHEF.Dto;
 using TOQUE.DE.CHEF.Services;
@@ -20,7 +20,6 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult CreatePurchase([FromBody] PurchaseDto dto)
         {
             try
@@ -63,6 +62,22 @@ namespace TOQUE.DE.CHEF.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("dashboardInfo")]
+        public IActionResult GetDashboardInfo()
+        {
+            try
+            {
+                DateTime startDate = DateTime.Now;
+                DateTime endDate = DateTime.Now;
+                var dashboardInfo = _purchaseService.GetDashboardInfo(startDate, endDate);
+                return Ok(dashboardInfo);
             }
             catch (Exception ex)
             {

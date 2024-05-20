@@ -137,8 +137,14 @@ namespace TOQUE.DE.CHEF.Services
 
         public User GetCurrentUser(ClaimsPrincipal User)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            return _context.users.Single(x => x.Id == userId);
+            if (User != null)
+            {
+                var userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+                return _context.users.Single(x => x.Id == userId);
+            }
+            else {
+                return null;
+            }
         }
     }
 }

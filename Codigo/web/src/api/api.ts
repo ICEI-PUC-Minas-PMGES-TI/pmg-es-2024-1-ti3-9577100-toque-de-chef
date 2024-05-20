@@ -8,7 +8,7 @@ export const api = async (endpoint: string, init?: RequestInit | undefined) => {
   //cplara https://localhost:7039/${endpoint}
   //cpPedo http://localhost:5041/${endpoint}
 
-  const response = await fetch(`https://localhost:7039/${endpoint}`, {
+  const response = await fetch(`http://localhost:5041/${endpoint}`, {
     ...init,
     headers: {
       ...init?.headers,
