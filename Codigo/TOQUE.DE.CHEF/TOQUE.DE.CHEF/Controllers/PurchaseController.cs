@@ -70,12 +70,10 @@ namespace TOQUE.DE.CHEF.Controllers
         }
 
         [HttpGet("dashboardInfo")]
-        public IActionResult GetDashboardInfo()
+        public IActionResult GetDashboardInfo(DateTime startDate, DateTime endDate)
         {
             try
             {
-                DateTime startDate = DateTime.Now;
-                DateTime endDate = DateTime.Now;
                 var dashboardInfo = _purchaseService.GetDashboardInfo(startDate, endDate);
                 return Ok(dashboardInfo);
             }

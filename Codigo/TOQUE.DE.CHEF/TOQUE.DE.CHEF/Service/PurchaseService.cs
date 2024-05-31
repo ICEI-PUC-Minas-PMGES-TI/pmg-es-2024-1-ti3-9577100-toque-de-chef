@@ -145,12 +145,11 @@ namespace TOQUE.DE.CHEF.Services
         public DashboardCardsInfo GetDashboardInfo(DateTime startDate, DateTime endDate)
         {
             var purchases = _context.purchases
-                .Where(p => p.PurchaseDate >= startDate && p.PurchaseDate <= endDate)
-                .Include(p => p.PurchaseItems)
                 .ToList();
 
+            
             var ultimaCompra = purchases.Max(p => p.PurchaseDate);
-            var totalCompra = purchases.Sum(p => p.PurchaseItems.Sum(pi => pi.TotalPrice));
+            var totalCompra = purchases.Sum(p => p.PurchaseItems.Sum(pi => pi?.TotalPrice));
             var mediaGasto = totalCompra / purchases.Count;
 
             return new DashboardCardsInfo
