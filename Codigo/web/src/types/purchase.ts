@@ -39,3 +39,18 @@ export type PurchaseResponse = {
   count: number;
   obj: Purchase[];
 };
+
+export interface purchaseDashboard {
+  name: string;
+  value: number;
+}
+
+export interface PurchaseDashboardResponse {
+  purchases: Purchase[];
+}
+
+export interface MonthPurchaseResponse {
+  lastPurchaseDate: string;
+  totalThisMonth: number;
+  averageMonthlySpending: number;
+}

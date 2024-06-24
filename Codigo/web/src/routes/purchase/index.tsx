@@ -5,6 +5,7 @@ import {
   InputGroup,
   Pagination,
   Stack,
+  Table,
 } from "react-bootstrap";
 import {
   Box,
@@ -116,7 +117,7 @@ function Index() {
           <InputGroup className="p-2 me-auto w-8">
             <Form.Control
               type="text"
-              placeholder="Pesquisar Produto"
+              placeholder="Pesquisar Compra"
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
               {...register("name")}
@@ -194,42 +195,33 @@ function Index() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
-                      gap: "16px",
+                      gridTemplateColumns: "1fr",
+                      padding: "16px",
                     }}
                   >
-                    {purchase?.purchaseItems.map((item, index2) => (
-                      <div
-                        key={index2}
-                        style={{
-                          display: "grid",
-                          justifyContent: "center",
-                          gap: "16px",
-                          boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.1)",
-                          borderRadius: "8px",
-                          padding: "16px",
-                        }}
-                      >
-                        <div>
-                          <Box /> Nome: {item.product.name}
-                        </div>
-                        <div>
-                          <Clipboard /> Categoria:{" "}
-                          {item?.product?.category?.name || "tempero"}
-                        </div>
-                        <div>
-                          <CurrencyDollar /> Preço Unitário: {item.unitPrice}
-                        </div>
-                        <div>
-                          <Diamond /> Quantidade: {item.quantity}
-                        </div>
-                        <div>
-                          {" "}
-                          <CashCoin /> Preço Total:
-                          {item.quantity * item.unitPrice}
-                        </div>
-                      </div>
-                    ))}
+                    <Table responsive>
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Nome</th>
+                          <th scope="col">Preço Unitário</th>
+                          <th scope="col">Quantidade</th>
+                          <th scope="col">Preço Total</th>
+                        </tr>
+                      </thead>
+                      <tbody className="table-group-divider">
+                        {purchase?.purchaseItems.map((item, index2) => (
+                          <tr key={index2}>
+                            <th scope="row">{startIndex + index2 + 1}</th>
+                            <td>{item.product.name}</td>
+                            <td> {item.unitPrice},00</td>
+
+                            <td> {item.quantity}</td>
+                            <td> {item.quantity * item.unitPrice},00</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
                   </div>
                 </Accordion.Body>
               </Accordion.Item>
@@ -245,33 +237,7 @@ function Index() {
           paddingTop: "16px",
           justifyContent: "center",
         }}
-      >
-        <Pagination>
-          <Pagination.First onClick={() => setCurrentPage(1)} />
-          <Pagination.Prev onClick={handlePaginationPrev} />
-          {[
-            ...Array(
-              Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)
-            ).keys(),
-          ].map((page) => (
-            <Pagination.Item
-              key={page}
-              active={page + 1 === currentPage}
-              onClick={() => setCurrentPage(page + 1)}
-            >
-              {page + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next onClick={handlePaginationNext} />
-          <Pagination.Last
-            onClick={() =>
-              setCurrentPage(
-                Math.ceil((purchaseData?.obj?.length || 0) / itemsPerPage)
-              )
-            }
-          />
-        </Pagination>
-      </div>
+      ></div>
 
       <CreatePurchaseModal />
       <UpdatePurchaseModal />

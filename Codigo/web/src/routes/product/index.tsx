@@ -8,12 +8,7 @@ import {
   Table,
   Spinner,
 } from "react-bootstrap";
-import {
-  FileEarmarkArrowDown,
-  PencilFill,
-  Search,
-  TrashFill,
-} from "react-bootstrap-icons";
+import { PencilFill, Search, TrashFill } from "react-bootstrap-icons";
 import { PlusCircle } from "react-bootstrap-icons";
 import { UpdateProductModal } from "./_components/UpdateProductModal";
 import { useSearchParam } from "../../hooks/useSearchParams";
@@ -35,6 +30,7 @@ const schema = z.object({
     z.object({
       id: z.number(),
       stockQtd: z.number(),
+      processStockQtd: z.number().optional(),
       name: z.string(),
       description: z.string(),
       category: z.object({
@@ -59,9 +55,16 @@ function Index() {
   const [, setDeleteProductModal] = useSearchParam("deleteProductModal");
 
   const [isRealizandoRetirada, setIsRealizandoRetirada] = useState(false);
+  const [isToEdit, setIsToEdit] = useState(false);
+  const [processedQuantities, setProcessedQuantities] = useState<
+    Record<number, number>
+  >({});
 
-  const { handleSubmit, register, formState, getValues, reset } =
+  const { handleSubmit, register, formState, getValues, reset, watch } =
     useForm<z.infer<typeof schema>>();
+
+  const isAvaliableToEditStockId =
+    !formState.dirtyFields.products || isRealizandoRetirada;
 
   const { data: currentUser } = useCurrentUser();
 
@@ -87,6 +90,7 @@ function Index() {
       reset({
         products: data?.obj || [],
       });
+      setProcessedQuantities({});
     });
   }, [refetch, reset]);
 
@@ -108,11 +112,13 @@ function Index() {
     setCurrentPage(pageNumber);
   };
 
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = Math.min(
-  //   startIndex + itemsPerPage,
-  //   productData?.obj?.length || 0
-  // );
+  const handleToEditStock = () => {
+    if (isToEdit) {
+      setIsToEdit(false);
+    } else {
+      setIsToEdit(true);
+    }
+  };
 
   const totalPages = Math.ceil((productData?.obj?.length || 0) / itemsPerPage);
   const searchProdut = async () => {
@@ -135,14 +141,27 @@ function Index() {
     await Promise.all(
       products.map(([index, value]) => {
         const initialValueProduct = productData?.obj[Number(index)];
+
         return mutateAsyncUpdate({
           product: {
             id: initialValueProduct?.id as number,
-            stockQtd: Number(value.stockQtd),
+            stockQtd:
+              (initialValueProduct?.stockQtd || 0) -
+              Number(value.processStockQtd),
             categoryId: initialValueProduct?.category.id,
             description: initialValueProduct?.description,
             name: initialValueProduct?.name,
           },
+        }).then(() => {
+          if (initialValueProduct) {
+            const newStock =
+              initialValueProduct.stockQtd - Number(value.processStockQtd);
+            setProcessedQuantities((prev) => ({
+              ...prev,
+              [Number(index)]: Number(value.processStockQtd),
+            }));
+            initialValueProduct.stockQtd = newStock;
+          }
         });
       })
     );
@@ -150,7 +169,9 @@ function Index() {
     reset({
       products: getValues("products"),
     });
+
     setIsRealizandoRetirada(false);
+    setIsToEdit(false);
   };
 
   const handleKeyPress = (event: React.KeyboardEvent, index: number) => {
@@ -210,18 +231,29 @@ function Index() {
               <PlusCircle /> <strong>Cadastrar Novo Produto</strong>
             </Button>
 
+            {isToEdit && (
+              <Button
+                className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
+                disabled={isAvaliableToEditStockId}
+                onClick={handleRealizarRetirada}
+              >
+                <strong>Atualizar Valor</strong>
+                {isRealizandoRetirada && (
+                  <Spinner animation="border" role="status" size="sm">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                )}
+              </Button>
+            )}
+
             <Button
               className="p-2 d-flex gap-2 align-items-center text-nowrap text-white"
-              disabled={!formState.dirtyFields.products || isRealizandoRetirada}
-              onClick={handleRealizarRetirada}
+              onClick={handleToEditStock}
             >
-              <FileEarmarkArrowDown />
-              <strong>Realizar Retirada</strong>
-              {isRealizandoRetirada && (
-                <Spinner animation="border" role="status" size="sm">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              )}
+              {" "}
+              <strong>
+                {isToEdit ? "Cancelar Retirada" : "Retirar Estoque"}
+              </strong>
             </Button>
           </>
         )}
@@ -235,59 +267,72 @@ function Index() {
               <th scope="col">Nome</th>
               <th scope="col">Descrição</th>
               <th scope="col">Quantidade</th>
+              {isToEdit && <th scope="col">Retirar</th>}
               <th scope="col">Categoria</th>
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {getValues("products")?.map((product, index) => (
-              <tr key={index}>
-                <th scope="row">{index + 1}</th>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
-                    <Form.Control
-                      type="number"
-                      placeholder="Estoque maximo"
-                      min={0}
-                      max={productData?.obj?.[index]?.stockQtd}
-                      onKeyPress={(e) => handleKeyPress(e, index)}
-                      disabled={
-                        productData?.obj?.[index]?.stockQtd === 0 ||
-                        isRealizandoRetirada
-                      }
-                      {...register(`products.${index}.stockQtd`, {
-                        valueAsNumber: true,
-                      })}
-                    />
-                  </Form.Group>
-                </td>
-                <td>{product.category.name}</td>
-                {currentUser && currentUser.type !== 2 && (
-                  <td className="d-flex gap-2 ">
-                    <Button
-                      onClick={() =>
-                        setUpdateProductModal(product.id.toString())
-                      }
-                      className="text-white"
-                    >
-                      <PencilFill />
-                    </Button>
-                    <Button
-                      className="text-white"
-                      onClick={() =>
-                        setDeleteProductModal(product.id.toString())
-                      }
-                    >
-                      <TrashFill />
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            ))}
+            {getValues("products")?.map((product, index) => {
+              const prods = productData?.obj || [];
+              const initialStockQtd = prods?.[index].stockQtd;
+              const stockQtd = processedQuantities[index] || 0;
+              const stockQtdProcessed = initialStockQtd - stockQtd;
+
+              return (
+                <tr key={index}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{initialStockQtd}</td>
+                  {isToEdit && (
+                    <td>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="exampleForm.ControlInput1"
+                      >
+                        <Form.Control
+                          type="number"
+                          placeholder="Estoque maximo"
+                          min={0}
+                          // max={productData?.obj?.[index]?.stockQtd}
+                          max={100}
+                          onKeyPress={(e) => handleKeyPress(e, index)}
+                          disabled={
+                            productData?.obj?.[index]?.stockQtd === 0 ||
+                            isRealizandoRetirada
+                          }
+                          {...register(`products.${index}.processStockQtd`, {
+                            valueAsNumber: true,
+                            value: 0,
+                          })}
+                        />
+                      </Form.Group>
+                    </td>
+                  )}
+                  <td>{product.category.name}</td>
+                  {currentUser && currentUser.type !== 2 && (
+                    <td className="d-flex gap-2 ">
+                      <Button
+                        onClick={() =>
+                          setUpdateProductModal(product.id.toString())
+                        }
+                        className="text-white"
+                      >
+                        <PencilFill />
+                      </Button>
+                      <Button
+                        className="text-white"
+                        onClick={() =>
+                          setDeleteProductModal(product.id.toString())
+                        }
+                      >
+                        <TrashFill />
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>

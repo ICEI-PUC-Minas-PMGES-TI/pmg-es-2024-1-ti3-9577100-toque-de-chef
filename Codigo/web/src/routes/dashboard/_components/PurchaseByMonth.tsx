@@ -1,4 +1,10 @@
-import { Trash } from "react-bootstrap-icons";
+import React from "react";
+import { Chart } from "react-google-charts";
+import { DateRangeComponent } from "./DateRangeComponent";
+import { DropdownButton, Button } from "react-bootstrap";
+import { useReadPurchaseDashboard } from "../../../api/Dashboard/useReadPurchaseDashboard";
+import { useReadPurchaseDashboardYear } from "../../../api/Dashboard/useReadPurchaseDashboardYear";
+import { useReadMonthPurchase } from "../../../api/Dashboard/useReadMonthPurchase";
 
 interface InfoCardProps {
   titulo: string;
@@ -30,6 +36,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
 };
 
 export const PurchaseByMonth: React.FC = () => {
+  const { data: monthPurchaseData } = useReadMonthPurchase();
+
   return (
     <>
       <div className="p-2">Dashboard</div>
@@ -41,17 +49,17 @@ export const PurchaseByMonth: React.FC = () => {
         }}
       >
         <InfoCard
-          titulo="20/10/2024"
+          titulo={monthPurchaseData?.lastPurchaseDate || "-"}
           descricao="Última Compra"
           backgroundColor=""
         />
         <InfoCard
-          titulo="R$ 1200,00"
+          titulo={`R$ ${monthPurchaseData?.totalThisMonth.toFixed(2) || "0,00"}`}
           descricao="Gasto esse mês"
           backgroundColor=""
         />
         <InfoCard
-          titulo="R$ 2300,00"
+          titulo={`R$ ${monthPurchaseData?.averageMonthlySpending.toFixed(2) || "0,00"}`}
           descricao="Média mensal de gastos"
           backgroundColor=""
         />

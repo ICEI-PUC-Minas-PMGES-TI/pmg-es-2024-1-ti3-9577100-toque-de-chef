@@ -1,35 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import { Chart } from "react-google-charts";
 import { DateRangeComponent } from "./DateRangeComponent";
-import { DropdownButton, Dropdown } from "react-bootstrap";
-
-export const data = [
-  ["Dia", "Valor"],
-  ["2014", 400],
-  ["2015", 460],
-  ["2016", 1120],
-  ["2017", 540],
-  ["2017", 0],
-  ["2017", 540],
-  ["2017", 540],
-];
+import { DropdownButton, Button } from "react-bootstrap";
+import { useReadPurchaseDashboard } from "../../../api/Dashboard/useReadPurchaseDashboard";
+import { useReadPurchaseDashboardYear } from "../../../api/Dashboard/useReadPurchaseDashboardYear";
 
 export const options = {
   chart: {},
 };
 
 export const PurchaseByDate = () => {
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [isAnnual, setIsAnnual] = useState<boolean>(false);
+
+  const { data: purchaseData } = useReadPurchaseDashboard(startDate, endDate, {
+    enabled: !isAnnual,
+  });
+
+  const { data: annualPurchaseData } = useReadPurchaseDashboardYear({
+    enabled: isAnnual,
+  });
+
+  const data = [
+    ["Dia", "Valor"],
+    ...(isAnnual
+      ? annualPurchaseData?.purchases
+      : purchaseData?.purchases || []
+    ).map((purchase) => [purchase.name, purchase.value]),
+  ];
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div className="p-2">Compras Efetuadas</div>
+        <div className="p-2">Valor total de Compras</div>
 
         <DropdownButton
           id="dropdown-basic-button"
           title="Selecione o Período"
           className="text-white"
         >
-          <DateRangeComponent />
+          <DateRangeComponent
+            onDateChange={(start, end) => {
+              setStartDate(start);
+              setEndDate(end);
+              setIsAnnual(false);
+            }}
+          />
+
+          <div
+            style={{ width: "340px" }}
+            className="bg-light d-flex justify-content-end"
+          >
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setStartDate(null);
+                setEndDate(null);
+                setIsAnnual(true);
+              }}
+            >
+              Anual
+            </Button>
+          </div>
         </DropdownButton>
       </div>
 

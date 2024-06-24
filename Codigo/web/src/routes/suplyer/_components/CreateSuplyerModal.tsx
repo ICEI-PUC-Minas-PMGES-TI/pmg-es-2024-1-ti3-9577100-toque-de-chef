@@ -87,14 +87,15 @@ export const CreateSuplyerModal = () => {
               {...register("name")}
             />
           </FloatingLabel>
-          <FloatingLabel controlId="phoneInput" label="Contato">
-            <InputMask
-              mask="(99) 99999-9999"
-              maskChar="_" // This is optional, you can customize the placeholder character for empty positions in the mask
-              type="tel" // Use "tel" type for phone numbers
-              placeholder="(99) 99999-9999"
+          <FloatingLabel
+            controlId="phoneInput"
+            label="Contato"
+            className="mb-3"
+          >
+            <Form.Control
+              type="number"
+              placeholder="Contato"
               {...register("phone")}
-              as={Form.Control} // Use as prop to render the InputMask as a Form.Control
             />
           </FloatingLabel>
           <FloatingLabel

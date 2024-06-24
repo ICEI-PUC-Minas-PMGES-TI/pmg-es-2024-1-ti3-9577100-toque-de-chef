@@ -18,6 +18,7 @@ export const DateRangeComponent = () => {
         editableDateInputs={true}
         onChange={(item) => setState([item.selection])}
         moveRangeOnFirstSelection={false}
+        continuos={false}
         ranges={state}
         locale={ptBR}
       />

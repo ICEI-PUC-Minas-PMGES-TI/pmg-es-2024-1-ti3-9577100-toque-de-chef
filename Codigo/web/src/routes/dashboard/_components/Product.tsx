@@ -1,40 +1,40 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  DropdownButton,
-  Form,
-  InputGroup,
-  Pagination,
-  Stack,
-  Table,
-} from "react-bootstrap";
-import { Search } from "react-bootstrap-icons";
-
-import { z } from "zod";
+import { Button, DropdownButton, Pagination, Table } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useSearchParam } from "../../../hooks/useSearchParams";
-import { useReadProducts } from "../../../api/Product/useReadProducts";
 import { isKeyPressed } from "../../../helpers/Utils/Util";
 import { DateRangeComponent } from "./DateRangeComponent";
+import { useReadProductDashboard } from "../../../api/Dashboard/useReadProductDashboard";
 
-const schema = z.object({
-  name: z.string({ required_error: "Obrigatório" }),
-});
+const products = [];
+
+const getYearRange = () => {
+  const year = new Date().getFullYear();
+  return {
+    startDate: `${year}-01-01`,
+    endDate: `${year}-12-31`,
+  };
+};
 
 export function Product() {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(10); // Definindo itemsPerPage
-  const [, setCreateProductModal] = useSearchParam("createProductModal");
+  const [itemsPerPage] = useState<number>(10);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [, setCreateProductModal] = useState(false);
 
-  const { handleSubmit, register, formState, getValues } =
-    useForm<z.infer<typeof schema>>();
+  const { handleSubmit, register, formState, getValues } = useForm();
 
-  const { data: productData } = useReadProducts(getValues("name"));
+  const { data: productDashboardData } = useReadProductDashboard(
+    startDate,
+    endDate,
+    currentPage,
+    itemsPerPage
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (isKeyPressed(event, [{ key: "j", modifier: "Ctrl" }])) {
-        setCreateProductModal("true");
+        setCreateProductModal(true);
       }
     };
 
@@ -52,10 +52,11 @@ export function Product() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(
     startIndex + itemsPerPage,
-    productData?.obj?.length || 0
+    productDashboardData?.products.length || 0
   );
-  const totalPages = Math.ceil((productData?.obj?.length || 0) / itemsPerPage);
-  const searchProdut = async () => {};
+  const totalPages = Math.ceil(
+    (productDashboardData?.products.length || 0) / itemsPerPage
+  );
 
   return (
     <div>
@@ -73,7 +74,28 @@ export function Product() {
           title="Selecione o Período"
           className="text-white"
         >
-          <DateRangeComponent />
+          <DateRangeComponent
+            onDateChange={(start, end) => {
+              setStartDate(start);
+              setEndDate(end);
+            }}
+          />
+
+          <div
+            style={{ width: "340px" }}
+            className="bg-light d-flex justify-content-end"
+          >
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const { startDate, endDate } = getYearRange();
+                setStartDate(startDate);
+                setEndDate(endDate);
+              }}
+            >
+              Anual
+            </Button>
+          </div>
         </DropdownButton>
       </div>
 
@@ -96,18 +118,16 @@ export function Product() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {productData?.obj
-              ?.slice(startIndex, endIndex)
+            {productDashboardData?.products
+              .slice(startIndex, endIndex)
               .map((product, index) => (
                 <tr key={index}>
                   <td>{product.name}</td>
-                  <td>{product.stockQtd}</td>
-                  <td>{product.stockQtd}</td>
-
-                  <td>{product.stockQtd}</td>
-                  <td>{product.stockQtd}</td>
-
-                  <td>{product.stockQtd}</td>
+                  <td>{product.entrada}</td>
+                  <td>{product.saida}</td>
+                  <td>{product.precoMedio}</td>
+                  <td>{product.maiorPreco}</td>
+                  <td>{product.menorPreco}</td>
                 </tr>
               ))}
           </tbody>
