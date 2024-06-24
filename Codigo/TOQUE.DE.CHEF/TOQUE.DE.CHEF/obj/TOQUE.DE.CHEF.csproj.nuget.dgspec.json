@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "/Users/laralima/Documents/TIS/pmg-es-2024-1-ti3-9577100-toque-de-chef/Codigo/TOQUE.DE.CHEF/TOQUE.DE.CHEF/TOQUE.DE.CHEF.csproj": {}
   },
   "projects": {
@@ -15,6 +16,23 @@
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/laralima/.nuget/NuGet/NuGet.Config"
+=======
+    "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
+        "projectName": "TOQUE.DE.CHEF",
+        "projectPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF.csproj",
+        "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\pedro\\OneDrive\\Área de Trabalho\\pmg-es-2024-1-ti3-9577100-toque-de-chef\\Codigo\\TOQUE.DE.CHEF\\TOQUE.DE.CHEF\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> b7a073091cb378e1954a04097abe6b3ab590feaa
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -104,7 +122,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+>>>>>>> b7a073091cb378e1954a04097abe6b3ab590feaa
         }
       }
     }
